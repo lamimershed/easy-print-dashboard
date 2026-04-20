@@ -1,0 +1,249 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Onboarding Complete - Editorial Vitality</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'tertiary-container': '#f2b885',
+              'surface-container-lowest': '#ffffff',
+              'on-background': '#2f2f2f',
+              'surface-dim': '#d6d4d4',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'surface-tint': '#00694e',
+              'outline-variant': '#aeadac',
+              'secondary-container': '#d5ed7e',
+              'on-primary-container': '#005c44',
+              'primary-fixed-dim': '#8ee2c0',
+              'primary-fixed': '#9cf1ce',
+              'on-tertiary-fixed-variant': '#663e16',
+              'on-error': '#ffefee',
+              'inverse-on-surface': '#9e9c9c',
+              'surface-container-low': '#f3f0f0',
+              'surface-container-high': '#e4e2e1',
+              'error-dim': '#9f0519',
+              tertiary: '#7d5228',
+              'on-primary': '#c6ffe5',
+              error: '#b31b25',
+              'inverse-primary': '#9cf1ce',
+              secondary: '#506300',
+              'on-primary-fixed-variant': '#00664c',
+              'on-tertiary': '#fff0e6',
+              'on-tertiary-container': '#5b350d',
+              'surface-variant': '#dedcdc',
+              'surface-container': '#eae8e7',
+              'on-tertiary-fixed': '#422200',
+              'tertiary-fixed': '#f2b885',
+              'secondary-fixed': '#d5ed7e',
+              'on-surface-variant': '#5c5b5b',
+              'on-error-container': '#570008',
+              primary: '#00694e',
+              'on-secondary-fixed-variant': '#506300',
+              'inverse-surface': '#0e0e0e',
+              'surface-container-highest': '#dedcdc',
+              'error-container': '#fb5151',
+              'on-primary-fixed': '#004734',
+              'primary-container': '#9cf1ce',
+              'secondary-fixed-dim': '#c7df71',
+              'primary-dim': '#005b43',
+              'tertiary-fixed-dim': '#e3ab79',
+              'on-secondary-container': '#485800',
+              'on-surface': '#2f2f2f',
+              'secondary-dim': '#465600',
+              'tertiary-dim': '#70461d',
+              background: '#f9f6f5',
+              'on-secondary-fixed': '#374400',
+              outline: '#777676',
+              'on-secondary': '#e5fe8c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .editorial-shadow {
+        box-shadow: 0px 12px 32px rgba(47, 47, 47, 0.06);
+      }
+      .asymmetric-blob {
+        clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-surface font-body text-on-surface overflow-hidden">
+    <!-- Success Canvas Layout -->
+    <main
+      class="relative flex min-h-screen items-center justify-center overflow-hidden p-6 md:p-12"
+    >
+      <!-- Decorative Background Layer (Asymmetric Shapes) -->
+      <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <div
+          class="bg-primary-container/20 absolute -top-[10%] -left-[5%] h-[60%] w-[40%] rounded-full blur-[120px]"
+        ></div>
+        <div
+          class="bg-secondary-container/30 absolute -right-[10%] -bottom-[20%] h-[70%] w-[50%] rounded-full blur-[150px]"
+        ></div>
+        <div
+          class="bg-tertiary-container/40 absolute top-[20%] right-[15%] h-32 w-32 rounded-full opacity-50 blur-3xl"
+        ></div>
+      </div>
+      <!-- Main Content Container -->
+      <div
+        class="relative z-10 grid w-full max-w-5xl grid-cols-1 items-center gap-8 md:grid-cols-12"
+      >
+        <!-- Visual Anchor: Asymmetric Image/Graphic -->
+        <div class="order-2 flex justify-center md:order-1 md:col-span-5">
+          <div class="group relative">
+            <!-- Layered Paper Effect -->
+            <div
+              class="bg-secondary-container absolute -inset-4 rotate-3 rounded-lg opacity-20 transition-transform duration-500 group-hover:rotate-6"
+            ></div>
+            <div
+              class="absolute -inset-2 -rotate-2 rounded-lg bg-primary/5 transition-transform duration-500"
+            ></div>
+            <div
+              class="editorial-shadow relative h-80 w-64 overflow-hidden rounded-lg md:h-[480px] md:w-80"
+            >
+              <img
+                class="h-full w-full object-cover"
+                data-alt="Modern minimalist aesthetic of high-quality printed editorial magazines stacked on a clean mint green surface with soft natural lighting"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5ydaK7B3RJnBKAhl63bNpD11UVpcK05PsbxPeBAe3gWASkDq2R15FMGjONafc-uFD_X3Bp65xlX1bBfAZrQQVmLuo_0FJu2ImDnQJ36TZipSPOmKVLA5f4awLX1WOZLWNrmWPufpc6EIFB2Mf_GlmQHeY0pxk_Tt_G_kQAEGgF-74haml1EKXitr4jZzBeHnYnTfKF8LhgfdUaf98FC086UFHYsMRjEjNnW0-L4YxPNr96ax6XkeVXx6nopgXTlkuQdfF8Yl_HkHX"
+              />
+              <!-- Floating Success Badge -->
+              <div
+                class="bg-tertiary-container text-on-tertiary-container font-headline editorial-shadow absolute top-6 -right-4 flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold"
+              >
+                <span class="material-symbols-outlined text-base">verified</span>
+                COMPLETED
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Copy Anchor: High Energy Success Text -->
+        <div class="order-1 space-y-12 md:order-2 md:col-span-7">
+          <div class="space-y-4">
+            <!-- Label with high contrast -->
+            <span
+              class="bg-secondary-container text-on-secondary-container font-label inline-block rounded-full px-4 py-1.5 text-xs font-bold tracking-widest"
+            >
+              ONBOARDING COMPLETE
+            </span>
+            <!-- Main Headline: Plus Jakarta Sans -->
+            <div class="space-y-0">
+              <h1
+                class="font-headline text-6xl leading-[1.1] font-extrabold tracking-tight text-primary md:text-8xl"
+              >
+                You are all set!!
+              </h1>
+              <p
+                class="font-headline text-on-surface-variant mt-6 max-w-lg text-2xl font-medium opacity-80 md:text-3xl"
+              >
+                Now start using your Dashboard
+              </p>
+            </div>
+          </div>
+          <!-- Action Group -->
+          <div class="flex flex-col items-start gap-6 pt-4 sm:flex-row sm:items-center">
+            <button
+              class="group text-on-primary font-headline editorial-shadow relative flex items-center gap-3 rounded-full bg-primary px-10 py-5 text-lg font-bold transition-all duration-300 hover:scale-105 active:scale-95"
+            >
+              Enter Dashboard
+              <span class="material-symbols-outlined transition-transform group-hover:translate-x-1"
+                >arrow_forward</span
+              >
+            </button>
+            <button
+              class="font-headline hover:text-on-primary-fixed-variant flex items-center gap-2 px-6 py-5 text-lg font-bold text-primary transition-colors"
+            >
+              <span class="material-symbols-outlined">help_outline</span>
+              Take a quick tour
+            </button>
+          </div>
+          <!-- Footer Stats / Confirmation Details (Editorial Style) -->
+          <div
+            class="border-outline-variant/15 grid grid-cols-2 gap-8 border-t-0 pt-12 md:grid-cols-3"
+          >
+            <div class="space-y-1">
+              <p
+                class="font-label text-outline text-[10px] font-extrabold tracking-[0.2em] uppercase"
+              >
+                ACCOUNT STATUS
+              </p>
+              <p class="text-on-surface text-sm font-semibold">Verified &amp; Active</p>
+            </div>
+            <div class="space-y-1">
+              <p
+                class="font-label text-outline text-[10px] font-extrabold tracking-[0.2em] uppercase"
+              >
+                DEFAULT ROLE
+              </p>
+              <p class="text-on-surface text-sm font-semibold">Master Printer</p>
+            </div>
+            <div class="hidden space-y-1 md:block">
+              <p
+                class="font-label text-outline text-[10px] font-extrabold tracking-[0.2em] uppercase"
+              >
+                REGION
+              </p>
+              <p class="text-on-surface text-sm font-semibold">Global High-Res</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Glassmorphism Floating Decoration -->
+      <div
+        class="bg-surface/70 editorial-shadow absolute bottom-12 left-1/2 flex -translate-x-1/2 items-center gap-8 rounded-full border-0 px-8 py-4 backdrop-blur-3xl"
+      >
+        <div class="flex -space-x-3">
+          <div
+            class="text-on-primary ring-surface flex h-8 w-8 items-center justify-center rounded-full bg-primary ring-4"
+          >
+            <span class="material-symbols-outlined text-xs">check</span>
+          </div>
+          <div class="bg-secondary-container ring-surface h-8 w-8 rounded-full ring-4"></div>
+          <div class="bg-tertiary-container ring-surface h-8 w-8 rounded-full ring-4"></div>
+        </div>
+        <p class="text-on-surface-variant font-body text-xs font-medium">
+          Join <span class="text-on-surface font-bold">1.2k+</span> professionals this week
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

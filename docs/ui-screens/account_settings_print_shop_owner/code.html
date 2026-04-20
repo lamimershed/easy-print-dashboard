@@ -1,0 +1,429 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-error': '#ffefee',
+              'on-background': '#2f2f2f',
+              'on-secondary-container': '#485800',
+              'secondary-container': '#d5ed7e',
+              'on-tertiary-container': '#5b350d',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'secondary-fixed-dim': '#c7df71',
+              'error-container': '#fb5151',
+              'secondary-fixed': '#d5ed7e',
+              'primary-fixed': '#9cf1ce',
+              outline: '#777676',
+              error: '#b31b25',
+              'surface-container-highest': '#dedcdc',
+              'on-primary-fixed': '#004734',
+              'on-tertiary-fixed': '#422200',
+              'surface-variant': '#dedcdc',
+              'on-primary-fixed-variant': '#00664c',
+              primary: '#00694e',
+              'primary-dim': '#005b43',
+              'surface-container-low': '#f3f0f0',
+              'on-surface': '#2f2f2f',
+              'on-secondary': '#e5fe8c',
+              'inverse-surface': '#0e0e0e',
+              'on-tertiary': '#fff0e6',
+              'tertiary-fixed-dim': '#e3ab79',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-fixed-variant': '#506300',
+              'outline-variant': '#aeadac',
+              'on-primary': '#c6ffe5',
+              tertiary: '#7d5228',
+              'secondary-dim': '#465600',
+              'on-primary-container': '#005c44',
+              background: '#f9f6f5',
+              'tertiary-dim': '#70461d',
+              'on-secondary-fixed': '#374400',
+              'surface-dim': '#d6d4d4',
+              'primary-container': '#9cf1ce',
+              'primary-fixed-dim': '#8ee2c0',
+              'on-tertiary-fixed-variant': '#663e16',
+              secondary: '#506300',
+              'surface-tint': '#00694e',
+              'tertiary-container': '#f2b885',
+              'surface-container-high': '#e4e2e1',
+              'on-error-container': '#570008',
+              'surface-container': '#eae8e7',
+              'inverse-primary': '#9cf1ce',
+              'error-dim': '#9f0519',
+              'tertiary-fixed': '#f2b885',
+              'on-surface-variant': '#5c5b5b',
+              'inverse-on-surface': '#9e9c9c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .editorial-shadow {
+        box-shadow: 0px 12px 32px rgba(47, 47, 47, 0.06);
+      }
+    </style>
+  </head>
+  <body class="bg-surface font-body text-on-background">
+    <!-- SideNavBar Component -->
+    <aside
+      class="fixed top-0 left-0 z-50 flex h-screen w-72 flex-col overflow-y-auto bg-[#EAE8E7] py-8 dark:bg-[#1A1A1A]"
+    >
+      <div class="mb-12 px-8">
+        <h1
+          class="font-['Plus_Jakarta_Sans'] text-2xl font-black text-[#00694E] dark:text-[#9CF1CE]"
+        >
+          PrintEasy
+        </h1>
+        <p class="font-label text-on-surface-variant mt-1 text-xs tracking-widest uppercase">
+          Shop Owner Dashboard
+        </p>
+      </div>
+      <nav class="flex-1 space-y-2">
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-colors hover:opacity-100 dark:text-[#E4E2E1]"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-colors hover:opacity-100 dark:text-[#E4E2E1]"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Analytics</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-colors hover:opacity-100 dark:text-[#E4E2E1]"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="print">print</span>
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Device Info</span>
+        </a>
+        <a
+          class="ml-4 flex items-center gap-4 rounded-l-full bg-[#FFFFFF] py-4 pl-8 text-[#00694E] shadow-sm transition-all duration-300 dark:bg-[#2F2F2F] dark:text-[#9CF1CE]"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined"
+            data-icon="settings"
+            style="font-variation-settings: 'FILL' 1"
+            >settings</span
+          >
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight"
+            >Account Settings</span
+          >
+        </a>
+      </nav>
+      <div class="mt-auto px-8">
+        <div class="bg-surface-container-high/50 flex items-center gap-3 rounded-lg p-4">
+          <div
+            class="bg-primary-container text-on-primary-container flex h-10 w-10 items-center justify-center rounded-full font-bold"
+          >
+            JD
+          </div>
+          <div>
+            <p class="text-sm font-bold">John's Print</p>
+            <p class="text-on-surface-variant text-xs">Pro Plan</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- TopNavBar Component -->
+    <header
+      class="fixed top-0 right-0 z-40 flex h-20 w-[calc(100%-18rem)] items-center justify-between bg-[#F9F6F5]/80 px-10 backdrop-blur-3xl dark:bg-[#1A1A1A]/80"
+    >
+      <div class="flex items-center gap-8">
+        <div class="group relative">
+          <span
+            class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2"
+            data-icon="search"
+            >search</span
+          >
+          <input
+            class="bg-surface-container-high w-64 rounded-full border-none py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-primary/40"
+            placeholder="Search documents..."
+            type="text"
+          />
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <button
+          class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+        </button>
+        <button
+          class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="settings_suggest"
+            >settings_suggest</span
+          >
+        </button>
+        <button
+          class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+        </button>
+        <div class="bg-outline-variant/30 mx-2 h-8 w-[1px]"></div>
+        <img
+          alt="User Profile Avatar"
+          class="border-primary-container h-10 w-10 rounded-full border-2"
+          data-alt="professional portrait of a middle aged male shop owner with a friendly smile in a clean office environment"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpZ7t_YLR9d_bhce2wOmDlnwqE7JrlzDjzB1DVjm2xqIdpMybdEnhHOb-HfE8T-V8lI1c5XAqdbzGzmXC88DH5pvAVa1NDCbjBqgDvL6HZcinA9jYLwSE5DgYeFpCPrU1Wk1dJXdVnPwAbtLq5NPL12ZhzWdxPQWdtF5Cq8PHqRBQOt6816Cz7FdryQdedNbB2TYbbpGttxqYy9BodxJXKcVAhyGBKZJvaCHwkuN5niBeTsSvTzE7y6Va7Z4gb-sea7gBQTs1VHfUv"
+        />
+      </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="ml-72 px-10 pt-28 pb-20">
+      <div class="mx-auto max-w-6xl">
+        <!-- Page Header -->
+        <header class="mb-12">
+          <h2 class="font-headline text-on-surface mb-2 text-4xl font-extrabold tracking-tight">
+            Account Settings
+          </h2>
+          <p class="text-on-surface-variant font-body">
+            Manage your business profile and printing station configuration.
+          </p>
+        </header>
+        <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+          <!-- Basic Business Info Form -->
+          <section
+            class="bg-surface-container-lowest editorial-shadow rounded-lg p-8 lg:col-span-7"
+          >
+            <div class="mb-8 flex items-center gap-3">
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
+              >
+                <span class="material-symbols-outlined" data-icon="store">store</span>
+              </div>
+              <h3 class="font-headline text-xl font-bold">Business Information</h3>
+            </div>
+            <form class="space-y-6">
+              <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                    >Shop Name</label
+                  >
+                  <input
+                    class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                    type="text"
+                    value="PrintEasy Hub - Downtown"
+                  />
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                    >Phone Number</label
+                  >
+                  <input
+                    class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                    type="tel"
+                    value="+1 (555) 012-3456"
+                  />
+                </div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <label
+                  class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                  >Business Email</label
+                >
+                <input
+                  class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                  type="email"
+                  value="contact@printeasydowntown.com"
+                />
+              </div>
+              <div class="flex flex-col gap-2">
+                <label
+                  class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                  >Street Address</label
+                >
+                <input
+                  class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                  type="text"
+                  value="124 Editorial Lane, Suite 400"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-6 md:grid-cols-3">
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                    >City</label
+                  >
+                  <input
+                    class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                    type="text"
+                    value="New York"
+                  />
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label
+                    class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                    >State</label
+                  >
+                  <input
+                    class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                    type="text"
+                    value="NY"
+                  />
+                </div>
+                <div class="col-span-2 flex flex-col gap-2 md:col-span-1">
+                  <label
+                    class="font-label text-on-surface-variant text-xs font-semibold tracking-wider uppercase"
+                    >Zip Code</label
+                  >
+                  <input
+                    class="bg-surface-container-high font-body rounded-lg border-none p-3 transition-all focus:ring-2 focus:ring-primary/40"
+                    type="text"
+                    value="10001"
+                  />
+                </div>
+              </div>
+              <div class="flex justify-end pt-4">
+                <button
+                  class="bg-tertiary-container text-on-tertiary-container flex items-center gap-2 rounded-full px-8 py-3 font-bold transition-all hover:brightness-95"
+                  type="submit"
+                >
+                  <span class="material-symbols-outlined text-lg" data-icon="save">save</span>
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </section>
+          <!-- QR Code Section -->
+          <section class="flex flex-col gap-8 lg:col-span-5">
+            <div
+              class="bg-surface-container-lowest editorial-shadow relative overflow-hidden rounded-lg p-8 text-center"
+            >
+              <!-- Decorative Background Element -->
+              <div
+                class="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-primary/5 blur-2xl"
+              ></div>
+              <div class="relative z-10">
+                <div class="mb-6 flex items-center justify-center gap-3">
+                  <span
+                    class="material-symbols-outlined text-3xl text-primary"
+                    data-icon="qr_code_2"
+                    >qr_code_2</span
+                  >
+                  <h3 class="font-headline text-xl font-bold">Printing Stand QR</h3>
+                </div>
+                <p class="text-on-surface-variant mb-8 px-4 text-sm">
+                  Place this QR code at your shop's printing station. Customers can scan to upload
+                  and print instantly.
+                </p>
+                <!-- QR Code Frame -->
+                <div
+                  class="bg-surface-container editorial-shadow mx-auto mb-8 inline-block rounded-lg border-4 border-white p-6"
+                >
+                  <div class="rounded-md bg-white p-4">
+                    <img
+                      alt="Unique Shop QR Code"
+                      class="h-48 w-48 mix-blend-multiply"
+                      data-alt="clean black and white qr code on a white square background used for digital check-in"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzztIMLmb0YG0_0uLe_2_sbb4ZgeTjkHCvcvWc7HQCPBnR-hRoNGbHUl7mEzL5Veis3m4EodY5q9swOdnEdL-hKP_efOIA6nctL7rttHcZShWNNf5Rp18kkGdI7u_ac7xRAoXgIbm1TySrNFuz1sWrsI-XFi34_8UhccAfzCK8SKVc6bIdQlje5CHe9j_ZrcK2Y5l8YEDQJ6X5DxJWeAdXj8E2D49kmKS6-C79NKB8uy_SRt2BjRLLUG4i5Q-FlBBnVhQoahFbbJIq"
+                    />
+                  </div>
+                  <p class="font-headline mt-4 text-lg font-extrabold tracking-tight text-primary">
+                    SCAN TO PRINT
+                  </p>
+                </div>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <button
+                    class="text-on-primary hover:bg-primary-dim flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-4 text-sm font-bold shadow-md transition-all"
+                  >
+                    <span class="material-symbols-outlined" data-icon="download">download</span>
+                    Download PNG
+                  </button>
+                  <button
+                    class="bg-secondary-container text-on-secondary-container flex items-center justify-center gap-2 rounded-full px-6 py-4 text-sm font-bold transition-all hover:brightness-95"
+                  >
+                    <span class="material-symbols-outlined" data-icon="print">print</span>
+                    Print Standee
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Extra Quick Tip Card -->
+            <div class="bg-primary-container flex items-start gap-4 rounded-lg p-6">
+              <div class="rounded-full bg-white/40 p-2">
+                <span
+                  class="material-symbols-outlined text-on-primary-container"
+                  data-icon="lightbulb"
+                  >lightbulb</span
+                >
+              </div>
+              <div>
+                <h4 class="text-on-primary-container mb-1 font-bold">Pro Tip</h4>
+                <p class="text-on-primary-container/80 text-sm leading-relaxed">
+                  Displaying the QR code on an acrylic stand near the entrance increases
+                  self-service usage by up to 40%.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+        <!-- Danger Zone -->
+        <section class="border-outline-variant/20 mt-16 border-t pt-8">
+          <div
+            class="bg-error/5 border-error/10 flex items-center justify-between rounded-lg border p-6"
+          >
+            <div>
+              <h4 class="text-error font-bold">Account Deactivation</h4>
+              <p class="text-on-surface-variant text-sm">
+                Temporarily disable your shop's digital printing presence.
+              </p>
+            </div>
+            <button
+              class="text-error border-error/20 hover:bg-error/10 rounded-full border px-6 py-2 font-bold transition-all"
+            >
+              Deactivate
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

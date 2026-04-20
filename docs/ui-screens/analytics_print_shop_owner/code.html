@@ -1,0 +1,458 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PrintEasy - Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-error': '#ffefee',
+              'on-background': '#2f2f2f',
+              'on-secondary-container': '#485800',
+              'secondary-container': '#d5ed7e',
+              'on-tertiary-container': '#5b350d',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'secondary-fixed-dim': '#c7df71',
+              'error-container': '#fb5151',
+              'secondary-fixed': '#d5ed7e',
+              'primary-fixed': '#9cf1ce',
+              outline: '#777676',
+              error: '#b31b25',
+              'surface-container-highest': '#dedcdc',
+              'on-primary-fixed': '#004734',
+              'on-tertiary-fixed': '#422200',
+              'surface-variant': '#dedcdc',
+              'on-primary-fixed-variant': '#00664c',
+              primary: '#00694e',
+              'primary-dim': '#005b43',
+              'surface-container-low': '#f3f0f0',
+              'on-surface': '#2f2f2f',
+              'on-secondary': '#e5fe8c',
+              'inverse-surface': '#0e0e0e',
+              'on-tertiary': '#fff0e6',
+              'tertiary-fixed-dim': '#e3ab79',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-fixed-variant': '#506300',
+              'outline-variant': '#aeadac',
+              'on-primary': '#c6ffe5',
+              tertiary: '#7d5228',
+              'secondary-dim': '#465600',
+              'on-primary-container': '#005c44',
+              background: '#f9f6f5',
+              'tertiary-dim': '#70461d',
+              'on-secondary-fixed': '#374400',
+              'surface-dim': '#d6d4d4',
+              'primary-container': '#9cf1ce',
+              'primary-fixed-dim': '#8ee2c0',
+              'on-tertiary-fixed-variant': '#663e16',
+              secondary: '#506300',
+              'surface-tint': '#00694e',
+              'tertiary-container': '#f2b885',
+              'surface-container-high': '#e4e2e1',
+              'on-error-container': '#570008',
+              'surface-container': '#eae8e7',
+              'inverse-primary': '#9cf1ce',
+              'error-dim': '#9f0519',
+              'tertiary-fixed': '#f2b885',
+              'on-surface-variant': '#5c5b5b',
+              'inverse-on-surface': '#9e9c9c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9f6f5;
+      }
+      .editorial-shadow {
+        box-shadow: 0px 12px 32px rgba(47, 47, 47, 0.06);
+      }
+      .chart-grid {
+        background-image:
+          linear-gradient(to right, #e4e2e1 1px, transparent 1px),
+          linear-gradient(to bottom, #e4e2e1 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+    </style>
+  </head>
+  <body class="bg-surface text-on-surface overflow-x-hidden">
+    <!-- SideNavBar Shell -->
+    <aside
+      class="fixed top-0 left-0 z-50 flex h-screen w-72 flex-col overflow-y-auto bg-[#EAE8E7] py-8 dark:bg-[#1A1A1A]"
+    >
+      <div class="mb-12 px-8">
+        <h1
+          class="font-['Plus_Jakarta_Sans'] text-2xl font-black text-[#00694E] dark:text-[#9CF1CE]"
+        >
+          PrintEasy
+        </h1>
+        <p
+          class="text-on-surface/60 font-['Plus_Jakarta_Sans'] text-xs font-semibold tracking-tight"
+        >
+          Shop Owner Dashboard
+        </p>
+      </div>
+      <nav class="flex flex-1 flex-col space-y-2">
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+          href="#"
+        >
+          <span class="material-symbols-outlined">grid_view</span>
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Dashboard</span>
+        </a>
+        <!-- Active State: Analytics -->
+        <a
+          class="ml-4 flex items-center gap-4 rounded-l-full bg-[#FFFFFF] py-4 pl-8 text-[#00694E] shadow-sm transition-all duration-300 dark:bg-[#2F2F2F] dark:text-[#9CF1CE]"
+          href="#"
+        >
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1"
+            >monitoring</span
+          >
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Analytics</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+          href="#"
+        >
+          <span class="material-symbols-outlined">print</span>
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Device Info</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+          href="#"
+        >
+          <span class="material-symbols-outlined">settings</span>
+          <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight"
+            >Account Settings</span
+          >
+        </a>
+      </nav>
+      <div class="mt-auto px-8">
+        <div class="bg-surface-container-highest flex items-center gap-3 rounded-lg p-4">
+          <img
+            alt="User Profile Avatar"
+            class="bg-primary-container h-10 w-10 rounded-full"
+            data-alt="professional headshot of a mature business owner in a modern office environment with soft natural lighting"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd-AUBmsKOLAFqcdO6q_roeKQqwRXZ5ikyKxKAcgsxwqqH1Gb4rjQ3uAjjgpbegQFG0ufLmuWLOT647-LOx0VjJgoXMvNo1v3iAStkr4Rf_kguICwCy9GJ6nfn4jvr3PmQ9-olX6pZvkkSSvgGoimzRSw50eQMwpLB4J_jtMbnMtS3QByFEwqi4vRp5tuQd-Jf0LTbTS89Al9_qm2crS9AM2Lxk9KAvcb1LXhSSI5Sz3bRAhL9qSDie-eGPAP8k3YmnusrZmw7rln8"
+          />
+          <div class="overflow-hidden">
+            <p class="truncate text-sm font-bold">Rajesh Kumar</p>
+            <p class="truncate text-xs opacity-60">Premium Partner</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Main Content Canvas -->
+    <main class="relative ml-72 min-h-screen">
+      <!-- TopNavBar Shell -->
+      <header
+        class="fixed top-0 right-0 z-40 flex h-20 w-[calc(100%-18rem)] items-center justify-between bg-[#F9F6F5]/80 px-10 backdrop-blur-3xl dark:bg-[#1A1A1A]/80"
+      >
+        <div class="flex items-center gap-6">
+          <div class="group relative">
+            <span
+              class="material-symbols-outlined text-outline absolute top-1/2 left-3 -translate-y-1/2"
+              >search</span
+            >
+            <input
+              class="bg-surface-container-high w-64 rounded-full border-none py-2 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:ring-primary/40"
+              placeholder="Search reports..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+          >
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <button
+            class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+          >
+            <span class="material-symbols-outlined">settings_suggest</span>
+          </button>
+          <button
+            class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+          >
+            <span class="material-symbols-outlined">help_outline</span>
+          </button>
+        </div>
+      </header>
+      <section class="px-10 pt-28 pb-20">
+        <!-- Header Section -->
+        <div class="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <h2
+              class="font-headline text-on-surface text-[3.5rem] leading-tight font-extrabold tracking-tight"
+            >
+              Visual <span class="text-primary italic">Pulse</span>
+            </h2>
+            <p class="font-body text-on-surface/60 max-w-md">
+              Real-time performance analytics for your high-volume print operations.
+            </p>
+          </div>
+          <!-- Date Range Picker Mock -->
+          <div
+            class="bg-surface-container editorial-shadow flex items-center gap-2 rounded-full p-2"
+          >
+            <button
+              class="bg-surface-container-lowest rounded-full px-6 py-2 text-sm font-semibold shadow-sm"
+            >
+              This Week
+            </button>
+            <button
+              class="hover:bg-surface-container-lowest/50 rounded-full px-6 py-2 text-sm font-semibold transition-all"
+            >
+              Last 30 Days
+            </button>
+            <div class="bg-outline-variant/30 mx-2 h-6 w-px"></div>
+            <button class="hover:bg-surface-container-lowest rounded-full p-2 transition-all">
+              <span class="material-symbols-outlined text-xl">calendar_month</span>
+            </button>
+          </div>
+        </div>
+        <!-- Summary Stats: Bento Style -->
+        <div class="mb-12 grid grid-cols-1 gap-6 md:grid-cols-4">
+          <div
+            class="bg-primary-container group relative overflow-hidden rounded-lg p-8 md:col-span-2"
+          >
+            <div class="relative z-10">
+              <span
+                class="label-md text-on-primary-container/60 mb-2 block font-bold tracking-widest uppercase"
+                >Total Revenue</span
+              >
+              <h3 class="text-on-primary-container mb-4 text-5xl font-black">₹1,42,850</h3>
+              <div class="text-on-primary-container flex items-center gap-2 font-bold">
+                <span class="material-symbols-outlined">trending_up</span>
+                <span>+12.4% vs last week</span>
+              </div>
+            </div>
+            <div
+              class="absolute -right-10 -bottom-10 opacity-10 transition-transform duration-700 group-hover:scale-110"
+            >
+              <span class="material-symbols-outlined text-[12rem]">payments</span>
+            </div>
+          </div>
+          <div class="bg-surface-container-lowest editorial-shadow rounded-lg p-8">
+            <span class="label-md text-on-surface/40 mb-2 block font-bold tracking-widest uppercase"
+              >Total Prints</span
+            >
+            <h3 class="text-on-surface mb-2 text-4xl font-extrabold">12,492</h3>
+            <p class="text-sm font-medium text-primary">High production day</p>
+          </div>
+          <div class="bg-tertiary-container editorial-shadow rounded-lg p-8">
+            <span
+              class="label-md text-on-tertiary-container/40 mb-2 block font-bold tracking-widest uppercase"
+              >Avg. Order</span
+            >
+            <h3 class="text-on-tertiary-container mb-2 text-4xl font-extrabold">₹540</h3>
+            <p class="text-tertiary text-sm font-medium">Stable margins</p>
+          </div>
+        </div>
+        <!-- Analytics Charts -->
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <!-- Revenue Line Chart -->
+          <div class="bg-surface-container-lowest editorial-shadow rounded-lg p-10 lg:col-span-2">
+            <div class="mb-10 flex items-center justify-between">
+              <div>
+                <h4 class="font-headline text-2xl font-bold">Revenue Performance</h4>
+                <p class="text-on-surface/50 text-sm">Daily earnings breakdown (INR)</p>
+              </div>
+              <div class="flex gap-4">
+                <div class="flex items-center gap-2">
+                  <div class="h-3 w-3 rounded-full bg-primary"></div>
+                  <span class="text-xs font-bold tracking-tighter uppercase">Current</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="bg-outline-variant h-3 w-3 rounded-full"></div>
+                  <span class="text-xs font-bold tracking-tighter uppercase">Target</span>
+                </div>
+              </div>
+            </div>
+            <!-- Mock Line Chart Visualization -->
+            <div class="relative h-80 w-full">
+              <div class="chart-grid absolute inset-0 opacity-20"></div>
+              <svg class="h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 300">
+                <!-- Background Fill Area -->
+                <path
+                  d="M0,250 L100,220 L200,240 L300,180 L400,210 L500,150 L600,170 L700,110 L800,130 L900,80 L1000,100 L1000,300 L0,300 Z"
+                  fill="url(#grad1)"
+                ></path>
+                <defs>
+                  <lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+                    <stop offset="0%" style="stop-color: #9cf1ce; stop-opacity: 0.4"></stop>
+                    <stop offset="100%" style="stop-color: #9cf1ce; stop-opacity: 0"></stop>
+                  </lineargradient>
+                </defs>
+                <!-- Main Line -->
+                <path
+                  d="M0,250 L100,220 L200,240 L300,180 L400,210 L500,150 L600,170 L700,110 L800,130 L900,80 L1000,100"
+                  fill="none"
+                  stroke="#00694e"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="4"
+                ></path>
+                <!-- Target Line (Dashed) -->
+                <line
+                  stroke="#aeadac"
+                  stroke-dasharray="8,8"
+                  stroke-width="2"
+                  x1="0"
+                  x2="1000"
+                  y1="150"
+                  y2="150"
+                ></line>
+              </svg>
+              <div
+                class="text-on-surface/40 mt-6 flex justify-between px-2 text-xs font-bold tracking-widest uppercase"
+              >
+                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span
+                ><span>Sat</span><span>Sun</span>
+              </div>
+            </div>
+          </div>
+          <!-- Print Volume Bar Chart -->
+          <div class="bg-surface-container-lowest editorial-shadow flex flex-col rounded-lg p-10">
+            <div class="mb-10">
+              <h4 class="font-headline text-2xl font-bold">Print Volume</h4>
+              <p class="text-on-surface/50 text-sm">Units per paper type</p>
+            </div>
+            <div class="flex flex-1 flex-col justify-between gap-6">
+              <!-- Bar 1 -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold tracking-tight uppercase">
+                  <span>Glossy Photo</span>
+                  <span>2.4k</span>
+                </div>
+                <div class="bg-surface-container h-3 overflow-hidden rounded-full">
+                  <div class="bg-primary-dim h-full rounded-full" style="width: 75%"></div>
+                </div>
+              </div>
+              <!-- Bar 2 -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold tracking-tight uppercase">
+                  <span>Standard A4</span>
+                  <span>8.1k</span>
+                </div>
+                <div class="bg-surface-container h-3 overflow-hidden rounded-full">
+                  <div class="h-full rounded-full bg-primary" style="width: 90%"></div>
+                </div>
+              </div>
+              <!-- Bar 3 -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold tracking-tight uppercase">
+                  <span>Heavy Cardstock</span>
+                  <span>1.2k</span>
+                </div>
+                <div class="bg-surface-container h-3 overflow-hidden rounded-full">
+                  <div class="bg-tertiary-container h-full rounded-full" style="width: 40%"></div>
+                </div>
+              </div>
+              <!-- Bar 4 -->
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm font-bold tracking-tight uppercase">
+                  <span>Vinyl Decals</span>
+                  <span>0.8k</span>
+                </div>
+                <div class="bg-surface-container h-3 overflow-hidden rounded-full">
+                  <div class="bg-secondary-container h-full rounded-full" style="width: 25%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="border-outline-variant/10 mt-10 border-t pt-10 text-center">
+              <button
+                class="flex items-center justify-center gap-2 text-sm font-bold text-primary transition-all hover:gap-4"
+              >
+                Export PDF Report <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Detailed Grid -->
+        <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div class="bg-surface-container flex items-center justify-between rounded-lg p-8">
+            <div class="flex items-center gap-6">
+              <div
+                class="bg-surface-container-lowest flex h-16 w-16 items-center justify-center rounded-lg text-primary"
+              >
+                <span class="material-symbols-outlined text-4xl">timer</span>
+              </div>
+              <div>
+                <h5 class="text-lg font-bold">Peak Printing Hours</h5>
+                <p class="text-sm opacity-60">Highest traffic between 11 AM - 3 PM</p>
+              </div>
+            </div>
+            <span
+              class="bg-primary-container text-on-primary-container rounded-full px-4 py-1 text-xs font-bold tracking-widest uppercase"
+              >Optimized</span
+            >
+          </div>
+          <div class="bg-surface-container flex items-center justify-between rounded-lg p-8">
+            <div class="flex items-center gap-6">
+              <div
+                class="bg-surface-container-lowest text-tertiary flex h-16 w-16 items-center justify-center rounded-lg"
+              >
+                <span class="material-symbols-outlined text-4xl">inventory_2</span>
+              </div>
+              <div>
+                <h5 class="text-lg font-bold">Ink Efficiency</h5>
+                <p class="text-sm opacity-60">Cyan levels dropping faster than projected</p>
+              </div>
+            </div>
+            <span
+              class="bg-tertiary-container text-on-tertiary-container rounded-full px-4 py-1 text-xs font-bold tracking-widest uppercase"
+              >Action Required</span
+            >
+          </div>
+        </div>
+      </section>
+      <!-- Floating Contextual FAB -->
+      <button
+        class="text-on-primary editorial-shadow fixed right-10 bottom-10 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-primary transition-all hover:scale-105 active:scale-95"
+      >
+        <span class="material-symbols-outlined text-3xl">add</span>
+      </button>
+    </main>
+  </body>
+</html>

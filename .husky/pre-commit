@@ -1,0 +1,4 @@
+
+pnpm type-check
+pnpm format:check
+pnpm lint

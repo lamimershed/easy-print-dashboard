@@ -1,0 +1,608 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PrintEasy - Device Info</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-error': '#ffefee',
+              'on-background': '#2f2f2f',
+              'on-secondary-container': '#485800',
+              'secondary-container': '#d5ed7e',
+              'on-tertiary-container': '#5b350d',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'secondary-fixed-dim': '#c7df71',
+              'error-container': '#fb5151',
+              'secondary-fixed': '#d5ed7e',
+              'primary-fixed': '#9cf1ce',
+              outline: '#777676',
+              error: '#b31b25',
+              'surface-container-highest': '#dedcdc',
+              'on-primary-fixed': '#004734',
+              'on-tertiary-fixed': '#422200',
+              'surface-variant': '#dedcdc',
+              'on-primary-fixed-variant': '#00664c',
+              primary: '#00694e',
+              'primary-dim': '#005b43',
+              'surface-container-low': '#f3f0f0',
+              'on-surface': '#2f2f2f',
+              'on-secondary': '#e5fe8c',
+              'inverse-surface': '#0e0e0e',
+              'on-tertiary': '#fff0e6',
+              'tertiary-fixed-dim': '#e3ab79',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-fixed-variant': '#506300',
+              'outline-variant': '#aeadac',
+              'on-primary': '#c6ffe5',
+              tertiary: '#7d5228',
+              'secondary-dim': '#465600',
+              'on-primary-container': '#005c44',
+              background: '#f9f6f5',
+              'tertiary-dim': '#70461d',
+              'on-secondary-fixed': '#374400',
+              'surface-dim': '#d6d4d4',
+              'primary-container': '#9cf1ce',
+              'primary-fixed-dim': '#8ee2c0',
+              'on-tertiary-fixed-variant': '#663e16',
+              secondary: '#506300',
+              'surface-tint': '#00694e',
+              'tertiary-container': '#f2b885',
+              'surface-container-high': '#e4e2e1',
+              'on-error-container': '#570008',
+              'surface-container': '#eae8e7',
+              'inverse-primary': '#9cf1ce',
+              'error-dim': '#9f0519',
+              'tertiary-fixed': '#f2b885',
+              'on-surface-variant': '#5c5b5b',
+              'inverse-on-surface': '#9e9c9c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .font-jakarta {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+    </style>
+  </head>
+  <body class="bg-surface text-on-surface">
+    <!-- SideNavBar -->
+    <aside
+      class="fixed top-0 left-0 z-50 flex h-screen w-72 flex-col overflow-y-auto bg-[#EAE8E7] py-8 dark:bg-[#1A1A1A]"
+    >
+      <div class="mb-12 px-8">
+        <h1
+          class="font-['Plus_Jakarta_Sans'] text-2xl font-black tracking-tight text-[#00694E] dark:text-[#9CF1CE]"
+        >
+          PrintEasy
+        </h1>
+        <p
+          class="text-on-surface-variant/60 mt-1 font-['Plus_Jakarta_Sans'] text-xs font-semibold tracking-widest uppercase"
+        >
+          Shop Owner Dashboard
+        </p>
+      </div>
+      <nav class="flex-1">
+        <ul class="space-y-2">
+          <li>
+            <a
+              class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all duration-300 hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+              href="#"
+            >
+              <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+              <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all duration-300 hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+              href="#"
+            >
+              <span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+              <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight">Analytics</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="ml-4 flex items-center gap-4 rounded-l-full bg-[#FFFFFF] py-4 pl-8 text-[#00694E] shadow-sm transition-all duration-300 dark:bg-[#2F2F2F] dark:text-[#9CF1CE]"
+              href="#"
+            >
+              <span
+                class="material-symbols-outlined"
+                data-icon="print"
+                style="font-variation-settings: 'FILL' 1"
+                >print</span
+              >
+              <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight"
+                >Device Info</span
+              >
+            </a>
+          </li>
+          <li>
+            <a
+              class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all duration-300 hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+              href="#"
+            >
+              <span class="material-symbols-outlined" data-icon="settings">settings</span>
+              <span class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight"
+                >Account Settings</span
+              >
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="mt-auto px-8">
+        <div class="bg-surface-container-highest/30 flex items-center gap-3 rounded-lg p-4">
+          <div class="h-10 w-10 overflow-hidden rounded-full bg-primary">
+            <img
+              alt="User Profile Avatar"
+              class="h-full w-full object-cover"
+              data-alt="Close-up portrait of a professional male shop owner with a friendly smile, natural studio lighting"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDm6tDS40k3eb4VGpuvBRrlpk0S2uuBmqP4AWGNpwe8DCAeCwTvG2j6KBJN4aP9SU-roDZM7H8A5UypiTv_CU5-aQ4PxI9kpHMFLrR5pbamAfwg02IRc0TF2X6vmLb0iMN5UNkyv0HNFqQLJSnHYrPthYAzVoQ2jkrkbv-zrFN8m160vBLC_Tg3xwm0-uL68V2Q89TA8BmMxElWnMU1JqoazYUy-cRq_Y04kaAiZbPb9g2kwbXeZYvdi72hOOXahv4fF0yP5v7-WIj"
+            />
+          </div>
+          <div>
+            <p class="text-sm font-bold">Alex Chen</p>
+            <p class="text-xs opacity-60">Store #402</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- TopNavBar -->
+    <header
+      class="fixed top-0 right-0 z-40 flex h-20 w-[calc(100%-18rem)] items-center justify-between bg-[#F9F6F5]/80 px-10 backdrop-blur-3xl dark:bg-[#1A1A1A]/80"
+    >
+      <div
+        class="bg-surface-container-high/50 group focus-within:bg-surface-container-lowest flex w-96 items-center gap-4 rounded-full px-4 py-2 transition-all"
+      >
+        <span class="material-symbols-outlined text-outline">search</span>
+        <input
+          class="font-body w-full border-none bg-transparent text-sm focus:ring-0"
+          placeholder="Search devices or logs..."
+          type="text"
+        />
+      </div>
+      <div class="flex items-center gap-6">
+        <button
+          class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] active:opacity-80 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+        </button>
+        <button
+          class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] active:opacity-80 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="settings_suggest"
+            >settings_suggest</span
+          >
+        </button>
+        <button
+          class="rounded-full p-2 text-[#2F2F2F] transition-all hover:bg-[#E4E2E1] active:opacity-80 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+        </button>
+        <div class="bg-outline-variant/30 h-8 w-px"></div>
+        <button
+          class="text-on-primary font-jakarta hover:bg-primary-dim rounded-full bg-primary px-6 py-2 text-sm font-bold shadow-lg shadow-primary/20 transition-colors"
+        >
+          Add New Device
+        </button>
+      </div>
+    </header>
+    <!-- Main Content -->
+    <main class="ml-72 px-10 pt-28 pb-12">
+      <div class="mb-10 flex items-end justify-between">
+        <div>
+          <h2 class="font-jakarta text-on-background mb-2 text-5xl font-black tracking-tight">
+            Connected Devices
+          </h2>
+          <p class="text-on-surface-variant font-body">
+            Manage your printer fleet and monitoring status across all locations.
+          </p>
+        </div>
+        <div class="flex gap-2">
+          <span
+            class="bg-primary-container text-on-primary-container inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold"
+          >
+            <span class="h-2 w-2 animate-pulse rounded-full bg-primary"></span>
+            8 ACTIVE
+          </span>
+          <span
+            class="bg-surface-container-highest text-on-surface-variant inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold"
+          >
+            2 OFFLINE
+          </span>
+        </div>
+      </div>
+      <!-- Bento Grid Layout for Devices -->
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <!-- Hero Device Card (Larger) -->
+        <div
+          class="bg-surface-container-lowest group relative overflow-hidden rounded-lg p-8 lg:col-span-2"
+        >
+          <div
+            class="bg-primary-container/20 group-hover:bg-primary-container/40 absolute -right-12 -bottom-12 h-64 w-64 rounded-full blur-3xl transition-all"
+          ></div>
+          <div class="relative z-10 flex h-full flex-col">
+            <div class="mb-8 flex items-start justify-between">
+              <div>
+                <span
+                  class="mb-2 block text-[0.65rem] font-black tracking-[0.2em] text-primary uppercase"
+                  >Primary Production Unit</span
+                >
+                <h3 class="font-jakarta text-on-surface text-3xl font-extrabold">
+                  ProJet Master 9000
+                </h3>
+                <p class="text-on-surface-variant font-body">Model: XP-9000-Ind</p>
+              </div>
+              <span
+                class="bg-primary-container text-on-primary-container rounded-full px-4 py-1 text-xs font-bold tracking-wider uppercase"
+                >Ready to Print</span
+              >
+            </div>
+            <div class="mb-8 grid grid-cols-3 gap-8">
+              <div class="space-y-1">
+                <p class="text-outline text-[0.65rem] font-bold tracking-wider uppercase">
+                  Connection
+                </p>
+                <div class="text-on-surface flex items-center gap-2 font-semibold">
+                  <span class="material-symbols-outlined scale-75 text-primary">wifi</span>
+                  WiFi 6G
+                </div>
+              </div>
+              <div class="space-y-1">
+                <p class="text-outline text-[0.65rem] font-bold tracking-wider uppercase">
+                  Ink Levels
+                </p>
+                <div class="bg-surface-container mt-2 h-1.5 w-full rounded-full">
+                  <div class="h-full w-[88%] rounded-full bg-primary"></div>
+                </div>
+                <p class="mt-1 text-xs font-bold">88% CMYK</p>
+              </div>
+              <div class="space-y-1">
+                <p class="text-outline text-[0.65rem] font-bold tracking-wider uppercase">
+                  Today's Jobs
+                </p>
+                <p class="text-on-surface text-xl font-black">
+                  142 <span class="text-on-surface-variant text-xs font-normal">pages</span>
+                </p>
+              </div>
+            </div>
+            <div class="mt-auto flex items-center gap-4">
+              <button
+                class="text-on-primary font-jakarta flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-bold transition-all hover:shadow-xl hover:shadow-primary/20 active:scale-95"
+              >
+                <span class="material-symbols-outlined text-sm">settings</span>
+                Configure Device
+              </button>
+              <button
+                class="bg-surface-container-high text-on-surface font-jakarta hover:bg-surface-container-highest rounded-full px-6 py-3 text-sm font-bold transition-all"
+              >
+                View Logs
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Stats Card -->
+        <div
+          class="bg-tertiary-container relative flex flex-col justify-between overflow-hidden rounded-lg p-8"
+        >
+          <div class="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/20 blur-2xl"></div>
+          <div>
+            <h4 class="font-jakarta text-on-tertiary-container mb-4 text-xl font-extrabold">
+              Uptime Report
+            </h4>
+            <div class="space-y-4">
+              <div
+                class="flex items-center justify-between rounded-xl bg-white/40 p-4 backdrop-blur-sm"
+              >
+                <span class="text-on-tertiary-container text-sm font-bold">Average Daily Run</span>
+                <span class="text-on-tertiary-container text-lg font-black">18.4h</span>
+              </div>
+              <div
+                class="flex items-center justify-between rounded-xl bg-white/40 p-4 backdrop-blur-sm"
+              >
+                <span class="text-on-tertiary-container text-sm font-bold">Maintenance Due</span>
+                <span class="text-on-tertiary-container text-lg font-black">4 days</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8">
+            <p class="text-on-tertiary-container/60 mb-2 text-[0.65rem] font-black uppercase">
+              Fleet Health
+            </p>
+            <div class="flex h-3 gap-1">
+              <div class="flex-1 rounded-full bg-primary"></div>
+              <div class="flex-1 rounded-full bg-primary"></div>
+              <div class="flex-1 rounded-full bg-primary"></div>
+              <div class="flex-1 rounded-full bg-primary"></div>
+              <div class="flex-1 rounded-full bg-primary"></div>
+              <div class="flex-1 rounded-full bg-secondary"></div>
+              <div class="bg-tertiary flex-1 rounded-full"></div>
+              <div class="bg-error flex-[0.5] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        <!-- List of other devices -->
+        <div class="lg:col-span-3">
+          <div class="bg-surface-container-lowest overflow-hidden rounded-lg">
+            <div
+              class="border-surface-container flex items-center justify-between border-b px-8 py-6"
+            >
+              <h4 class="font-jakarta text-xl font-extrabold">All Secondary Devices</h4>
+              <div class="flex items-center gap-4">
+                <button class="flex items-center gap-1 text-sm font-bold text-primary">
+                  <span class="material-symbols-outlined text-sm">filter_list</span>
+                  Filter
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse text-left">
+                <thead>
+                  <tr class="bg-surface-container-low">
+                    <th
+                      class="text-outline px-8 py-4 text-[0.65rem] font-black tracking-widest uppercase"
+                    >
+                      Printer Name
+                    </th>
+                    <th
+                      class="text-outline px-8 py-4 text-[0.65rem] font-black tracking-widest uppercase"
+                    >
+                      Model
+                    </th>
+                    <th
+                      class="text-outline px-8 py-4 text-[0.65rem] font-black tracking-widest uppercase"
+                    >
+                      Connection
+                    </th>
+                    <th
+                      class="text-outline px-8 py-4 text-[0.65rem] font-black tracking-widest uppercase"
+                    >
+                      Status
+                    </th>
+                    <th
+                      class="text-outline px-8 py-4 text-right text-[0.65rem] font-black tracking-widest uppercase"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-surface-container divide-y">
+                  <!-- Printer 1 -->
+                  <tr class="group hover:bg-surface-container-low/50 transition-colors">
+                    <td class="px-8 py-6">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="bg-surface-container-high flex h-10 w-10 items-center justify-center rounded-lg text-primary"
+                        >
+                          <span class="material-symbols-outlined">print</span>
+                        </div>
+                        <span class="text-on-surface font-bold">Counter_Alpha_01</span>
+                      </div>
+                    </td>
+                    <td class="text-on-surface-variant px-8 py-6 text-sm font-medium">
+                      LaserJet Pro M404
+                    </td>
+                    <td class="px-8 py-6">
+                      <span
+                        class="bg-surface-container text-on-surface inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black tracking-tighter uppercase"
+                      >
+                        <span class="material-symbols-outlined text-[14px]">usb</span>
+                        USB 3.0
+                      </span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
+                        <span class="h-2 w-2 rounded-full bg-primary"></span>
+                        Online
+                      </span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <button
+                        class="bg-surface-container-high hover:bg-primary-container hover:text-on-primary-container ml-auto flex h-10 w-10 items-center justify-center rounded-full transition-all"
+                      >
+                        <span class="material-symbols-outlined text-sm">settings</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Printer 2 -->
+                  <tr class="group hover:bg-surface-container-low/50 transition-colors">
+                    <td class="px-8 py-6">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="bg-surface-container-high flex h-10 w-10 items-center justify-center rounded-lg text-primary"
+                        >
+                          <span class="material-symbols-outlined">print</span>
+                        </div>
+                        <span class="text-on-surface font-bold">Floor_Office_Jet</span>
+                      </div>
+                    </td>
+                    <td class="text-on-surface-variant px-8 py-6 text-sm font-medium">
+                      Epson EcoTank L3250
+                    </td>
+                    <td class="px-8 py-6">
+                      <span
+                        class="bg-surface-container text-on-surface inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black tracking-tighter uppercase"
+                      >
+                        <span class="material-symbols-outlined text-[14px]">wifi</span>
+                        WiFi 2.4G
+                      </span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
+                        <span class="h-2 w-2 rounded-full bg-primary"></span>
+                        Online
+                      </span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <button
+                        class="bg-surface-container-high hover:bg-primary-container hover:text-on-primary-container ml-auto flex h-10 w-10 items-center justify-center rounded-full transition-all"
+                      >
+                        <span class="material-symbols-outlined text-sm">settings</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Printer 3 (Offline) -->
+                  <tr class="group hover:bg-surface-container-low/50 transition-colors">
+                    <td class="px-8 py-6">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="bg-surface-container-high text-outline flex h-10 w-10 items-center justify-center rounded-lg"
+                        >
+                          <span class="material-symbols-outlined">print_disabled</span>
+                        </div>
+                        <span class="text-outline font-bold">Warehouse_Plotter</span>
+                      </div>
+                    </td>
+                    <td class="text-on-surface-variant px-8 py-6 text-sm font-medium">
+                      HP DesignJet T650
+                    </td>
+                    <td class="px-8 py-6">
+                      <span
+                        class="bg-surface-container text-outline inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black tracking-tighter uppercase"
+                      >
+                        <span class="material-symbols-outlined text-[14px]">lan</span>
+                        Ethernet
+                      </span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="text-error inline-flex items-center gap-1.5 text-xs font-bold">
+                        <span class="bg-error h-2 w-2 rounded-full"></span>
+                        Disconnected
+                      </span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <button
+                        class="bg-surface-container-high hover:bg-error-container hover:text-on-error ml-auto flex h-10 w-10 items-center justify-center rounded-full transition-all"
+                      >
+                        <span class="material-symbols-outlined text-sm">build</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Printer 4 -->
+                  <tr class="group hover:bg-surface-container-low/50 border-none transition-colors">
+                    <td class="px-8 py-6">
+                      <div class="flex items-center gap-3">
+                        <div
+                          class="bg-surface-container-high flex h-10 w-10 items-center justify-center rounded-lg text-primary"
+                        >
+                          <span class="material-symbols-outlined">print</span>
+                        </div>
+                        <span class="text-on-surface font-bold">Label_Station_04</span>
+                      </div>
+                    </td>
+                    <td class="text-on-surface-variant px-8 py-6 text-sm font-medium">
+                      Brother QL-800
+                    </td>
+                    <td class="px-8 py-6">
+                      <span
+                        class="bg-surface-container text-on-surface inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black tracking-tighter uppercase"
+                      >
+                        <span class="material-symbols-outlined text-[14px]">usb</span>
+                        USB 2.0
+                      </span>
+                    </td>
+                    <td class="px-8 py-6">
+                      <span class="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
+                        <span class="h-2 w-2 rounded-full bg-primary"></span>
+                        Online
+                      </span>
+                    </td>
+                    <td class="px-8 py-6 text-right">
+                      <button
+                        class="bg-surface-container-high hover:bg-primary-container hover:text-on-primary-container ml-auto flex h-10 w-10 items-center justify-center rounded-full transition-all"
+                      >
+                        <span class="material-symbols-outlined text-sm">settings</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- System Alerts / Activity Overlay (Editorial Element) -->
+      <div
+        class="bg-surface-container mt-12 flex flex-col items-center gap-12 rounded-lg p-8 md:flex-row"
+      >
+        <div class="flex-1">
+          <h5 class="font-jakarta text-on-surface mb-2 text-2xl font-extrabold">
+            Automated Maintenance
+          </h5>
+          <p class="text-on-surface-variant">
+            Your devices are scheduled for a routine health check every Monday at 3:00 AM. No manual
+            action is required unless a critical failure is detected.
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <div
+            class="bg-surface-container-lowest rounded-2xl border-l-4 border-primary p-6 shadow-sm"
+          >
+            <p class="text-outline mb-2 text-[0.65rem] font-black uppercase">Last Sync</p>
+            <p class="font-jakarta font-bold">2 mins ago</p>
+          </div>
+          <div
+            class="bg-surface-container-lowest border-tertiary rounded-2xl border-l-4 p-6 shadow-sm"
+          >
+            <p class="text-outline mb-2 text-[0.65rem] font-black uppercase">Network Load</p>
+            <p class="font-jakarta font-bold">Stable (12ms)</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- FAB for quick action -->
+    <button
+      class="text-on-primary fixed right-10 bottom-10 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-primary shadow-2xl shadow-primary/40 transition-all hover:scale-105 active:scale-95"
+    >
+      <span class="material-symbols-outlined text-3xl">add</span>
+    </button>
+  </body>
+</html>

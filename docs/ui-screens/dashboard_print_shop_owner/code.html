@@ -1,0 +1,527 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PrintEasy | Shop Owner Dashboard</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'on-error': '#ffefee',
+              'on-background': '#2f2f2f',
+              'on-secondary-container': '#485800',
+              'secondary-container': '#d5ed7e',
+              'on-tertiary-container': '#5b350d',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'secondary-fixed-dim': '#c7df71',
+              'error-container': '#fb5151',
+              'secondary-fixed': '#d5ed7e',
+              'primary-fixed': '#9cf1ce',
+              outline: '#777676',
+              error: '#b31b25',
+              'surface-container-highest': '#dedcdc',
+              'on-primary-fixed': '#004734',
+              'on-tertiary-fixed': '#422200',
+              'surface-variant': '#dedcdc',
+              'on-primary-fixed-variant': '#00664c',
+              primary: '#00694e',
+              'primary-dim': '#005b43',
+              'surface-container-low': '#f3f0f0',
+              'on-surface': '#2f2f2f',
+              'on-secondary': '#e5fe8c',
+              'inverse-surface': '#0e0e0e',
+              'on-tertiary': '#fff0e6',
+              'tertiary-fixed-dim': '#e3ab79',
+              'surface-container-lowest': '#ffffff',
+              'on-secondary-fixed-variant': '#506300',
+              'outline-variant': '#aeadac',
+              'on-primary': '#c6ffe5',
+              tertiary: '#7d5228',
+              'secondary-dim': '#465600',
+              'on-primary-container': '#005c44',
+              background: '#f9f6f5',
+              'tertiary-dim': '#70461d',
+              'on-secondary-fixed': '#374400',
+              'surface-dim': '#d6d4d4',
+              'primary-container': '#9cf1ce',
+              'primary-fixed-dim': '#8ee2c0',
+              'on-tertiary-fixed-variant': '#663e16',
+              secondary: '#506300',
+              'surface-tint': '#00694e',
+              'tertiary-container': '#f2b885',
+              'surface-container-high': '#e4e2e1',
+              'on-error-container': '#570008',
+              'surface-container': '#eae8e7',
+              'inverse-primary': '#9cf1ce',
+              'error-dim': '#9f0519',
+              'tertiary-fixed': '#f2b885',
+              'on-surface-variant': '#5c5b5b',
+              'inverse-on-surface': '#9e9c9c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9f6f5;
+      }
+      h1,
+      h2,
+      h3,
+      .brand-font {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-surface text-on-surface">
+    <!-- SideNavBar Component -->
+    <aside
+      class="fixed top-0 left-0 z-50 flex h-screen w-72 flex-col overflow-y-auto bg-[#EAE8E7] py-8 font-['Plus_Jakarta_Sans'] font-semibold tracking-tight dark:bg-[#1A1A1A]"
+    >
+      <div class="mb-12 px-8">
+        <h1 class="text-2xl font-black text-[#00694E] dark:text-[#9CF1CE]">PrintEasy</h1>
+        <p class="mt-1 text-xs tracking-widest uppercase opacity-60">Shop Owner Dashboard</p>
+      </div>
+      <nav class="flex flex-1 flex-col space-y-2">
+        <!-- Active: Dashboard -->
+        <a
+          class="ml-4 flex items-center gap-4 rounded-l-full bg-[#FFFFFF] py-4 pl-8 text-[#00694E] shadow-sm transition-all duration-300 dark:bg-[#2F2F2F] dark:text-[#9CF1CE]"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+          <span>Dashboard</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+          <span>Analytics</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="print">print</span>
+          <span>Device Info</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-4 pl-12 text-[#2F2F2F] opacity-70 transition-all hover:bg-[#FFFFFF]/50 hover:opacity-100 dark:text-[#E4E2E1] dark:hover:bg-[#2F2F2F]/50"
+          href="#"
+        >
+          <span class="material-symbols-outlined" data-icon="settings">settings</span>
+          <span>Account Settings</span>
+        </a>
+      </nav>
+      <div class="mt-auto px-8">
+        <div class="bg-surface-container-low flex items-center gap-3 rounded-lg p-4">
+          <div
+            class="text-on-primary flex h-10 w-10 items-center justify-center rounded-full bg-primary font-bold"
+          >
+            JD
+          </div>
+          <div>
+            <p class="text-sm font-bold">Jayesh D.</p>
+            <p class="text-xs opacity-60">Admin</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- TopNavBar Component -->
+    <header
+      class="fixed top-0 right-0 z-40 flex h-20 w-[calc(100%-18rem)] items-center justify-between bg-[#F9F6F5]/80 px-10 backdrop-blur-3xl dark:bg-[#1A1A1A]/80"
+    >
+      <div class="bg-surface-container-high flex w-96 items-center gap-4 rounded-full px-4 py-2">
+        <span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+        <input
+          class="w-full border-none bg-transparent text-sm focus:ring-0"
+          placeholder="Search orders, files..."
+          type="text"
+        />
+      </div>
+      <div class="flex items-center gap-6">
+        <button
+          class="rounded-full p-2 text-[#00694E] transition-all hover:bg-[#E4E2E1] dark:text-[#9CF1CE] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+        </button>
+        <button
+          class="rounded-full p-2 text-[#00694E] transition-all hover:bg-[#E4E2E1] dark:text-[#9CF1CE] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="settings_suggest"
+            >settings_suggest</span
+          >
+        </button>
+        <button
+          class="rounded-full p-2 text-[#00694E] transition-all hover:bg-[#E4E2E1] dark:text-[#9CF1CE] dark:hover:bg-[#2F2F2F]"
+        >
+          <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+        </button>
+        <div class="border-primary-container h-10 w-10 overflow-hidden rounded-full border-2">
+          <img
+            alt="User Profile Avatar"
+            class="h-full w-full object-cover"
+            data-alt="Professional headshot of a shop manager in a brightly lit modern office environment, warm and friendly expression"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgr1Cpv2UUnxjqQ-9YWbVlvKkGDAMxwpC22cqyASO3mwIUxaDqes16aPXlrb0vaCihvm88zZtzThAV_0Gw1rcXMA2W5840eyzGsqPAYVV_I7DdGIsIHDYsCIMfg6cIK3M5Wr9f5bHZgGNT_JrXVQuFK4KdJOw9sb3FshfBjqtc2EOjTf-gQXNOX_8PdPk32yeN-Sa3P6cnwTW2mjc5ys0HMznaGEwWUxMAbOGLNe0zHbaX4Q5wCbpFXooOlgdC8VqFvM7aT5rklMX5"
+          />
+        </div>
+      </div>
+    </header>
+    <!-- Main Content -->
+    <main class="ml-72 px-10 pt-28 pb-12">
+      <!-- Greeting Section -->
+      <section class="mb-10">
+        <h2 class="text-on-surface mb-2 text-4xl font-extrabold tracking-tight">
+          Good Morning, Print Shop
+        </h2>
+        <p class="text-on-surface-variant font-medium">
+          Here's what's happening at your floor today.
+        </p>
+      </section>
+      <!-- Stats Row (Editorial Bento Style) -->
+      <div class="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <!-- Stat 1 -->
+        <div class="bg-primary-container group relative overflow-hidden rounded-lg p-8">
+          <div class="relative z-10">
+            <span class="text-on-primary-container text-sm font-bold tracking-widest uppercase"
+              >Today's Customers</span
+            >
+            <div class="text-on-primary-container mt-4 mb-2 text-5xl font-black">42</div>
+            <div class="text-on-primary-container/80 flex items-center gap-1 text-sm font-semibold">
+              <span class="material-symbols-outlined text-sm" data-icon="trending_up"
+                >trending_up</span
+              >
+              <span>12% from yesterday</span>
+            </div>
+          </div>
+          <span
+            class="material-symbols-outlined text-on-primary-container absolute -right-4 -bottom-4 transform text-9xl opacity-10 transition-transform group-hover:scale-110"
+            data-icon="groups"
+            >groups</span
+          >
+        </div>
+        <!-- Stat 2 -->
+        <div
+          class="bg-surface-container-lowest relative overflow-hidden rounded-lg p-8 shadow-[0px_12px_32px_rgba(47,47,47,0.06)]"
+        >
+          <span class="text-on-surface-variant text-sm font-bold tracking-widest uppercase"
+            >Revenue Received</span
+          >
+          <div class="text-on-surface mt-4 mb-2 text-5xl font-black">₹12,450</div>
+          <div class="flex items-center gap-1 text-sm font-semibold text-primary">
+            <span class="material-symbols-outlined text-sm" data-icon="payments">payments</span>
+            <span>All payments settled</span>
+          </div>
+        </div>
+        <!-- Stat 3 -->
+        <div class="bg-secondary-container relative overflow-hidden rounded-lg p-8">
+          <span class="text-on-secondary-container text-sm font-bold tracking-widest uppercase"
+            >Total Prints</span
+          >
+          <div class="text-on-secondary-container mt-4 mb-2 text-5xl font-black">156</div>
+          <div class="text-on-secondary-container/80 flex items-center gap-1 text-sm font-semibold">
+            <span class="material-symbols-outlined text-sm" data-icon="description"
+              >description</span
+            >
+            <span>84% Color / 16% B&amp;W</span>
+          </div>
+          <div
+            class="bg-on-secondary-container/10 absolute top-8 right-8 flex h-16 w-16 items-center justify-center rounded-full"
+          >
+            <span class="material-symbols-outlined text-on-secondary-container" data-icon="print"
+              >print</span
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Two Column Layout -->
+      <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+        <!-- Left: Device Connected Card (Editorial Layout) -->
+        <div
+          class="bg-surface-container-lowest overflow-hidden rounded-lg shadow-[0px_12px_32px_rgba(47,47,47,0.06)] lg:col-span-5"
+        >
+          <div class="border-surface-container border-b p-8">
+            <div class="mb-6 flex items-start justify-between">
+              <div class="rounded-2xl bg-primary/10 p-3">
+                <span class="material-symbols-outlined text-3xl text-primary" data-icon="printer"
+                  >print</span
+                >
+              </div>
+              <span
+                class="bg-primary-container text-on-primary-container flex items-center gap-2 rounded-full px-4 py-1 text-xs font-bold"
+              >
+                <span class="h-2 w-2 animate-pulse rounded-full bg-primary"></span>
+                ONLINE
+              </span>
+            </div>
+            <h3 class="text-on-surface text-2xl font-bold">Epson L3210</h3>
+            <p class="text-on-surface-variant font-medium">Shop Floor - Primary Unit</p>
+          </div>
+          <div class="space-y-8 p-8">
+            <!-- Paper Level -->
+            <div>
+              <div class="mb-3 flex items-center justify-between">
+                <span class="text-on-surface text-sm font-bold tracking-tight uppercase"
+                  >Paper Level</span
+                >
+                <span class="text-sm font-bold text-primary">85%</span>
+              </div>
+              <div class="bg-surface-container h-3 w-full overflow-hidden rounded-full">
+                <div class="h-full rounded-full bg-primary" style="width: 85%"></div>
+              </div>
+              <p
+                class="text-on-surface-variant mt-2 text-[10px] font-bold tracking-wider uppercase"
+              >
+                Approx. 425 Sheets Remaining
+              </p>
+            </div>
+            <!-- Ink Level -->
+            <div>
+              <div class="mb-3 flex items-center justify-between">
+                <span class="text-on-surface text-sm font-bold tracking-tight uppercase"
+                  >Ink Level</span
+                >
+                <span class="text-tertiary text-sm font-bold">60%</span>
+              </div>
+              <div class="bg-surface-container flex h-3 w-full overflow-hidden rounded-full">
+                <!-- CMYK Visualization -->
+                <div class="h-full bg-cyan-400" style="width: 15%"></div>
+                <div class="bg-magenta-400 h-full" style="background-color: #ff00ff"></div>
+                <div class="h-full bg-yellow-400" style="width: 15%"></div>
+                <div class="bg-on-surface h-full" style="width: 15%"></div>
+                <div class="bg-surface-container h-full flex-1"></div>
+              </div>
+              <p
+                class="text-on-surface-variant mt-2 text-[10px] font-bold tracking-wider uppercase"
+              >
+                Maintenance due in 12 days
+              </p>
+            </div>
+          </div>
+          <div class="px-8 pb-8">
+            <button
+              class="bg-on-surface text-surface w-full rounded-full py-4 text-sm font-bold transition-opacity hover:opacity-90"
+            >
+              Run Device Diagnostic
+            </button>
+          </div>
+        </div>
+        <!-- Right: Live Queue Card -->
+        <div
+          class="bg-surface-container-lowest overflow-hidden rounded-lg shadow-[0px_12px_32px_rgba(47,47,47,0.06)] lg:col-span-7"
+        >
+          <div class="bg-surface-container/30 flex items-center justify-between p-8">
+            <div>
+              <h3 class="text-on-surface text-2xl font-bold">Live Queue</h3>
+              <p class="text-on-surface-variant text-sm font-medium">5 jobs pending in stack</p>
+            </div>
+            <button
+              class="bg-tertiary-container text-on-tertiary-container rounded-full px-6 py-2 text-sm font-bold transition-transform hover:scale-95"
+            >
+              Pause All
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="bg-surface-container-low">
+                  <th
+                    class="text-on-surface-variant px-8 py-4 text-[11px] font-black tracking-widest uppercase"
+                  >
+                    File Name
+                  </th>
+                  <th
+                    class="text-on-surface-variant px-8 py-4 text-center text-[11px] font-black tracking-widest uppercase"
+                  >
+                    Pages
+                  </th>
+                  <th
+                    class="text-on-surface-variant px-8 py-4 text-[11px] font-black tracking-widest uppercase"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="text-on-surface-variant px-8 py-4 text-[11px] font-black tracking-widest uppercase"
+                  ></th>
+                </tr>
+              </thead>
+              <tbody class="divide-surface-container-low divide-y">
+                <!-- Job 1 -->
+                <tr class="hover:bg-surface-container-low/50 transition-colors">
+                  <td class="px-8 py-5">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="bg-error/10 flex h-10 w-10 items-center justify-center rounded-lg"
+                      >
+                        <span
+                          class="material-symbols-outlined text-error"
+                          data-icon="picture_as_pdf"
+                          >picture_as_pdf</span
+                        >
+                      </div>
+                      <div>
+                        <p class="text-on-surface text-sm font-bold">Draft_v2.pdf</p>
+                        <p class="text-on-surface-variant text-xs">Client: Rahul Sharma</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-on-surface px-8 py-5 text-center text-sm font-bold">12</td>
+                  <td class="px-8 py-5">
+                    <span
+                      class="bg-surface-container-high text-on-surface-variant rounded-full px-3 py-1 text-[11px] font-black uppercase"
+                      >In Queue</span
+                    >
+                  </td>
+                  <td class="px-8 py-5 text-right">
+                    <button
+                      class="material-symbols-outlined text-outline hover:text-on-surface"
+                      data-icon="more_vert"
+                    >
+                      more_vert
+                    </button>
+                  </td>
+                </tr>
+                <!-- Job 2 -->
+                <tr class="bg-primary/5">
+                  <td class="px-8 py-5">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10"
+                      >
+                        <span class="material-symbols-outlined text-primary" data-icon="image"
+                          >image</span
+                        >
+                      </div>
+                      <div>
+                        <p class="text-on-surface text-sm font-bold">Photo_Collage.jpg</p>
+                        <p class="text-on-surface-variant text-xs">Client: Walk-in</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-on-surface px-8 py-5 text-center text-sm font-bold">1</td>
+                  <td class="px-8 py-5">
+                    <span
+                      class="bg-primary-container text-on-primary-container flex w-max items-center gap-1 rounded-full px-3 py-1 text-[11px] font-black uppercase"
+                    >
+                      <span
+                        class="material-symbols-outlined animate-spin text-[14px]"
+                        data-icon="settings"
+                        >settings</span
+                      >
+                      Processing
+                    </span>
+                  </td>
+                  <td class="px-8 py-5 text-right">
+                    <button
+                      class="material-symbols-outlined text-outline hover:text-on-surface"
+                      data-icon="more_vert"
+                    >
+                      more_vert
+                    </button>
+                  </td>
+                </tr>
+                <!-- Job 3 -->
+                <tr class="hover:bg-surface-container-low/50 transition-colors">
+                  <td class="px-8 py-5">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="bg-tertiary/10 flex h-10 w-10 items-center justify-center rounded-lg"
+                      >
+                        <span
+                          class="material-symbols-outlined text-tertiary"
+                          data-icon="description"
+                          >description</span
+                        >
+                      </div>
+                      <div>
+                        <p class="text-on-surface text-sm font-bold">Resume_Final.docx</p>
+                        <p class="text-on-surface-variant text-xs">Client: Priya K.</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-on-surface px-8 py-5 text-center text-sm font-bold">2</td>
+                  <td class="px-8 py-5">
+                    <span
+                      class="bg-surface-container-high text-on-surface-variant rounded-full px-3 py-1 text-[11px] font-black uppercase"
+                      >In Queue</span
+                    >
+                  </td>
+                  <td class="px-8 py-5 text-right">
+                    <button
+                      class="material-symbols-outlined text-outline hover:text-on-surface"
+                      data-icon="more_vert"
+                    >
+                      more_vert
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="bg-surface-container/10 border-surface-container-low border-t p-8 text-center"
+          >
+            <a
+              class="flex items-center justify-center gap-2 text-sm font-bold text-primary"
+              href="#"
+            >
+              View Full History
+              <span class="material-symbols-outlined text-sm" data-icon="arrow_forward"
+                >arrow_forward</span
+              >
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- FAB for Quick Print (Contextual) -->
+    <button
+      class="text-on-primary fixed right-10 bottom-10 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-primary shadow-[0px_12px_32px_rgba(0,105,78,0.3)] transition-transform hover:scale-110 active:scale-95"
+    >
+      <span class="material-symbols-outlined text-3xl" data-icon="add" data-weight="fill">add</span>
+    </button>
+  </body>
+</html>

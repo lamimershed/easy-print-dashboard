@@ -1,0 +1,267 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Welcome to PrintEasy</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'tertiary-container': '#f2b885',
+              'surface-container-lowest': '#ffffff',
+              'on-background': '#2f2f2f',
+              'surface-dim': '#d6d4d4',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'surface-tint': '#00694e',
+              'outline-variant': '#aeadac',
+              'secondary-container': '#d5ed7e',
+              'on-primary-container': '#005c44',
+              'primary-fixed-dim': '#8ee2c0',
+              'primary-fixed': '#9cf1ce',
+              'on-tertiary-fixed-variant': '#663e16',
+              'on-error': '#ffefee',
+              'inverse-on-surface': '#9e9c9c',
+              'surface-container-low': '#f3f0f0',
+              'surface-container-high': '#e4e2e1',
+              'error-dim': '#9f0519',
+              tertiary: '#7d5228',
+              'on-primary': '#c6ffe5',
+              error: '#b31b25',
+              'inverse-primary': '#9cf1ce',
+              secondary: '#506300',
+              'on-primary-fixed-variant': '#00664c',
+              'on-tertiary': '#fff0e6',
+              'on-tertiary-container': '#5b350d',
+              'surface-variant': '#dedcdc',
+              'surface-container': '#eae8e7',
+              'on-tertiary-fixed': '#422200',
+              'tertiary-fixed': '#f2b885',
+              'secondary-fixed': '#d5ed7e',
+              'on-surface-variant': '#5c5b5b',
+              'on-error-container': '#570008',
+              primary: '#00694e',
+              'on-secondary-fixed-variant': '#506300',
+              'inverse-surface': '#0e0e0e',
+              'surface-container-highest': '#dedcdc',
+              'error-container': '#fb5151',
+              'on-primary-fixed': '#004734',
+              'primary-container': '#9cf1ce',
+              'secondary-fixed-dim': '#c7df71',
+              'primary-dim': '#005b43',
+              'tertiary-fixed-dim': '#e3ab79',
+              'on-secondary-container': '#485800',
+              'on-surface': '#2f2f2f',
+              'secondary-dim': '#465600',
+              'tertiary-dim': '#70461d',
+              background: '#f9f6f5',
+              'on-secondary-fixed': '#374400',
+              outline: '#777676',
+              'on-secondary': '#e5fe8c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9f6f5;
+        color: #2f2f2f;
+      }
+      .editorial-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1.5rem;
+      }
+      .asymmetric-blob {
+        border-radius: 47% 53% 70% 30% / 30% 60% 40% 70%;
+      }
+    </style>
+  </head>
+  <body class="bg-surface overflow-hidden">
+    <!-- Ambient Background Blobs -->
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div
+        class="bg-primary-container/30 asymmetric-blob absolute -top-24 -left-24 h-[600px] w-[600px] blur-3xl"
+      ></div>
+      <div
+        class="bg-secondary-container/20 asymmetric-blob absolute -right-48 -bottom-48 h-[800px] w-[800px] rotate-12 blur-3xl"
+      ></div>
+      <div
+        class="bg-tertiary-container/5 asymmetric-blob absolute top-1/2 left-1/2 h-[1000px] w-[1000px] -translate-x-1/2 -translate-y-1/2 blur-3xl"
+      ></div>
+    </div>
+    <!-- Main Content Canvas (Suppressed Shell for Focus) -->
+    <main class="relative z-10 flex min-h-screen items-center justify-center p-6 md:p-12">
+      <!-- Welcome Card: The Central Minimalist Modal -->
+      <div
+        class="bg-surface-container-lowest relative flex min-h-[600px] w-full max-w-5xl flex-col overflow-hidden rounded-lg shadow-[0px_12px_32px_rgba(47,47,47,0.06)] md:flex-row"
+      >
+        <!-- Left Side: Editorial Image & Identity -->
+        <div class="relative h-[300px] w-full overflow-hidden md:h-auto md:w-1/2">
+          <div class="absolute inset-0 z-10 bg-primary/10 mix-blend-overlay"></div>
+          <img
+            alt="Print Samples"
+            class="absolute inset-0 h-full w-full object-cover"
+            data-alt="Close-up of premium textured paper stock and minimalist print samples in a brightly lit modern design studio with soft shadows"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvBHs-CNFvKNUU6wQV8dzPHApjSVTw0x7LkQ_4xC0bW9TUY6BVcF_tlGrL1QOe8gf4ytFWcBFRrXs_loLJqrz1p2lTGA4b4i5YALG3gu0hax-bcJMmjO8K7c6c_eIEYYYiUdaNwDge2npDbYGMIyhYYWuOGItKCYbn9uI4YTQTtTD766uHz-_4lGquAh9BREUTcsRQsOc94YRh-BtgyA31wKWOumLPB5qNEL2OJUjG7C5fyBOmRdAU_UNFCF3oK_tlSqzvFq-ec1dg"
+          />
+          <!-- Floating Identity Anchor -->
+          <div class="absolute top-8 left-8 z-20 flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
+              <span
+                class="material-symbols-outlined text-on-primary"
+                style="font-variation-settings: 'FILL' 1"
+                >print</span
+              >
+            </div>
+            <span class="font-headline text-2xl font-bold text-white drop-shadow-md"
+              >PrintEasy</span
+            >
+          </div>
+          <!-- Vertical Label -->
+          <div class="absolute bottom-12 left-8 z-20 hidden md:block">
+            <p
+              class="font-label rotate-180 text-xs tracking-widest text-white/80 uppercase [writing-mode:vertical-lr]"
+            >
+              Editorial Vitality • Master Printer
+            </p>
+          </div>
+        </div>
+        <!-- Right Side: Interaction & Greeting -->
+        <div class="flex w-full flex-col justify-center gap-10 p-10 md:w-1/2 md:p-16">
+          <!-- Header Section -->
+          <div class="space-y-4">
+            <div
+              class="bg-secondary-container inline-flex items-center gap-2 rounded-full px-4 py-1.5"
+            >
+              <span
+                class="material-symbols-outlined text-sm"
+                style="font-variation-settings: 'FILL' 1"
+                >colors_spark</span
+              >
+              <span
+                class="font-label text-on-secondary-container text-xs font-bold tracking-wider uppercase"
+                >New Experience</span
+              >
+            </div>
+            <h1
+              class="font-headline text-on-background text-5xl leading-tight font-extrabold tracking-tighter md:text-6xl"
+            >
+              Welcome to <span class="text-primary italic">PrintEasy</span>
+            </h1>
+            <p class="font-body text-on-surface-variant max-w-md text-lg">
+              Your portal to precision printing and editorial excellence. Transform your digital
+              drafts into tactile reality with the touch of a button.
+            </p>
+          </div>
+          <!-- Features Bento Light -->
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-surface-container-low space-y-2 rounded-lg p-6">
+              <span class="material-symbols-outlined text-primary" data-icon="inventory_2"
+                >inventory_2</span
+              >
+              <h3 class="font-headline text-on-surface font-bold">Manage Orders</h3>
+              <p class="text-on-surface-variant text-xs leading-relaxed">
+                Track every project from press to doorstep.
+              </p>
+            </div>
+            <div class="bg-surface-container-low space-y-2 rounded-lg p-6">
+              <span class="material-symbols-outlined text-primary" data-icon="palette"
+                >palette</span
+              >
+              <h3 class="font-headline text-on-surface font-bold">Live Previews</h3>
+              <p class="text-on-surface-variant text-xs leading-relaxed">
+                High-fidelity texture renders of your designs.
+              </p>
+            </div>
+          </div>
+          <!-- CTA Section -->
+          <div class="flex flex-col items-center gap-4 pt-4 sm:flex-row">
+            <button
+              class="text-on-primary font-headline flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-lg font-bold shadow-lg transition-all hover:scale-[1.02] active:scale-95 sm:w-auto"
+            >
+              Start Your Project
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+            <button
+              class="font-headline hover:bg-primary-container/20 flex w-full items-center justify-center gap-2 rounded-full bg-transparent px-8 py-4 text-lg font-bold text-primary transition-all sm:w-auto"
+            >
+              View Tutorial
+            </button>
+          </div>
+          <!-- Security Note -->
+          <div class="text-outline flex items-center gap-2 text-xs">
+            <span class="material-symbols-outlined text-[16px]">lock_open</span>
+            <span>Secure end-to-end encrypted file handling</span>
+          </div>
+        </div>
+        <!-- Absolute decorative element -->
+        <div
+          class="bg-tertiary-container pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full opacity-50 blur-2xl"
+        ></div>
+      </div>
+      <!-- Secondary layer: Subtle status chips floating outside -->
+      <div class="absolute right-12 bottom-12 hidden flex-col items-end gap-3 lg:flex">
+        <div
+          class="bg-surface-container-lowest/80 flex items-center gap-3 rounded-lg border border-white/50 p-4 shadow-sm backdrop-blur-md"
+        >
+          <div class="h-2 w-2 animate-pulse rounded-full bg-primary"></div>
+          <span class="font-label text-on-surface text-xs font-bold uppercase"
+            >System Status: Optimal</span
+          >
+        </div>
+        <div
+          class="bg-surface-container-lowest/80 flex items-center gap-3 rounded-lg border border-white/50 p-4 shadow-sm backdrop-blur-md"
+        >
+          <span class="material-symbols-outlined text-tertiary-container">verified</span>
+          <span class="font-label text-on-surface text-xs font-bold uppercase"
+            >Paper Grade: Premium Silk</span
+          >
+        </div>
+      </div>
+    </main>
+    <!-- Close Action (Semantic Shell Rule) -->
+    <button
+      class="bg-surface-container-highest/50 hover:bg-surface-container-highest text-on-surface fixed top-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full backdrop-blur-md transition-colors"
+    >
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </body>
+</html>

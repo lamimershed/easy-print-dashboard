@@ -1,0 +1,252 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PrintEasy - Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#53A687',
+              'primary-dim': '#438a6f',
+              secondary: '#DEF294',
+              tertiary: '#F2B885',
+              'accent-green': '#C1D96C',
+              'background-soft': '#e8faf4',
+              surface: '#FFFFFF',
+              'on-surface': '#000000',
+              'on-surface-variant': '#2F2F2F',
+              outline: '#777676',
+              'outline-variant': '#aeadac',
+              'surface-container-high': '#f0f9f6',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      .brand-font {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-surface font-body text-on-surface selection:bg-primary/20 selection:text-primary">
+    <!-- Navigation -->
+    <nav
+      class="border-background-soft fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl"
+    >
+      <div class="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-5 md:px-12">
+        <div
+          class="font-['Plus_Jakarta_Sans'] text-2xl font-extrabold tracking-tighter text-primary"
+        >
+          PrintEasy
+        </div>
+        <div class="hidden items-center gap-8 md:flex">
+          <a
+            class="text-on-surface-variant font-['Plus_Jakarta_Sans'] font-medium transition-all duration-300 hover:text-primary"
+            href="#"
+            >Contact Support</a
+          >
+          <a
+            class="text-on-surface-variant font-['Plus_Jakarta_Sans'] font-medium transition-all duration-300 hover:text-primary"
+            href="#"
+            >About</a
+          >
+          <button
+            class="rounded-full bg-primary px-6 py-2.5 font-['Plus_Jakarta_Sans'] font-semibold text-white transition-all hover:opacity-90 active:scale-95"
+          >
+            Register Shop
+          </button>
+        </div>
+        <button class="p-2 text-primary md:hidden">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="flex min-h-screen flex-col pt-[72px] md:flex-row">
+      <!-- Left Side: Visual Panel (Matching SCREEN_71 style) -->
+      <section
+        class="relative hidden flex-1 items-start justify-start overflow-hidden bg-[#00694e] p-12 md:flex lg:p-20"
+      >
+        <div class="relative z-10">
+          <div class="brand-font mb-16 text-2xl font-extrabold tracking-tight text-white italic">
+            PrintEasy
+          </div>
+        </div>
+        <!-- Decorative Layering (Matching SCREEN_71 exactly) -->
+        <div
+          class="absolute right-0 bottom-0 h-1/2 w-full translate-x-1/4 translate-y-1/4 opacity-40"
+        >
+          <div class="absolute inset-0 translate-y-10 -rotate-12 rounded-lg bg-white/10"></div>
+          <div class="absolute inset-0 -rotate-6 rounded-lg bg-secondary/20"></div>
+          <img
+            alt="Premium paper textures"
+            class="absolute inset-0 h-full w-full rotate-3 rounded-lg object-cover shadow-2xl"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9CLzDgKVhcPs1mTnwOMg3foSTLYfzhusF01iyxpCbCEIVi4Vk2onvbrI-pH5l3IjkDPjxHmvb7Ecw6TDssO2IUXceDcSahnuyFvyy3yqiZyyJ1CDHU8hG_Y5ARTFRg5LMWmXjb6bhtLB-jkIFx7sm-7nXtLXo9mmnHZEe8E_BWL8PQ5TCZkJLETdv-ESloxOc7d4bYsGD_OUl75xOkZJISDIN4ubPif1i0zeIqN33H9CbSvFoW1gSF9t-zcIrIYZlC9iggmKVEDjO"
+          />
+        </div>
+        <div class="absolute bottom-12 left-12 z-10 flex items-center gap-4">
+          <div class="h-px w-12 bg-white/30"></div>
+          <span class="label-md text-xs font-bold tracking-widest text-white uppercase opacity-60"
+            >EST. 2024</span
+          >
+        </div>
+      </section>
+      <!-- Right Side: Login Form -->
+      <section class="bg-surface flex flex-1 items-center justify-center p-6 md:p-12 lg:p-24">
+        <div class="w-full max-w-md">
+          <header class="mb-10">
+            <h2 class="font-headline text-on-surface mb-2 text-3xl font-extrabold tracking-tight">
+              Welcome back
+            </h2>
+            <p class="text-on-surface-variant font-medium">
+              Access your shop's editorial dashboard.
+            </p>
+          </header>
+          <form class="space-y-6">
+            <!-- Email -->
+            <div class="space-y-1">
+              <label
+                class="text-on-surface-variant ml-1 block text-[10px] font-bold tracking-wider uppercase"
+                for="email"
+                >Email Address</label
+              >
+              <div class="relative">
+                <input
+                  class="bg-surface-container-high text-on-surface placeholder:text-outline-variant font-body w-full rounded-lg border-none px-4 py-4 transition-all focus:ring-2 focus:ring-primary/40"
+                  id="email"
+                  placeholder="owner@printshop.com"
+                  type="email"
+                />
+                <span
+                  class="material-symbols-outlined text-outline-variant absolute top-1/2 right-4 -translate-y-1/2 scale-75"
+                  >mail</span
+                >
+              </div>
+            </div>
+            <!-- Password -->
+            <div class="space-y-1">
+              <div class="flex items-center justify-between px-1">
+                <label
+                  class="text-on-surface-variant block text-[10px] font-bold tracking-wider uppercase"
+                  for="password"
+                  >Password</label
+                >
+                <a class="text-xs font-bold text-primary transition-all hover:underline" href="#"
+                  >Forgot Password?</a
+                >
+              </div>
+              <div class="relative">
+                <input
+                  class="bg-surface-container-high text-on-surface placeholder:text-outline-variant font-body w-full rounded-lg border-none px-4 py-4 transition-all focus:ring-2 focus:ring-primary/40"
+                  id="password"
+                  placeholder="••••••••"
+                  type="password"
+                />
+                <span
+                  class="material-symbols-outlined text-outline-variant absolute top-1/2 right-4 -translate-y-1/2 scale-75"
+                  >lock</span
+                >
+              </div>
+            </div>
+            <!-- Remember Me -->
+            <div class="flex items-center gap-3 px-1">
+              <input
+                class="bg-surface-container-high h-5 w-5 cursor-pointer rounded border-none text-primary transition-all focus:ring-primary/40"
+                id="remember"
+                type="checkbox"
+              />
+              <label
+                class="text-on-surface-variant cursor-pointer text-sm font-medium select-none"
+                for="remember"
+                >Keep me logged in</label
+              >
+            </div>
+            <!-- Submit -->
+            <div class="pt-4">
+              <button
+                class="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-primary py-4 text-lg font-bold text-white shadow-xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-95"
+                type="submit"
+              >
+                <span class="relative z-10">Login to Dashboard</span>
+                <span
+                  class="material-symbols-outlined relative z-10 text-xl transition-transform group-hover:translate-x-1"
+                  >arrow_forward</span
+                >
+              </button>
+            </div>
+          </form>
+          <div class="mt-10 text-center">
+            <p class="text-on-surface-variant text-sm">
+              Don't have an account?
+              <a
+                class="ml-1 font-bold text-primary decoration-secondary decoration-2 underline-offset-4 hover:underline"
+                href="#"
+                >Sign up</a
+              >
+            </p>
+          </div>
+          <!-- Trust Badges -->
+          <div class="mt-16 flex items-center justify-center gap-8 opacity-30 grayscale">
+            <span class="material-symbols-outlined text-2xl">verified_user</span>
+            <span class="material-symbols-outlined text-2xl">security</span>
+            <span class="material-symbols-outlined text-2xl">print</span>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-surface border-background-soft w-full border-t py-8">
+      <div
+        class="mx-auto flex max-w-screen-2xl flex-col items-center justify-between px-6 text-xs font-medium tracking-wide md:flex-row md:px-12"
+      >
+        <div class="text-on-surface-variant/60 mb-4 md:mb-0">
+          © 2024 PrintEasy. All rights reserved.
+        </div>
+        <div class="flex gap-6">
+          <a class="text-on-surface-variant/60 transition-colors hover:text-primary" href="#"
+            >Privacy Policy</a
+          >
+          <a class="text-on-surface-variant/60 transition-colors hover:text-primary" href="#"
+            >Terms of Service</a
+          >
+          <a class="text-on-surface-variant/60 transition-colors hover:text-primary" href="#"
+            >Help Center</a
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

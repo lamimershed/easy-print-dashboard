@@ -1,0 +1,478 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Editorial Vitality | QR Stand Preview</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;0,800;1,700&amp;family=Inter:wght@400;500;600;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'tertiary-container': '#f2b885',
+              'surface-container-lowest': '#ffffff',
+              'on-background': '#2f2f2f',
+              'surface-dim': '#d6d4d4',
+              'surface-bright': '#f9f6f5',
+              surface: '#f9f6f5',
+              'surface-tint': '#00694e',
+              'outline-variant': '#aeadac',
+              'secondary-container': '#d5ed7e',
+              'on-primary-container': '#005c44',
+              'primary-fixed-dim': '#8ee2c0',
+              'primary-fixed': '#9cf1ce',
+              'on-tertiary-fixed-variant': '#663e16',
+              'on-error': '#ffefee',
+              'inverse-on-surface': '#9e9c9c',
+              'surface-container-low': '#f3f0f0',
+              'surface-container-high': '#e4e2e1',
+              'error-dim': '#9f0519',
+              tertiary: '#7d5228',
+              'on-primary': '#c6ffe5',
+              error: '#b31b25',
+              'inverse-primary': '#9cf1ce',
+              secondary: '#506300',
+              'on-primary-fixed-variant': '#00664c',
+              'on-tertiary': '#fff0e6',
+              'on-tertiary-container': '#5b350d',
+              'surface-variant': '#dedcdc',
+              'surface-container': '#eae8e7',
+              'on-tertiary-fixed': '#422200',
+              'tertiary-fixed': '#f2b885',
+              'secondary-fixed': '#d5ed7e',
+              'on-surface-variant': '#5c5b5b',
+              'on-error-container': '#570008',
+              primary: '#00694e',
+              'on-secondary-fixed-variant': '#506300',
+              'inverse-surface': '#0e0e0e',
+              'surface-container-highest': '#dedcdc',
+              'error-container': '#fb5151',
+              'on-primary-fixed': '#004734',
+              'primary-container': '#9cf1ce',
+              'secondary-fixed-dim': '#c7df71',
+              'primary-dim': '#005b43',
+              'tertiary-fixed-dim': '#e3ab79',
+              'on-secondary-container': '#485800',
+              'on-surface': '#2f2f2f',
+              'secondary-dim': '#465600',
+              'tertiary-dim': '#70461d',
+              background: '#f9f6f5',
+              'on-secondary-fixed': '#374400',
+              outline: '#777676',
+              'on-secondary': '#e5fe8c',
+            },
+            borderRadius: {
+              DEFAULT: '1rem',
+              lg: '2rem',
+              xl: '3rem',
+              full: '9999px',
+            },
+            fontFamily: {
+              headline: ['Plus Jakarta Sans'],
+              body: ['Inter'],
+              label: ['Inter'],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .editorial-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .glass-nav {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .preview-shadow {
+        box-shadow: 0px 12px 32px rgba(47, 47, 47, 0.06);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container"
+  >
+    <!-- SideNavBar (Shared Component) -->
+    <aside
+      class="fixed top-0 left-0 z-50 flex h-screen w-64 flex-col gap-2 border-r-0 bg-emerald-50/80 py-8 backdrop-blur-xl dark:bg-zinc-950/80"
+    >
+      <div class="mb-8 px-8">
+        <h1
+          class="font-['Plus_Jakarta_Sans'] text-xl font-bold tracking-tight text-emerald-900 italic dark:text-emerald-100"
+        >
+          Editorial Vitality
+        </h1>
+        <p
+          class="mt-1 font-['Plus_Jakarta_Sans'] text-xs font-bold tracking-widest text-emerald-800/60 uppercase"
+        >
+          Master Printer
+        </p>
+      </div>
+      <nav class="flex-1 space-y-1">
+        <a
+          class="mx-2 flex cursor-pointer items-center gap-3 rounded-full px-4 py-3 font-['Plus_Jakarta_Sans'] text-sm font-bold tracking-tight text-emerald-800/60 transition-all hover:bg-emerald-100 active:scale-95 dark:text-emerald-400/50 dark:hover:bg-emerald-900/20"
+          href="#"
+        >
+          <span class="material-symbols-outlined">dashboard</span>
+          Dashboard
+        </a>
+        <a
+          class="mx-2 flex cursor-pointer items-center gap-3 rounded-full bg-emerald-200 px-4 py-3 font-['Plus_Jakarta_Sans'] text-sm font-bold tracking-tight text-emerald-950 transition-all active:scale-95 dark:bg-emerald-900/40 dark:text-emerald-100"
+          href="#"
+        >
+          <span class="material-symbols-outlined">description</span>
+          Orders
+        </a>
+        <a
+          class="mx-2 flex cursor-pointer items-center gap-3 rounded-full px-4 py-3 font-['Plus_Jakarta_Sans'] text-sm font-bold tracking-tight text-emerald-800/60 transition-all hover:bg-emerald-100 active:scale-95 dark:text-emerald-400/50 dark:hover:bg-emerald-900/20"
+          href="#"
+        >
+          <span class="material-symbols-outlined">inventory_2</span>
+          Inventory
+        </a>
+        <a
+          class="mx-2 flex cursor-pointer items-center gap-3 rounded-full px-4 py-3 font-['Plus_Jakarta_Sans'] text-sm font-bold tracking-tight text-emerald-800/60 transition-all hover:bg-emerald-100 active:scale-95 dark:text-emerald-400/50 dark:hover:bg-emerald-900/20"
+          href="#"
+        >
+          <span class="material-symbols-outlined">group</span>
+          Customers
+        </a>
+        <a
+          class="mx-2 flex cursor-pointer items-center gap-3 rounded-full px-4 py-3 font-['Plus_Jakarta_Sans'] text-sm font-bold tracking-tight text-emerald-800/60 transition-all hover:bg-emerald-100 active:scale-95 dark:text-emerald-400/50 dark:hover:bg-emerald-900/20"
+          href="#"
+        >
+          <span class="material-symbols-outlined">settings</span>
+          Settings
+        </a>
+      </nav>
+      <div class="mt-auto px-4">
+        <button
+          class="text-on-primary flex w-full items-center justify-center gap-2 rounded-full bg-primary py-4 font-bold shadow-lg shadow-primary/20 transition-transform duration-200 hover:scale-[1.02] active:scale-95"
+        >
+          <span class="material-symbols-outlined text-lg">add</span>
+          New Project
+        </button>
+      </div>
+    </aside>
+    <!-- TopNavBar (Shared Component) -->
+    <header
+      class="fixed top-0 right-0 left-64 z-40 flex h-16 w-full items-center justify-between bg-white/70 px-8 backdrop-blur-2xl dark:bg-zinc-900/70"
+    >
+      <div class="flex items-center gap-6">
+        <span class="editorial-title text-lg font-black text-emerald-900 dark:text-emerald-50"
+          >Shop Dashboard</span
+        >
+        <div class="bg-surface-container h-4 w-px"></div>
+        <nav class="flex items-center gap-6">
+          <a
+            class="border-b-2 border-emerald-500 py-5 font-['Inter'] text-sm font-semibold text-emerald-900 dark:text-emerald-100"
+            href="#"
+            >Overview</a
+          >
+          <a
+            class="font-['Inter'] text-sm text-zinc-500 transition-colors hover:text-emerald-700 dark:text-zinc-400 dark:hover:text-emerald-300"
+            href="#"
+            >Analytics</a
+          >
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="group relative">
+          <span
+            class="material-symbols-outlined text-on-surface-variant cursor-pointer transition-colors hover:text-primary"
+            >notifications</span
+          >
+          <span
+            class="bg-error absolute top-0 right-0 h-2 w-2 rounded-full border-2 border-white"
+          ></span>
+        </div>
+        <span
+          class="material-symbols-outlined text-on-surface-variant cursor-pointer transition-colors hover:text-primary"
+          >help_outline</span
+        >
+        <div class="bg-primary-container h-8 w-8 overflow-hidden rounded-full">
+          <img
+            alt="Owner Profile"
+            class="h-full w-full object-cover"
+            data-alt="Close up portrait of a middle aged man with professional glasses and a warm smile in a brightly lit studio"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeTv9ySFlKffyPYmLrFIc9DS2kLPhE19GOzX6hXrA4P5Y8E2w_5sLV7UDtIvXBg1u_XkeCnt7VJ3V9-SCiFJzpi9x85u4_n8h0nmgMVv3DzdZ00bANH2vFDeMy5d4Po_oWVLIcNCG7D4Ucg78X9uTOIde7LAf5Lj931M594l--W5xbIWwu2mm_nxW7jFLjlqJWlHwG5VnmwjS9GkyKmEt3YKzhPZk09wWg13LsAHNDxzei6ZYMU4VPQEoYj_jCqCfaY5TzS2HYjpmB"
+          />
+        </div>
+      </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="min-h-screen pt-16 pl-64">
+      <div class="mx-auto max-w-7xl p-12">
+        <!-- Header Section -->
+        <div class="mb-12 flex items-end justify-between">
+          <div class="space-y-2">
+            <span class="text-label-md font-label font-bold tracking-[0.2em] text-primary uppercase"
+              >Production Preview</span
+            >
+            <h2 class="editorial-title text-on-surface text-5xl font-extrabold tracking-tighter">
+              QR Stand <span class="text-primary italic">A4 Canvas</span>
+            </h2>
+          </div>
+          <div class="flex gap-4">
+            <div class="bg-surface-container-high flex items-center gap-2 rounded-full px-6 py-3">
+              <span class="material-symbols-outlined text-primary">aspect_ratio</span>
+              <span class="text-sm font-semibold">210 x 297 mm</span>
+            </div>
+          </div>
+        </div>
+        <!-- Preview Layout: Bento Grid Style -->
+        <div class="grid grid-cols-12 gap-8">
+          <!-- The Main Stand Preview (Large Column) -->
+          <div
+            class="bg-surface-container-low relative col-span-8 flex items-center justify-center overflow-hidden rounded-xl p-12"
+          >
+            <!-- Perspective Paper Stack -->
+            <div class="group relative">
+              <!-- Shadow Layer -->
+              <div
+                class="bg-on-surface/5 absolute inset-0 translate-x-4 translate-y-8 transform rounded-lg blur-3xl"
+              ></div>
+              <!-- The QR Stand Card -->
+              <div
+                class="bg-surface-container-lowest preview-shadow border-surface-container relative aspect-[1/1.414] w-[400px] transform rounded-md border transition-transform duration-500 group-hover:-translate-y-2"
+              >
+                <!-- Design Content -->
+                <div class="flex h-full flex-col items-center justify-between p-10 text-center">
+                  <div class="space-y-4">
+                    <div class="mx-auto h-1 w-16 rounded-full bg-primary"></div>
+                    <h3 class="editorial-title text-on-surface text-2xl font-bold">
+                      Welcome to Our Shop
+                    </h3>
+                    <p class="text-on-surface-variant font-body text-sm">
+                      Scan the code below to view our full seasonal catalog and exclusive offers.
+                    </p>
+                  </div>
+                  <!-- QR Placeholder -->
+                  <div class="relative rounded-lg border-2 border-primary/10 bg-white p-6">
+                    <img
+                      alt="Sample QR Code"
+                      class="h-48 w-48 opacity-90"
+                      data-alt="Minimalist black and white QR code centered on a clean white square background with soft edges"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWFgpuQEVHJn7ZSsMPFSRkNNMW6EFiBGlVBYNZjKl01MZDp5OThmJPU7LNNNOXR88EWx9NRPjNoHvsuirwDPV3vx2EsvkZ5k1gYfLkPoq934Ypdp-hCukK9vcdZk4OrXgc-aUQZfi1hT9rmOYgJVOAHydpLaXKIWIn5tiMOz5bmH7LvvMztmUKC5Hf5XVoNqYXEoSOk5m_PzYpnENzoaty3HjsvMgkBdG83OycjrrQl0TcDhELsPIzIEH1UFLdCMCd5BrgkgZQxFBQ"
+                    />
+                    <div
+                      class="bg-secondary-container text-on-secondary-container absolute -top-3 -right-3 rounded-full px-3 py-1 text-[10px] font-black tracking-widest uppercase"
+                    >
+                      Scan Me
+                    </div>
+                  </div>
+                  <div class="w-full space-y-6">
+                    <div
+                      class="text-outline flex items-center justify-between text-[10px] font-black tracking-[0.2em] uppercase"
+                    >
+                      <span>EDITORIAL VITALITY</span>
+                      <span>EST. 2024</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Secondary floating preview element -->
+              <div
+                class="bg-tertiary-container/30 preview-shadow absolute top-20 -right-12 hidden aspect-square w-32 rounded-lg border border-white/20 p-4 backdrop-blur-md xl:block"
+              >
+                <div
+                  class="border-tertiary flex h-full w-full items-center justify-center rounded-md border-2 border-dashed"
+                >
+                  <span class="material-symbols-outlined text-tertiary scale-150">texture</span>
+                </div>
+              </div>
+            </div>
+            <!-- Ambient Decoration -->
+            <div
+              class="absolute right-0 bottom-0 -mr-32 -mb-32 h-64 w-64 rounded-full bg-gradient-to-tl from-primary/10 to-transparent blur-3xl"
+            ></div>
+          </div>
+          <!-- Controls & Metadata (Right Column) -->
+          <div class="col-span-4 space-y-8">
+            <!-- Print Settings Card -->
+            <div
+              class="bg-surface-container-lowest preview-shadow border-surface-container rounded-lg border p-8"
+            >
+              <h4 class="editorial-title mb-6 flex items-center gap-2 text-xl font-bold">
+                <span class="material-symbols-outlined text-primary">tune</span>
+                Print Specifications
+              </h4>
+              <div class="space-y-6">
+                <div>
+                  <label
+                    class="text-outline-variant mb-2 block text-xs font-bold tracking-widest uppercase"
+                    >Paper Stock</label
+                  >
+                  <div
+                    class="bg-surface-container-high rounded-DEFAULT flex items-center justify-between p-4"
+                  >
+                    <span class="font-semibold">Premium Silk 300gsm</span>
+                    <span class="material-symbols-outlined text-primary">expand_more</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      class="text-outline-variant mb-2 block text-xs font-bold tracking-widest uppercase"
+                      >Quantity</label
+                    >
+                    <div
+                      class="bg-surface-container-high rounded-DEFAULT p-4 text-center font-black"
+                    >
+                      25
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      class="text-outline-variant mb-2 block text-xs font-bold tracking-widest uppercase"
+                      >Finish</label
+                    >
+                    <div
+                      class="bg-surface-container-high rounded-DEFAULT p-4 text-center font-black"
+                    >
+                      Matte
+                    </div>
+                  </div>
+                </div>
+                <div class="border-surface-container space-y-3 border-t pt-6">
+                  <div class="flex items-center justify-between">
+                    <span class="text-on-surface-variant">Unit Price</span>
+                    <span class="font-bold">$2.40</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-on-surface-variant font-semibold">Total Estimate</span>
+                    <span class="text-2xl font-black text-primary">$60.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Primary Action -->
+            <div class="space-y-4">
+              <button
+                class="text-on-primary flex w-full items-center justify-center gap-3 rounded-full bg-primary py-6 text-lg font-black shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95"
+              >
+                <span class="material-symbols-outlined">print</span>
+                Print Your QR
+              </button>
+              <button
+                class="bg-secondary-container text-on-secondary-container hover:bg-secondary-container/80 w-full rounded-full py-4 font-bold transition-colors"
+              >
+                Save as Draft
+              </button>
+            </div>
+            <!-- Material Card -->
+            <div
+              class="bg-tertiary-container/20 border-tertiary-container/30 rounded-lg border p-6"
+            >
+              <div class="flex items-start gap-4">
+                <span
+                  class="material-symbols-outlined text-tertiary rounded-full bg-white p-3 shadow-sm"
+                  >info</span
+                >
+                <div>
+                  <p class="text-on-tertiary-container text-sm font-bold">Pro Tip</p>
+                  <p class="text-on-tertiary-container/80 text-xs leading-relaxed">
+                    Matte finishes work best for QR codes to avoid glare reflections during scanning
+                    in bright environments.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Footer Stats / Meta -->
+        <div class="mt-12 grid grid-cols-4 gap-8">
+          <div class="group flex cursor-pointer items-center gap-4">
+            <div
+              class="bg-surface-container-highest group-hover:bg-primary-container flex h-12 w-12 items-center justify-center rounded-full transition-colors"
+            >
+              <span
+                class="material-symbols-outlined text-on-surface-variant group-hover:text-primary"
+                >visibility</span
+              >
+            </div>
+            <div>
+              <p class="text-outline text-xs font-bold tracking-widest uppercase">Visibility</p>
+              <p class="font-black">High Contrast</p>
+            </div>
+          </div>
+          <div class="group flex cursor-pointer items-center gap-4">
+            <div
+              class="bg-surface-container-highest group-hover:bg-primary-container flex h-12 w-12 items-center justify-center rounded-full transition-colors"
+            >
+              <span
+                class="material-symbols-outlined text-on-surface-variant group-hover:text-primary"
+                >brush</span
+              >
+            </div>
+            <div>
+              <p class="text-outline text-xs font-bold tracking-widest uppercase">Colors</p>
+              <p class="font-black">CMYK Optimized</p>
+            </div>
+          </div>
+          <div class="group flex cursor-pointer items-center gap-4">
+            <div
+              class="bg-surface-container-highest group-hover:bg-primary-container flex h-12 w-12 items-center justify-center rounded-full transition-colors"
+            >
+              <span
+                class="material-symbols-outlined text-on-surface-variant group-hover:text-primary"
+                >check_circle</span
+              >
+            </div>
+            <div>
+              <p class="text-outline text-xs font-bold tracking-widest uppercase">Status</p>
+              <p class="font-black">Ready to Print</p>
+            </div>
+          </div>
+          <div class="group flex cursor-pointer items-center gap-4">
+            <div
+              class="bg-surface-container-highest group-hover:bg-primary-container flex h-12 w-12 items-center justify-center rounded-full transition-colors"
+            >
+              <span
+                class="material-symbols-outlined text-on-surface-variant group-hover:text-primary"
+                >history</span
+              >
+            </div>
+            <div>
+              <p class="text-outline text-xs font-bold tracking-widest uppercase">Revision</p>
+              <p class="font-black">v1.2 (Latest)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Floating Action Background Blur Decoration -->
+    <div
+      class="pointer-events-none fixed top-0 right-0 -z-10 h-screen w-1/2 bg-gradient-to-l from-primary/5 to-transparent"
+    ></div>
+  </body>
+</html>
