@@ -6,12 +6,12 @@ Tracks customer scan and print lifecycle events for each client. Provides summar
 
 ## Event Types
 
-| Event type        | When fired                                            | Metadata                                                          |
-| ----------------- | ----------------------------------------------------- | ----------------------------------------------------------------- |
-| `scan`            | `GET /api/client/:slug` is called (customer scans QR) | `{ slug, tempUserId? }`                                           |
-| `print_started`   | `customer:file_metadata` WS event received            | `{ filename, fileSize, mimeType, copies, colorMode, tempUserId }` |
-| `print_completed` | `client:print_complete` WS event received             | `{ dbJobId, tempUserId }`                                         |
-| `print_failed`    | `client:print_error` WS event received                | `{ error, tempUserId }`                                           |
+| Event type        | When fired                                        | Metadata                                                          |
+| ----------------- | ------------------------------------------------- | ----------------------------------------------------------------- |
+| `scan`            | `GET /client/:slug` is called (customer scans QR) | `{ slug, tempUserId? }`                                           |
+| `print_started`   | `customer:file_metadata` WS event received        | `{ filename, fileSize, mimeType, copies, colorMode, tempUserId }` |
+| `print_completed` | `client:print_complete` WS event received         | `{ dbJobId, tempUserId }`                                         |
+| `print_failed`    | `client:print_error` WS event received            | `{ error, tempUserId }`                                           |
 
 All writes are **best-effort fire-and-forget** — failures are logged with `logger.warn` and never interrupt the WebSocket or HTTP response.
 
@@ -21,7 +21,7 @@ All writes are **best-effort fire-and-forget** — failures are logged with `log
 
 The customer frontend generates a UUID on first visit and stores it in `localStorage`. This is passed:
 
-1. As a query param `?tempUserId=<uuid>` on `GET /api/client/:slug`
+1. As a query param `?tempUserId=<uuid>` on `GET /client/:slug`
 2. As part of the `customer:join_session` WebSocket payload: `{ sessionId, tempUserId }`
 
 The server stores `tempUserId` on the in-memory session and persists it to the `PrintJob` DB row. The backend never validates or interprets it — it's treated as an opaque string.
@@ -32,7 +32,7 @@ The server stores `tempUserId` on the in-memory session and persists it to the `
 
 All endpoints require `Authorization: Bearer <accessToken>` with `CLIENT` role.
 
-### `GET /api/analytics/me`
+### `GET /analytics/me`
 
 Get an analytics summary for the authenticated client's client.
 
@@ -59,7 +59,7 @@ Get an analytics summary for the authenticated client's client.
 
 ---
 
-### `GET /api/analytics/me/events`
+### `GET /analytics/me/events`
 
 Get a paginated list of raw analytics events.
 
@@ -93,7 +93,7 @@ Get a paginated list of raw analytics events.
 
 ## Print Job History
 
-### `GET /api/print-jobs/me`
+### `GET /print-jobs/me`
 
 Get paginated print job history for the authenticated client.
 
@@ -133,7 +133,7 @@ Get paginated print job history for the authenticated client.
 
 ## Public client Endpoint (QR scan landing)
 
-### `GET /api/client/:slug`
+### `GET /client/:slug`
 
 Unauthenticated. Called by the customer frontend immediately after QR scan.
 

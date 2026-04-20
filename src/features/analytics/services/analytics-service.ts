@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '@/services/api';
 import type {
-  TAnalyticsSummary,
-  TPaginatedAnalyticsEvents,
-  TPaginatedPrintJobs,
+  TAnalyticsSummaryResponse,
+  TAnalyticsEventsResponse,
+  TPrintJobsResponse,
   TAnalyticsPeriod,
 } from '../types';
 
@@ -20,10 +20,10 @@ const useGetSummary = (period: TAnalyticsPeriod = '30d') =>
   useQuery({
     queryKey: queryKeys.summary(period),
     queryFn: async () => {
-      const { data } = await api.get<TAnalyticsSummary>('/analytics/me', {
+      const { data } = await api.get<TAnalyticsSummaryResponse>('/analytics/me', {
         params: { period },
       });
-      return data;
+      return data.data;
     },
     staleTime: 60 * 1000,
   });
@@ -32,10 +32,10 @@ const useGetEvents = (page = 1, limit = 20, eventType?: string) =>
   useQuery({
     queryKey: queryKeys.events(page, limit, eventType),
     queryFn: async () => {
-      const { data } = await api.get<TPaginatedAnalyticsEvents>('/analytics/me/events', {
+      const { data } = await api.get<TAnalyticsEventsResponse>('/analytics/me/events', {
         params: { page, limit, ...(eventType ? { eventType } : {}) },
       });
-      return data;
+      return { data: data.data, meta: data.meta };
     },
   });
 
@@ -43,10 +43,10 @@ const useGetPrintJobs = (page = 1, limit = 20, status?: string) =>
   useQuery({
     queryKey: queryKeys.printJobs(page, limit, status),
     queryFn: async () => {
-      const { data } = await api.get<TPaginatedPrintJobs>('/print-jobs/me', {
+      const { data } = await api.get<TPrintJobsResponse>('/print-jobs/me', {
         params: { page, limit, ...(status ? { status } : {}) },
       });
-      return data;
+      return { data: data.data, meta: data.meta };
     },
   });
 

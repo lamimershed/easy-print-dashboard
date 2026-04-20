@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/services/type';
+import { TApiResponse } from '@/services/type';
 
 // Role types
 export type TRoleList = 'admin' | 'warehouse' | 'customer';
@@ -8,7 +8,7 @@ export interface TRoleItem {
   value: TRoleList;
 }
 
-export type TRoleListResponse = ApiResponse<TRoleItem[]>;
+export type TRoleListResponse = TApiResponse<TRoleItem[]>;
 
 // File upload key types
 export type TFileUploadKey = 'categories' | 'products' | 'brands' | 'warehouses' | 'others';
@@ -27,7 +27,7 @@ export interface TFileUploadRequest {
   mimetype: TImageMimeType;
 }
 
-export type TPresignedUploadResponse = ApiResponse<{ uploadUrl: string; filePath: string }>;
+export type TPresignedUploadResponse = TApiResponse<{ uploadUrl: string; filePath: string }>;
 
 // File upload bulk types
 export interface TFileBulkUploadRequest {
@@ -47,11 +47,11 @@ export interface TBulkUploadResponseData {
   failed: TBulkUploadItem[];
 }
 
-export type TFileUploadResponse = ApiResponse<{
+export type TFileUploadResponse = TApiResponse<{
   name: string;
   fileName: string;
   fileId: string;
   location: string;
 }>;
 
-export type TBulkUploadResponse = ApiResponse<TBulkUploadResponseData>;
+export type TBulkUploadResponse = TApiResponse<TBulkUploadResponseData>;

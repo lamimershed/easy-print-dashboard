@@ -1,6 +1,6 @@
 # User Module
 
-Provides user account management as a foundational service consumed by `AuthModule` and `AdminModule`. There are no public-facing user routes — user data is always accessed through `AuthModule` (`/api/auth/me`) or `AdminModule` (`/api/admin/users`).
+Provides user account management as a foundational service consumed by `AuthModule` and `AdminModule`. There are no public-facing user routes — user data is always accessed through `AuthModule` (`/auth/me`) or `AdminModule` (`/admin/users`).
 
 ---
 

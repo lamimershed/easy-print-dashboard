@@ -167,7 +167,7 @@ See `.env.example` at the project root for a template with all variables.
 
 Configures and mounts the Swagger UI for API documentation.
 
-- **URL:** `http://localhost:3001/api/docs`
+- **URL:** `http://localhost:3001/docs`
 - **Available in:** `development` and `production` environments
 - **Populated by:** `@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiBearerAuth` decorators on all controllers
 
@@ -177,4 +177,4 @@ Configures and mounts the Swagger UI for API documentation.
 setupSwagger(app);
 ```
 
-The Swagger UI documents all REST endpoints under `/api/*`. WebSocket events are not included in Swagger — see `docs/print/PRINT.md` for the full Socket.IO event reference.
+The Swagger UI documents all REST endpoints under `/*`. WebSocket events are not included in Swagger — see `docs/print/PRINT.md` for the full Socket.IO event reference.

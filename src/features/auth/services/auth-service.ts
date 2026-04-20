@@ -6,7 +6,12 @@ import { useAuthStore } from '@/stores';
 import { utils } from '@/utils';
 import { authRoutes, DEFAULT_ROUTE } from '../config';
 import type { TRoleValue } from '../config';
-import type { TAuthResponse, TLoginRequest, TRegisterRequest } from '../types';
+import type {
+  TAuthApiResponse,
+  TAuthUserApiResponse,
+  TLoginRequest,
+  TRegisterRequest,
+} from '../types';
 
 const queryKeys = {
   all: ['auth'] as const,
@@ -19,8 +24,8 @@ const useLogin = () => {
 
   return useMutation({
     mutationFn: async (credentials: TLoginRequest) => {
-      const { data } = await api.post<TAuthResponse>('/auth/login', credentials);
-      return data;
+      const { data } = await api.post<TAuthApiResponse>('/auth/login', credentials);
+      return data.data;
     },
     onSuccess: (data) => {
       setAuth(data.accessToken, data.user.role);
@@ -38,8 +43,8 @@ const useRegister = () => {
 
   return useMutation({
     mutationFn: async (payload: TRegisterRequest) => {
-      const { data } = await api.post<TAuthResponse>('/auth/register', payload);
-      return data;
+      const { data } = await api.post<TAuthApiResponse>('/auth/register', payload);
+      return data.data;
     },
     onSuccess: (data) => {
       setAuth(data.accessToken, data.user.role);
@@ -79,8 +84,8 @@ const useGetMe = () =>
   useQuery({
     queryKey: queryKeys.me(),
     queryFn: async () => {
-      const { data } = await api.get<TAuthResponse['user']>('/auth/me');
-      return data;
+      const { data } = await api.get<TAuthUserApiResponse>('/auth/me');
+      return data.data;
     },
     staleTime: 5 * 60 * 1000,
   });

@@ -67,7 +67,7 @@ Apply the guard on `PrintGateway` or per-handler. Clean up the `counters` map on
 **Status:** Open
 
 **Problem:**
-`GET /api/admin/clients`, `GET /api/admin/users`, and `GET /api/admin/admins` return all records in a single unbounded query. At scale this causes high memory usage and slow responses.
+`GET /admin/clients`, `GET /admin/users`, and `GET /admin/admins` return all records in a single unbounded query. At scale this causes high memory usage and slow responses.
 
 **Fix required:**
 
@@ -120,15 +120,15 @@ Only 2 unit spec files exist (`session.service.spec.ts`, `print.gateway.spec.ts`
 Create a `test/` directory with `jest-e2e.json` config and the following test suites:
 
 1. **Auth flow** (`test/auth.e2e-spec.ts`):
-   - `POST /api/auth/register` → 201, cookie set
-   - `POST /api/auth/login` → 200, access token returned
-   - `POST /api/auth/refresh` → rotates tokens
-   - `POST /api/auth/logout` → cookie cleared
-   - `GET /api/auth/me` → returns current user
+   - `POST /auth/register` → 201, cookie set
+   - `POST /auth/login` → 200, access token returned
+   - `POST /auth/refresh` → rotates tokens
+   - `POST /auth/logout` → cookie cleared
+   - `GET /auth/me` → returns current user
 
 2. **WebSocket relay flow** (`test/gateway.e2e-spec.ts`):
    - client connects with JWT → `client:create_session` → receives `sessionId`
-   - `GET /api/session/:id/validate` → `{ valid: true }`
+   - `GET /session/:id/validate` → `{ valid: true }`
    - Customer connects → `customer:join_session` → client receives `customer:joined`
    - Customer sends `customer:file_metadata` → client receives `print:incoming`
    - Customer streams `customer:file_chunk` × N → client receives `print:chunk` × N, customer receives `transfer:progress`
@@ -195,7 +195,7 @@ Added `NODE_ENV: Joi.string().valid('development', 'production', 'test').default
 
 **File:** `src/auth/auth.controller.ts`
 
-Module-level constant replaced with a getter using `this.configService.get('NODE_ENV')`. Cookie path updated to `/api/auth/refresh` to match global prefix.
+Module-level constant replaced with a getter using `this.configService.get('NODE_ENV')`. Cookie path updated to `/auth/refresh` to match global prefix.
 
 ---
 

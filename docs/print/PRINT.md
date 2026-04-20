@@ -391,7 +391,7 @@ server.to(clientSocketId).emit('print:ready');
 
 2. Customer scans QR code
         │
-        └── GET /api/session/:id/validate → { valid: true }
+        └── GET /session/:id/validate → { valid: true }
 
 3. Customer connects → emits customer:join_session { sessionId, customerId? }
         │
@@ -492,7 +492,7 @@ Called when `client:print_complete` is received. Marks the DB `PrintJob` as `COM
 | `print_completed` | `client:print_complete` received  | `dbJobId`, `tempUserId`                                                 |
 | `print_failed`    | `client:print_error` received     | `error`, `tempUserId`                                                   |
 
-Analytics events are persisted to the `AnalyticsEvent` table and queryable via `GET /api/analytics/summary` and `GET /api/analytics/events`.
+Analytics events are persisted to the `AnalyticsEvent` table and queryable via `GET /analytics/summary` and `GET /analytics/events`.
 
 ---
 

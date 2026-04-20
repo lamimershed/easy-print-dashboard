@@ -7,15 +7,15 @@ import type {
   TFileUploadRequest,
   TFileUploadResponse,
   TPresignedUploadResponse,
-  TRoleListResponse,
+  TRoleItem,
 } from '@/types/common-services-types';
 
 const useGetRoles = () => {
   return useQuery({
     queryKey: ['role'],
     queryFn: async () => {
-      const { data } = await api.get<TRoleListResponse>('/master-data/role');
-      return data?.data?.map((item) => ({
+      const { data } = await api.get<TRoleItem[]>('/master-data/role');
+      return data?.map((item: TRoleItem) => ({
         label: item.name,
         value: item.value,
       }));

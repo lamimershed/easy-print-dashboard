@@ -61,13 +61,13 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await axios.post<{ accessToken: string }>(
+        const response = await axios.post<{ success: boolean; data: { accessToken: string } }>(
           `${BASE_URL}/auth/refresh`,
           {},
           { withCredentials: true }
         );
 
-        const { accessToken: newAccessToken } = response.data;
+        const { accessToken: newAccessToken } = response.data.data;
         updateAccessToken(newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         onRefreshed(newAccessToken);

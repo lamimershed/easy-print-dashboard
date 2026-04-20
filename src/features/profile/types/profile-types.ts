@@ -1,3 +1,4 @@
+import type { TApiResponse } from '@/services';
 import type { TClientProfile } from '@/features/auth/types';
 
 export type { TClientProfile };
@@ -11,3 +12,6 @@ export type TUpdateClientRequest = {
   latitude?: number;
   longitude?: number;
 };
+
+export type TClientProfileResponse = TApiResponse<TClientProfile>;
+export type TUpdateClientResponse = TApiResponse<TClientProfile>;

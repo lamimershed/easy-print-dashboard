@@ -14,7 +14,7 @@ import { ThemeProvider } from './components/theme-provider.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter basename={import.meta.env.VITE_BASE_PATH}>
-      <ThemeProvider defaultTheme="system" storageKey="app-theme">
+      <ThemeProvider defaultTheme="light" storageKey="app-theme">
         <QueryProvider>
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>

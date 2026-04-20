@@ -48,7 +48,7 @@ Customer scans QR code → opens https://easyprint.app/print/{slug}
                                 │
                                 ▼
         ┌──────────────────────────────────────────┐
-        │  GET /api/client/{slug}                   │
+        │  GET /client/{slug}                   │
         │  ?customerId=<localStorage UUID>          │
         │  → { id, companyName, slug,               │
         │       logoUrl, address,                   │
@@ -58,7 +58,7 @@ Customer scans QR code → opens https://easyprint.app/print/{slug}
                                 │
                                 ▼ (use id as clientId)
         ┌──────────────────────────────────────────┐
-        │  POST /api/sessions/start                 │
+        │  POST /sessions/start                 │
         │  { customerId, clientId }                 │
         │  → { sessionId, expiresAt,                │
         │       alreadyExisted }                    │
@@ -116,7 +116,7 @@ Customer scans QR code → opens https://easyprint.app/print/{slug}
 **Session recovery (page refresh):**
 
 ```
-GET /api/sessions/active?customerId=X&clientId=Y
+GET /sessions/active?customerId=X&clientId=Y
 → { sessionId, expiresAt, status }  — or 404 if expired
 ```
 
@@ -124,7 +124,7 @@ GET /api/sessions/active?customerId=X&clientId=Y
 
 ## 3. REST API Reference
 
-### `GET /api/client/:slug`
+### `GET /client/:slug`
 
 Public — no auth required. Called by the customer frontend after scanning the QR code.
 
@@ -154,7 +154,7 @@ Public — no auth required. Called by the customer frontend after scanning the 
 
 ---
 
-### `POST /api/sessions/start`
+### `POST /sessions/start`
 
 Public — no auth required. Creates or resumes a session for a `customerId + clientId` pair.
 
@@ -180,7 +180,7 @@ Returns **503** if the client is currently offline.
 
 ---
 
-### `GET /api/sessions/active`
+### `GET /sessions/active`
 
 Public — no auth required. Recovers an existing session on page refresh.
 
@@ -205,7 +205,7 @@ Returns **404** if no active session exists — call `POST /sessions/start` to c
 
 ---
 
-### `GET /api/sessions/status`
+### `GET /sessions/status`
 
 Debug/internal use. Returns session state by `sessionId`.
 
@@ -224,7 +224,7 @@ Debug/internal use. Returns session state by `sessionId`.
 
 ---
 
-### `GET /api/analytics/me`
+### `GET /analytics/me`
 
 Requires JWT + `CLIENT` role.
 
@@ -245,7 +245,7 @@ Requires JWT + `CLIENT` role.
 
 ---
 
-### `GET /api/analytics/me/events`
+### `GET /analytics/me/events`
 
 Requires JWT + `CLIENT` role. Paginated list of raw analytics events.
 
@@ -253,7 +253,7 @@ Requires JWT + `CLIENT` role. Paginated list of raw analytics events.
 
 ---
 
-### `GET /api/print-jobs/me`
+### `GET /print-jobs/me`
 
 Requires JWT + `CLIENT` role. Paginated print job history.
 
@@ -419,7 +419,7 @@ Written via `AnalyticsService.trackEvent()` — fire-and-forget, never throws.
 
 | Event type        | Triggered when                    | Metadata                                                          |
 | ----------------- | --------------------------------- | ----------------------------------------------------------------- |
-| `scan`            | `GET /api/client/:slug` called    | `{ slug, customerId }`                                            |
+| `scan`            | `GET /client/:slug` called        | `{ slug, customerId }`                                            |
 | `print_started`   | `customer:file_metadata` received | `{ filename, fileSize, mimeType, copies, colorMode, tempUserId }` |
 | `print_completed` | `client:print_complete` received  | `{ dbJobId, tempUserId }`                                         |
 | `print_failed`    | `client:print_error` received     | `{ error, tempUserId }`                                           |
@@ -434,7 +434,7 @@ Written via `AnalyticsService.trackEvent()` — fire-and-forget, never throws.
 
 | File                                                       | Responsibility                                                                        |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `src/client/client-public.controller.ts`                   | `GET /api/client/:slug` — public client info + scan analytics                         |
+| `src/client/client-public.controller.ts`                   | `GET /client/:slug` — public client info + scan analytics                             |
 | `src/client/client.service.ts`                             | `findBySlugPublic()` — resolves slug, checks `isOnline` via `SessionService`          |
 | `src/client/dto/client-public-response.dto.ts`             | `ClientPublicResponseDto`                                                             |
 | `src/session/session.controller.ts`                        | `POST /sessions/start`, `GET /sessions/active`, `GET /sessions/status`                |
@@ -443,7 +443,7 @@ Written via `AnalyticsService.trackEvent()` — fire-and-forget, never throws.
 | `src/session/dto/session.dto.ts`                           | `StartSessionDto`, `StartSessionResponseDto`, `ActiveSessionDto`, `SessionStatusDto`  |
 | `src/print/print.gateway.ts`                               | All WebSocket event handlers (`client:*`, `customer:*`)                               |
 | `src/print/print.service.ts`                               | `persistPrintJob()`, `updatePrintJobStatus()`, `completePrintJob()`, `failPrintJob()` |
-| `src/print/print.controller.ts`                            | `GET /api/print-jobs/me`                                                              |
+| `src/print/print.controller.ts`                            | `GET /print-jobs/me`                                                                  |
 | `src/print/repositories/print-job.repository.interface.ts` | `IPrintJobRepository` + `CreatePrintJobData`                                          |
 | `src/print/repositories/prisma-print-job.repository.ts`    | Prisma implementation                                                                 |
 | `src/analytics/analytics.service.ts`                       | `trackEvent()`, `getSummary()`, `getEvents()`                                         |

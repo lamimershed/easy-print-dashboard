@@ -1,3 +1,5 @@
+import type { TApiResponse, TApiPaginatedResponse, TPaginatedResult } from '@/services';
+
 export type TAnalyticsSummary = {
   totalScans: number;
   totalPrintJobs: number;
@@ -14,13 +16,6 @@ export type TAnalyticsEvent = {
   createdAt: string;
 };
 
-export type TPaginatedAnalyticsEvents = {
-  data: TAnalyticsEvent[];
-  total: number;
-  page: number;
-  limit: number;
-};
-
 export type TPrintJob = {
   id: string;
   filename: string;
@@ -34,11 +29,13 @@ export type TPrintJob = {
   completedAt: string | null;
 };
 
-export type TPaginatedPrintJobs = {
-  data: TPrintJob[];
-  total: number;
-  page: number;
-  limit: number;
-};
-
 export type TAnalyticsPeriod = '7d' | '30d' | 'all';
+
+// Paginated result shapes (what services return to components)
+export type TPaginatedAnalyticsEvents = TPaginatedResult<TAnalyticsEvent>;
+export type TPaginatedPrintJobs = TPaginatedResult<TPrintJob>;
+
+// API response types (used in service call type annotations)
+export type TAnalyticsSummaryResponse = TApiResponse<TAnalyticsSummary>;
+export type TAnalyticsEventsResponse = TApiPaginatedResponse<TAnalyticsEvent>;
+export type TPrintJobsResponse = TApiPaginatedResponse<TPrintJob>;

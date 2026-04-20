@@ -8,3 +8,4 @@ export * from './image-dropzone';
 export * from './logo-dropzone';
 export * from './field-info';
 export * from './date-picker-field';
+export * from './password-input';

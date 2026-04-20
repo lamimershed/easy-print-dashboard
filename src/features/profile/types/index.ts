@@ -1,1 +1,6 @@
-export type { TClientProfile, TUpdateClientRequest } from './profile-types';
+export type {
+  TClientProfile,
+  TUpdateClientRequest,
+  TClientProfileResponse,
+  TUpdateClientResponse,
+} from './profile-types';

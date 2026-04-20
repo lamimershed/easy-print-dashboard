@@ -1,3 +1,4 @@
+import type { TApiResponse } from '@/services';
 import type { TAuthUserRole } from '@/stores/auth-store';
 
 export type { TAuthUserRole };
@@ -28,6 +29,9 @@ export type TAuthResponse = {
   accessToken: string;
   user: TAuthUser;
 };
+
+export type TAuthApiResponse = TApiResponse<TAuthResponse>;
+export type TAuthUserApiResponse = TApiResponse<TAuthUser>;
 
 export type TRegisterRequest = {
   email: string;

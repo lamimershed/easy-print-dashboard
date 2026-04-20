@@ -26,9 +26,9 @@ Handles all authentication and authorization for the Easy Print backend. Impleme
 - **Module:** `src/auth/auth.module.ts`
 - **Controller:** `src/auth/auth.controller.ts`
 - **Service:** `src/auth/auth.service.ts`
-- **Routes prefix:** `/api/auth`
+- **Routes prefix:** `/auth`
 - **Access token:** Short-lived JWT (default 15 min), sent in `Authorization: Bearer <token>` header
-- **Refresh token:** Long-lived opaque token (default 30 days), stored as httpOnly cookie at path `/api/auth/refresh`
+- **Refresh token:** Long-lived opaque token (default 30 days), stored as httpOnly cookie at path `/auth/refresh`
 - **Password hashing:** bcrypt, cost factor 12 (registration), 10 (refresh tokens)
 
 ---
@@ -191,11 +191,11 @@ Sets required roles metadata consumed by `RolesGuard`.
 
 ## API Reference
 
-All routes are under `/api/auth`. Auth routes have a tighter throttle: **5 requests/min** per IP on login and register (vs. 30/min globally).
+All routes are under `/auth`. Auth routes have a tighter throttle: **5 requests/min** per IP on login and register (vs. 30/min globally).
 
 ---
 
-### `POST /api/auth/register`
+### `POST /auth/register`
 
 Register a new client account. Creates a `User`, a `Client` profile, and issues tokens.
 
@@ -237,13 +237,13 @@ Register a new client account. Creates a `User`, a `Client` profile, and issues 
 }
 ```
 
-Sets `refreshToken` as an httpOnly cookie (path: `/api/auth/refresh`, 30 days).
+Sets `refreshToken` as an httpOnly cookie (path: `/auth/refresh`, 30 days).
 
 **Errors:** `409 Conflict` — email already registered.
 
 ---
 
-### `POST /api/auth/login`
+### `POST /auth/login`
 
 Login with email and password.
 
@@ -265,7 +265,7 @@ Login with email and password.
 
 ---
 
-### `POST /api/auth/refresh`
+### `POST /auth/refresh`
 
 Exchange the refresh token cookie for a new access token (and rotated refresh token).
 
@@ -286,7 +286,7 @@ Sets a new `refreshToken` cookie. The old token is invalidated.
 
 ---
 
-### `POST /api/auth/logout`
+### `POST /auth/logout`
 
 Revoke the current refresh token and clear the cookie.
 
@@ -297,7 +297,7 @@ Revoke the current refresh token and clear the cookie.
 
 ---
 
-### `GET /api/auth/me`
+### `GET /auth/me`
 
 Get the current authenticated user's profile (user + client or admin data).
 
@@ -367,11 +367,11 @@ Role is stored in the `User.role` DB column and embedded in every JWT. The `@Rol
 
 ## Security Notes
 
-| Concern                      | Mitigation                                                                                                                |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **Brute force login**        | 5 req/min rate limit via `@Throttle` on `/login` and `/register`                                                          |
-| **Refresh token theft**      | httpOnly cookie (JS cannot read it), `sameSite: strict`, `secure: true` in production, scoped to `/api/auth/refresh` path |
-| **Token reuse after logout** | Rotating refresh tokens — each use invalidates the previous token                                                         |
-| **Bcrypt timing scan**       | `findActiveByUserId` caps result set at `take: 10` to bound the comparison loop                                           |
-| **Password storage**         | bcrypt with cost 12 (registration). Passwords are never returned in any response                                          |
-| **JWT secret exposure**      | Validated at startup via Joi schema — app will crash on boot if `JWT_SECRET` is missing                                   |
+| Concern                      | Mitigation                                                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Brute force login**        | 5 req/min rate limit via `@Throttle` on `/login` and `/register`                                                      |
+| **Refresh token theft**      | httpOnly cookie (JS cannot read it), `sameSite: strict`, `secure: true` in production, scoped to `/auth/refresh` path |
+| **Token reuse after logout** | Rotating refresh tokens — each use invalidates the previous token                                                     |
+| **Bcrypt timing scan**       | `findActiveByUserId` caps result set at `take: 10` to bound the comparison loop                                       |
+| **Password storage**         | bcrypt with cost 12 (registration). Passwords are never returned in any response                                      |
+| **JWT secret exposure**      | Validated at startup via Joi schema — app will crash on boot if `JWT_SECRET` is missing                               |

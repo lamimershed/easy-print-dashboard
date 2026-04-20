@@ -3,6 +3,8 @@ export type {
   TClientProfile,
   TAuthUserRole,
   TAuthResponse,
+  TAuthApiResponse,
+  TAuthUserApiResponse,
   TRegisterRequest,
   TLoginRequest,
 } from './auth-type';

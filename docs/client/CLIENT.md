@@ -23,8 +23,8 @@ Manages print client client profiles. Each `Client` is linked to a `User` accoun
 - **Module:** `src/client/client.module.ts`
 - **Controller:** `src/client/client.controller.ts`
 - **Service:** `src/client/client.service.ts`
-- **Routes prefix:** `/api/clients`
-- **Access:** `CLIENT` role only (self-service). Admin routes live in `AdminModule` under `/api/admin/clients`.
+- **Routes prefix:** `/clients`
+- **Access:** `CLIENT` role only (self-service). Admin routes live in `AdminModule` under `/admin/clients`.
 
 ---
 
@@ -119,7 +119,7 @@ enum ClientPlan {
 }
 ```
 
-Plans are managed by `SUPER_ADMIN` via `PATCH /api/admin/clients/:id/plan`. Clients cannot change their own plan.
+Plans are managed by `SUPER_ADMIN` via `PATCH /admin/clients/:id/plan`. Clients cannot change their own plan.
 
 ---
 
@@ -129,7 +129,7 @@ All routes require `Authorization: Bearer <token>` with `CLIENT` role.
 
 ---
 
-### `GET /api/clients/me`
+### `GET /clients/me`
 
 Get the authenticated client's own profile.
 
@@ -159,7 +159,7 @@ Get the authenticated client's own profile.
 
 ---
 
-### `PATCH /api/clients/me`
+### `PATCH /clients/me`
 
 Update the authenticated client's own profile. All fields are optional.
 
@@ -182,11 +182,11 @@ Update the authenticated client's own profile. All fields are optional.
 }
 ```
 
-> To update `logoUrl`, upload first via `POST /api/upload/client-logo` and pass the returned URL here.
+> To update `logoUrl`, upload first via `POST /upload/client-logo` and pass the returned URL here.
 
 ---
 
-### `DELETE /api/clients/me`
+### `DELETE /clients/me`
 
 Delete the authenticated client's own account. Cascades to related sessions, print jobs, and payments.
 
@@ -222,12 +222,12 @@ The concrete implementation is `PrismaClientRepository` in `src/client/repositor
 
 Admin-only client operations are exposed through `AdminModule` (not `ClientModule`). `AdminService` delegates to `ClientService` methods.
 
-| Admin route                         | Delegates to                         |
-| ----------------------------------- | ------------------------------------ |
-| `GET /api/admin/clients`            | `ClientService.findAll()`            |
-| `GET /api/admin/clients/:id`        | `ClientService.findById(id)`         |
-| `PATCH /api/admin/clients/:id`      | `ClientService.update(id, dto)`      |
-| `PATCH /api/admin/clients/:id/plan` | `ClientService.updatePlan(id, plan)` |
-| `DELETE /api/admin/clients/:id`     | `ClientService.remove(id)`           |
+| Admin route                     | Delegates to                         |
+| ------------------------------- | ------------------------------------ |
+| `GET /admin/clients`            | `ClientService.findAll()`            |
+| `GET /admin/clients/:id`        | `ClientService.findById(id)`         |
+| `PATCH /admin/clients/:id`      | `ClientService.update(id, dto)`      |
+| `PATCH /admin/clients/:id/plan` | `ClientService.updatePlan(id, plan)` |
+| `DELETE /admin/clients/:id`     | `ClientService.remove(id)`           |
 
 See `docs/admin/ADMIN.md` for the full admin API reference.

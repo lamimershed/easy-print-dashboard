@@ -23,7 +23,7 @@ Manages print sessions — the in-memory connection state between a client (kios
 - **Module:** `src/session/session.module.ts`
 - **Controller:** `src/session/session.controller.ts`
 - **Service:** `src/session/session.service.ts`
-- **Routes prefix:** `/api/session`
+- **Routes prefix:** `/session`
 - **Storage:** In-memory `Map<string, Session>` — sessions are not persisted to the database (metadata is written to PostgreSQL by `PrintService` when a print job starts)
 
 ---
@@ -111,7 +111,7 @@ type SessionStatus = 'waiting' | 'connected' | 'transferring' | 'printing' | 'co
    SessionService.createSession() OR createSessionWithId()
    → session status: 'waiting'
 
-2. Customer calls GET /api/session/:id/validate
+2. Customer calls GET /session/:id/validate
         │
         ▼
    SessionController validates session exists and has no customer
@@ -154,7 +154,7 @@ type SessionStatus = 'waiting' | 'connected' | 'transferring' | 'printing' | 'co
 
 ## API Reference
 
-### `GET /api/session/:sessionId`
+### `GET /session/:sessionId`
 
 Get the current status of a session.
 
@@ -177,7 +177,7 @@ Get the current status of a session.
 
 ---
 
-### `GET /api/session/:sessionId/validate`
+### `GET /session/:sessionId/validate`
 
 Validate a session for a customer attempting to join via QR code. Call this before connecting via WebSocket.
 

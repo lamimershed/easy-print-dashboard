@@ -5,4 +5,7 @@ export type {
   TPrintJob,
   TPaginatedPrintJobs,
   TAnalyticsPeriod,
+  TAnalyticsSummaryResponse,
+  TAnalyticsEventsResponse,
+  TPrintJobsResponse,
 } from './analytics-types';

@@ -27,7 +27,7 @@ export function AnalyticsEventsTable() {
     return <div className="py-8 text-center text-muted-foreground">Loading events…</div>;
   if (!data) return null;
 
-  const totalPages = Math.ceil(data.total / limit);
+  const totalPages = data.meta.totalPages;
 
   return (
     <div className="space-y-3">
@@ -71,7 +71,7 @@ export function AnalyticsEventsTable() {
             <Button
               variant="outline"
               size="sm"
-              disabled={page <= 1}
+              disabled={!data.meta.hasPreviousPage}
               onClick={() => setPage((p) => p - 1)}
             >
               Previous
@@ -79,7 +79,7 @@ export function AnalyticsEventsTable() {
             <Button
               variant="outline"
               size="sm"
-              disabled={page >= totalPages}
+              disabled={!data.meta.hasNextPage}
               onClick={() => setPage((p) => p + 1)}
             >
               Next

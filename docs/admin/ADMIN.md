@@ -23,7 +23,7 @@ Provides super-admin management APIs for clients, users, and admin accounts. All
 - **Module:** `src/admin/admin.module.ts`
 - **Controller:** `src/admin/admin.controller.ts`
 - **Service:** `src/admin/admin.service.ts`
-- **Routes prefix:** `/api/admin`
+- **Routes prefix:** `/admin`
 - **Access:** `SUPER_ADMIN` role only (enforced by `JwtAuthGuard` + `RolesGuard` at controller level)
 
 ---
@@ -48,7 +48,7 @@ AdminController  ──────────────────► Admin
 src/admin/
 ├── ADMIN.md                            ← this file
 ├── admin.module.ts                     ← NestJS module; imports ClientModule, UserModule
-├── admin.controller.ts                 ← All /api/admin/* routes
+├── admin.controller.ts                 ← All /admin/* routes
 ├── admin.service.ts                    ← Orchestrates ClientService + UserService + Prisma
 └── dto/
     ├── update-client-plan.dto.ts       ← { plan: ClientPlan }
@@ -68,7 +68,7 @@ All routes require:
 
 ### Clients
 
-#### `GET /api/admin/clients`
+#### `GET /admin/clients`
 
 List all client profiles.
 
@@ -97,7 +97,7 @@ List all client profiles.
 
 ---
 
-#### `GET /api/admin/clients/:id`
+#### `GET /admin/clients/:id`
 
 Get a single client by ID.
 
@@ -109,9 +109,9 @@ Get a single client by ID.
 
 ---
 
-#### `PATCH /api/admin/clients/:id`
+#### `PATCH /admin/clients/:id`
 
-Update any client profile field (same shape as `PATCH /api/clients/me` but admin can target any client).
+Update any client profile field (same shape as `PATCH /clients/me` but admin can target any client).
 
 | Property     | Value                                  |
 | ------------ | -------------------------------------- |
@@ -132,7 +132,7 @@ Update any client profile field (same shape as `PATCH /api/clients/me` but admin
 
 ---
 
-#### `PATCH /api/admin/clients/:id/plan`
+#### `PATCH /admin/clients/:id/plan`
 
 Change a client's subscription plan.
 
@@ -150,7 +150,7 @@ Valid values: `"FREE"` | `"STARTER"` | `"PRO"`
 
 ---
 
-#### `DELETE /api/admin/clients/:id`
+#### `DELETE /admin/clients/:id`
 
 Delete a client and all related data (sessions, print jobs, payments — cascade).
 
@@ -164,7 +164,7 @@ Delete a client and all related data (sessions, print jobs, payments — cascade
 
 ### Users
 
-#### `GET /api/admin/users`
+#### `GET /admin/users`
 
 List all user accounts (both `CLIENT` and `SUPER_ADMIN` roles). Password hashes are excluded from the response.
 
@@ -190,7 +190,7 @@ List all user accounts (both `CLIENT` and `SUPER_ADMIN` roles). Password hashes 
 
 ### Admins
 
-#### `GET /api/admin/admins`
+#### `GET /admin/admins`
 
 List all admin users (records in the `AdminUser` table, joined with their `User`).
 
