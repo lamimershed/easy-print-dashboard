@@ -14,6 +14,14 @@ pnpm format:check   # Prettier check (CI)
 
 No test suite is configured. Husky runs `type-check`, `lint`, and `format:check` on pre-commit.
 
+## Commit Policy
+
+**Never commit or push code without explicit user approval**, even in autopilot or autopilot_fleet mode.
+
+- Always show the user what will be committed (files changed, commit message) and wait for confirmation before running `git commit`.
+- Do not auto-commit as part of task completion unless the user has explicitly pre-approved committing in this session.
+- When in doubt, stage the changes and present a diff summary for review instead of committing.
+
 ## Architecture
 
 **Stack:** React 19, Vite 7, TypeScript 5.7 (strict), TailwindCSS v4, shadcn/ui (new-york), React Router v7, TanStack Query v5, Zustand v5, React Hook Form v7 + Zod v4, Axios, Socket.IO Client.

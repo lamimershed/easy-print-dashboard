@@ -3,6 +3,8 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { Download, Printer, Lightbulb, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useElectronPrinter } from '@/hooks';
+import { printHtml, isElectron } from '@/lib/electron-print';
 
 interface PrintingStandQrProps {
   slug: string;
@@ -11,7 +13,42 @@ interface PrintingStandQrProps {
 
 export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { printerName, isLoading: printerLoading } = useElectronPrinter();
   const customerUrl = `${import.meta.env.VITE_CUSTOMER_APP_URL ?? window.location.origin}/shop/${slug}`;
+
+  const buildStandeeHtml = (dataUrl: string) => `<!DOCTYPE html>
+<html>
+  <head>
+    <title>${companyName} — Print Standee</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: sans-serif;
+        background: #fff;
+        padding: 2rem;
+      }
+      img { width: 280px; height: 280px; }
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        color: #00694e;
+        margin-top: 1rem;
+      }
+      p { color: #5c5b5b; font-size: 0.85rem; margin-top: 0.5rem; }
+    </style>
+  </head>
+  <body>
+    <img src="${dataUrl}" alt="QR Code" />
+    <h2>SCAN TO PRINT</h2>
+    <p>${companyName}</p>
+  </body>
+</html>`;
 
   const handleDownloadPng = () => {
     const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement | null;
@@ -26,35 +63,30 @@ export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
     toast.success('QR code downloaded!');
   };
 
-  const handlePrintStandee = () => {
+  const handlePrintStandee = async () => {
     const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement | null;
     if (!canvas) {
       toast.error('QR canvas not ready');
       return;
     }
+
     const dataUrl = canvas.toDataURL('image/png');
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(`
-      <html>
-        <head>
-          <title>${companyName} — Print Standee</title>
-          <style>
-            body { margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; background: #fff; }
-            img { width: 280px; height: 280px; }
-            h2 { font-size: 1.5rem; font-weight: 900; letter-spacing: 0.1em; color: #00694e; margin-top: 1rem; }
-            p { color: #5c5b5b; font-size: 0.85rem; }
-          </style>
-        </head>
-        <body>
-          <img src="${dataUrl}" alt="QR Code" />
-          <h2>SCAN TO PRINT</h2>
-          <p>${companyName}</p>
-          <script>window.onload = () => { window.print(); window.close(); }</script>
-        </body>
-      </html>
-    `);
-    win.document.close();
+    const html = buildStandeeHtml(dataUrl);
+
+    const toastDescription =
+      isElectron() && printerName ? `Printing to: ${printerName}` : undefined;
+
+    const success = await printHtml(html);
+
+    if (isElectron()) {
+      if (success) {
+        toast.success('Standee sent to printer!', { description: toastDescription });
+      } else {
+        toast.error('Print failed', {
+          description: 'Check that your printer is connected and online.',
+        });
+      }
+    }
   };
 
   return (
@@ -102,11 +134,20 @@ export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
               variant="outline"
               className="gap-2 rounded-full border-lime-300 bg-lime-100 py-6 text-sm font-bold text-lime-800 hover:bg-lime-200 dark:border-lime-700 dark:bg-lime-900 dark:text-lime-200 dark:hover:bg-lime-800"
               onClick={handlePrintStandee}
+              disabled={printerLoading}
+              title={isElectron() && printerName ? `Print to: ${printerName}` : undefined}
             >
               <Printer className="size-4" />
               Print Standee
             </Button>
           </div>
+
+          {/* Printer name hint (Electron only) */}
+          {isElectron() && printerName && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              Will print to: <span className="font-semibold text-foreground">{printerName}</span>
+            </p>
+          )}
         </div>
       </div>
 
