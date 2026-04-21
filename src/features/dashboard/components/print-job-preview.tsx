@@ -11,10 +11,9 @@ interface PrintJobPreviewProps {
     copies: number;
     colorMode: string;
   };
-  sessionId: string;
   status: 'incoming' | 'printing';
-  onComplete: (sessionId: string) => void;
-  onError: (sessionId: string, error: string) => void;
+  onComplete: () => void;
+  onError: (error: string) => void;
 }
 
 const formatBytes = (bytes: number) => {
@@ -22,13 +21,7 @@ const formatBytes = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-export function PrintJobPreview({
-  job,
-  sessionId,
-  status,
-  onComplete,
-  onError,
-}: PrintJobPreviewProps) {
+export function PrintJobPreview({ job, status, onComplete, onError }: PrintJobPreviewProps) {
   return (
     <Card>
       <CardHeader>
@@ -59,14 +52,14 @@ export function PrintJobPreview({
 
         {status === 'printing' && (
           <div className="flex gap-3 pt-2">
-            <Button className="flex-1 gap-2" onClick={() => onComplete(sessionId)}>
+            <Button className="flex-1 gap-2" onClick={() => onComplete()}>
               <CheckCircle className="size-4" />
               Mark as Printed
             </Button>
             <Button
               variant="destructive"
               className="flex-1 gap-2"
-              onClick={() => onError(sessionId, 'Print error')}
+              onClick={() => onError('Print error')}
             >
               <AlertCircle className="size-4" />
               Report Error

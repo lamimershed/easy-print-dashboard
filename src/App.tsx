@@ -29,7 +29,7 @@ function App() {
         <Route element={<AuthCheck />}>
           <Route index element={<RoleRedirect />} />
 
-          <Route path="/dashboard" element={<MainLayout />}>
+          <Route path="/dashboard/*" element={<MainLayout />}>
             <Route path="*" element={<DashboardRoutes />} />
           </Route>
 

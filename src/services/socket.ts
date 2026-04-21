@@ -9,6 +9,9 @@ export const getSocket = (accessToken: string): Socket => {
     auth: { token: accessToken },
     withCredentials: true,
     autoConnect: true,
+    extraHeaders: {
+      'ngrok-skip-browser-warning': 'true',
+    },
   });
 
   return socket;

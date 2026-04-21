@@ -15,15 +15,17 @@ interface PrintIncomingPayload {
 interface UsePrintSocketReturn {
   sessionStatus: SessionStatus;
   currentJob: PrintIncomingPayload | null;
+  sessionId: string | null;
   isConnected: boolean;
-  markComplete: (sessionId: string) => void;
-  markError: (sessionId: string, error: string) => void;
+  markComplete: () => void;
+  markError: (error: string) => void;
 }
 
 export function usePrintSocket(clientId: string | undefined): UsePrintSocketReturn {
   const { accessToken } = useAuthStore();
   const [sessionStatus, setSessionStatus] = useState<SessionStatus>('idle');
   const [currentJob, setCurrentJob] = useState<PrintIncomingPayload | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -42,7 +44,8 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       setSessionStatus('idle');
     });
 
-    socket.on('client:joined', () => {
+    socket.on('client:joined', ({ sessionId: sid }: { sessionId: string }) => {
+      setSessionId(sid);
       setSessionStatus('waiting');
     });
 
@@ -53,6 +56,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     socket.on('customer:left', () => {
       setSessionStatus('waiting');
       setCurrentJob(null);
+      setSessionId(null);
     });
 
     socket.on('print:incoming', (payload: PrintIncomingPayload) => {
@@ -67,6 +71,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     socket.on('session:ended', () => {
       setSessionStatus('waiting');
       setCurrentJob(null);
+      setSessionId(null);
     });
 
     if (!socket.connected) socket.connect();
@@ -83,27 +88,26 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     };
   }, [accessToken, clientId]);
 
-  const markComplete = useCallback(
-    (sessionId: string) => {
-      if (!accessToken) return;
-      const socket = getSocket(accessToken);
-      socket.emit('client:print_complete', sessionId);
-      setSessionStatus('waiting');
-      setCurrentJob(null);
-    },
-    [accessToken]
-  );
+  const markComplete = useCallback(() => {
+    if (!accessToken || !sessionId) return;
+    const socket = getSocket(accessToken);
+    socket.emit('client:print_complete', sessionId);
+    setSessionStatus('waiting');
+    setCurrentJob(null);
+    setSessionId(null);
+  }, [accessToken, sessionId]);
 
   const markError = useCallback(
-    (sessionId: string, error: string) => {
-      if (!accessToken) return;
+    (error: string) => {
+      if (!accessToken || !sessionId) return;
       const socket = getSocket(accessToken);
       socket.emit('client:print_error', { sessionId, error });
       setSessionStatus('waiting');
       setCurrentJob(null);
+      setSessionId(null);
     },
-    [accessToken]
+    [accessToken, sessionId]
   );
 
-  return { sessionStatus, currentJob, isConnected, markComplete, markError };
+  return { sessionStatus, currentJob, sessionId, isConnected, markComplete, markError };
 }

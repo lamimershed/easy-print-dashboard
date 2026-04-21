@@ -8,6 +8,7 @@ const api: AxiosInstance = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
   },
 });
 
@@ -64,7 +65,7 @@ api.interceptors.response.use(
         const response = await axios.post<{ success: boolean; data: { accessToken: string } }>(
           `${BASE_URL}/auth/refresh`,
           {},
-          { withCredentials: true }
+          { withCredentials: true, headers: { 'ngrok-skip-browser-warning': 'true' } }
         );
 
         const { accessToken: newAccessToken } = response.data.data;
