@@ -1,20 +1,54 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import { Download, Printer, Lightbulb, QrCode } from 'lucide-react';
+import {
+  Download,
+  Printer,
+  Lightbulb,
+  QrCode,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useElectronPrinter } from '@/hooks';
-import { printHtml, isElectron } from '@/lib/electron-print';
+import { isElectron } from '@/lib/electron-print';
+import { usePrintStandee } from '../hooks/use-print-standee';
+import type { PrintStage } from '../hooks/use-print-standee';
 
 interface PrintingStandQrProps {
   slug: string;
   companyName: string;
 }
 
+const STAGE_LABELS: Partial<Record<PrintStage, string>> = {
+  preparing: 'Preparing…',
+  spooling: 'Sending to printer…',
+  printing: 'Printing…',
+};
+
 export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const { printerName, isLoading: printerLoading } = useElectronPrinter();
+  const { printerName, printerSystemName, isLoading: printerLoading } = useElectronPrinter();
+  const { print, isPending, stage, error, result, reset } = usePrintStandee();
+
   const customerUrl = `${import.meta.env.VITE_CUSTOMER_APP_URL ?? window.location.origin}/shop/${slug}`;
+
+  // Auto-reset error banner after 5 s
+  useEffect(() => {
+    if (stage === 'error') {
+      const timer = setTimeout(reset, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [stage, reset]);
+
+  // Show success toast once complete
+  useEffect(() => {
+    if (stage === 'complete' && result?.success) {
+      const description = isElectron() && printerName ? `Sent to: ${printerName}` : undefined;
+      toast.success('Standee printed!', { description });
+    }
+  }, [stage, result, printerName]);
 
   const buildStandeeHtml = (dataUrl: string) => `<!DOCTYPE html>
 <html>
@@ -69,25 +103,13 @@ export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
       toast.error('QR canvas not ready');
       return;
     }
-
     const dataUrl = canvas.toDataURL('image/png');
     const html = buildStandeeHtml(dataUrl);
-
-    const toastDescription =
-      isElectron() && printerName ? `Printing to: ${printerName}` : undefined;
-
-    const success = await printHtml(html);
-
-    if (isElectron()) {
-      if (success) {
-        toast.success('Standee sent to printer!', { description: toastDescription });
-      } else {
-        toast.error('Print failed', {
-          description: 'Check that your printer is connected and online.',
-        });
-      }
-    }
+    await print(html, printerSystemName ?? undefined);
   };
+
+  const buttonLabel = isPending && STAGE_LABELS[stage] ? STAGE_LABELS[stage] : 'Print Standee';
+  const isSuccess = stage === 'complete';
 
   return (
     <div className="flex flex-col gap-6">
@@ -126,24 +148,65 @@ export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
             <Button
               className="gap-2 rounded-full py-6 text-sm font-bold"
               onClick={handleDownloadPng}
+              disabled={isPending}
             >
               <Download className="size-4" />
               Download PNG
             </Button>
             <Button
               variant="outline"
-              className="gap-2 rounded-full border-lime-300 bg-lime-100 py-6 text-sm font-bold text-lime-800 hover:bg-lime-200 dark:border-lime-700 dark:bg-lime-900 dark:text-lime-200 dark:hover:bg-lime-800"
+              className={
+                isSuccess
+                  ? 'gap-2 rounded-full border-primary/30 bg-primary/10 py-6 text-sm font-bold text-primary'
+                  : 'gap-2 rounded-full border-lime-300 bg-lime-100 py-6 text-sm font-bold text-lime-800 hover:bg-lime-200 dark:border-lime-700 dark:bg-lime-900 dark:text-lime-200 dark:hover:bg-lime-800'
+              }
               onClick={handlePrintStandee}
-              disabled={printerLoading}
+              disabled={isPending || printerLoading}
               title={isElectron() && printerName ? `Print to: ${printerName}` : undefined}
             >
-              <Printer className="size-4" />
-              Print Standee
+              {isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : isSuccess ? (
+                <CheckCircle2 className="size-4" />
+              ) : (
+                <Printer className="size-4" />
+              )}
+              {buttonLabel}
             </Button>
           </div>
 
-          {/* Printer name hint (Electron only) */}
-          {isElectron() && printerName && (
+          {/* Error banner */}
+          {stage === 'error' && error && (
+            <div className="mt-4 flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-left">
+              <AlertCircle className="mt-0.5 size-4 shrink-0 text-destructive" />
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-destructive">Print failed</p>
+                <p className="text-xs text-destructive/80">{error}</p>
+              </div>
+              <button
+                className="text-xs text-destructive/60 hover:text-destructive"
+                onClick={reset}
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
+          {/* Stage indicator while pending */}
+          {isPending && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              <span className="font-medium text-foreground">{STAGE_LABELS[stage]}</span>
+              {isElectron() && printerName && (
+                <>
+                  {' '}
+                  — <span className="font-semibold">{printerName}</span>
+                </>
+              )}
+            </p>
+          )}
+
+          {/* Printer name hint (Electron only, idle state) */}
+          {!isPending && stage !== 'error' && isElectron() && printerName && (
             <p className="mt-3 text-xs text-muted-foreground">
               Will print to: <span className="font-semibold text-foreground">{printerName}</span>
             </p>

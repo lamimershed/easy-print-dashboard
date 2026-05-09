@@ -20,6 +20,10 @@ const ProfileRoutes = lazy(() =>
   import('./features/profile').then((m) => ({ default: m.ProfileRoutes }))
 );
 
+const PrinterTestPage = lazy(() =>
+  import('./features/print-monitor').then((m) => ({ default: m.PrinterTestPage }))
+);
+
 function App() {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -39,6 +43,10 @@ function App() {
 
           <Route path="/profile/*" element={<MainLayout />}>
             <Route path="*" element={<ProfileRoutes />} />
+          </Route>
+
+          <Route path="/printer-test" element={<MainLayout />}>
+            <Route index element={<PrinterTestPage />} />
           </Route>
         </Route>
 
