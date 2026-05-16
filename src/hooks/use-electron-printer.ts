@@ -30,6 +30,8 @@ export interface ElectronPrinterState {
   error: string | null;
   /** CUPS supply-query diagnostic — set when supply levels can't be fetched but printer itself is reachable */
   cupsError: string | null;
+  /** True when the printer supports automatic two-sided (duplex) printing */
+  supportsDuplex: boolean;
   /** Re-fetch device info on demand */
   refetch: () => void;
 }
@@ -96,6 +98,7 @@ export function useElectronPrinter(): ElectronPrinterState {
     paperLevel: null,
     inkLevel: null,
     supplyLevels: [],
+    supportsDuplex: false,
     isLoading: true,
     error: null,
     cupsError: null,
@@ -138,6 +141,7 @@ export function useElectronPrinter(): ElectronPrinterState {
           paperLevel: paperSupply?.levelPercent ?? null,
           inkLevel: inkSupply?.levelPercent ?? null,
           supplyLevels,
+          supportsDuplex: info.supportsDuplex ?? false,
           isLoading: false,
           error: null,
           cupsError: info.cupsError ?? null,
@@ -160,6 +164,7 @@ export function useElectronPrinter(): ElectronPrinterState {
           paperLevel: null,
           inkLevel: inkSupply?.levelPercent ?? null,
           supplyLevels,
+          supportsDuplex: false,
           isLoading: false,
           error: null,
           cupsError: null,

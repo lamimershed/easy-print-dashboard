@@ -1,5 +1,6 @@
 import { Users, TrendingUp, Printer, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
 import { profileService } from '@/features/profile/services';
 import { analyticsService } from '@/features/analytics';
@@ -10,6 +11,7 @@ import { DeviceCard } from '../components/device-card';
 import { LiveQueueCard } from '../components/live-queue-card';
 
 export default function DashboardPage() {
+  const queryClient = useQueryClient();
   const {
     data: profile,
     isLoading: profileLoading,
@@ -18,7 +20,11 @@ export default function DashboardPage() {
   const { data: summary, isLoading: summaryLoading } = analyticsService.useGetSummary('7d');
   const { data: jobsData, isLoading: jobsLoading } = analyticsService.useGetPrintJobs(1, 5);
 
-  const { sessionStatus, currentJob, isConnected } = usePrintSocket(profile?.id);
+  const { sessionStatus, currentJob, isConnected, printStage } = usePrintSocket(profile?.id, {
+    onPrintSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
+    },
+  });
 
   if (profileLoading) {
     return (
@@ -100,6 +106,7 @@ export default function DashboardPage() {
           <LiveQueueCard
             jobs={jobsData?.data ?? []}
             currentJob={activeJob}
+            printStage={printStage}
             isLoading={jobsLoading}
           />
         </div>

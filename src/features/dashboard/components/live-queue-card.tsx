@@ -3,19 +3,28 @@ import { Link } from 'react-router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { TPrintJob } from '@/features/analytics';
+import type { PrintStage } from '@/types/electron';
 
 interface PrintIncomingPayload {
   fileName: string;
   fileType: string;
   fileSize: number;
   copies: number;
-  colorMode: string;
+  colorMode: 'color' | 'blackwhite';
 }
 
 interface LiveQueueCardProps {
   jobs: TPrintJob[];
   currentJob: PrintIncomingPayload | null;
+  printStage: PrintStage;
   isLoading: boolean;
+}
+
+function activeBadgeStatus(stage: PrintStage): JobStatus {
+  if (stage === 'complete') return 'COMPLETED';
+  if (stage === 'error') return 'FAILED';
+  if (stage === 'printing' || stage === 'spooling') return 'PRINTING';
+  return 'ACTIVE';
 }
 
 type JobStatus = TPrintJob['status'] | 'ACTIVE';
@@ -70,7 +79,7 @@ function StatusBadge({ status }: { status: JobStatus }) {
   );
 }
 
-export function LiveQueueCard({ jobs, currentJob, isLoading }: LiveQueueCardProps) {
+export function LiveQueueCard({ jobs, currentJob, printStage, isLoading }: LiveQueueCardProps) {
   const pendingCount = jobs.filter((j) => j.status === 'PENDING' || j.status === 'PRINTING').length;
   const activeCount = currentJob ? 1 : 0;
   const totalPending = pendingCount + activeCount;
@@ -133,7 +142,7 @@ export function LiveQueueCard({ jobs, currentJob, isLoading }: LiveQueueCardProp
                   {currentJob.copies}
                 </td>
                 <td className="px-8 py-5">
-                  <StatusBadge status="ACTIVE" />
+                  <StatusBadge status={activeBadgeStatus(printStage)} />
                 </td>
                 <td className="px-8 py-5 text-right">
                   <MoreVertical className="ml-auto size-4 text-muted-foreground" />

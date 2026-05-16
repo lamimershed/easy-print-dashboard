@@ -43,6 +43,8 @@ export type PrinterFeedbackState = {
   error: string | null;
   /** CUPS-specific error (supply levels may be empty) */
   cupsError: string | null;
+  /** True when the printer's PPD advertises two-sided-long-edge (auto-duplex capable) */
+  supportsDuplex: boolean;
   /** Manually re-fetch device info and printer list */
   refetch: () => void;
 };

@@ -296,9 +296,21 @@ interface PdfPrintConfigPanelProps {
   onChange: (config: PdfPrintConfig) => void;
   onPrint: () => void;
   isPrinting: boolean;
+  supportsDuplex: boolean;
 }
 
-function PdfPrintConfigPanel({ config, onChange, onPrint, isPrinting }: PdfPrintConfigPanelProps) {
+function PdfPrintConfigPanel({
+  config,
+  onChange,
+  onPrint,
+  isPrinting,
+  supportsDuplex,
+}: PdfPrintConfigPanelProps) {
+  useEffect(() => {
+    if (!supportsDuplex && config.duplex !== 'simplex') {
+      onChange({ ...config, duplex: 'simplex' });
+    }
+  }, [supportsDuplex]); // eslint-disable-line react-hooks/exhaustive-deps
   const isRangeMode = config.pageRange !== 'all';
   const isDefault =
     config.colorMode === 'color' &&
@@ -365,22 +377,18 @@ function PdfPrintConfigPanel({ config, onChange, onPrint, isPrinting }: PdfPrint
             <Button
               variant="outline"
               size="sm"
+              disabled={!supportsDuplex}
+              title={
+                !supportsDuplex
+                  ? 'Printer does not support automatic two-sided printing'
+                  : undefined
+              }
               className={cn(
                 config.duplex === 'longEdge' && 'border-primary bg-primary/10 text-primary'
               )}
               onClick={() => onChange({ ...config, duplex: 'longEdge' })}
             >
-              2-Sided ↕
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn(
-                config.duplex === 'shortEdge' && 'border-primary bg-primary/10 text-primary'
-              )}
-              onClick={() => onChange({ ...config, duplex: 'shortEdge' })}
-            >
-              2-Sided ↔
+              2-Sided
             </Button>
           </div>
         </div>
@@ -616,6 +624,7 @@ export default function PrinterTestPage() {
             onChange={setPdfPrintConfig}
             onPrint={runPdfPrint}
             isPrinting={isPrinting}
+            supportsDuplex={printer.supportsDuplex}
           />
 
           {/* Test cards */}

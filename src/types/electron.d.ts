@@ -56,6 +56,8 @@ export interface DeviceInfo {
   supplyLevels: PrinterSupply[];
   /** Set if the CUPS IPP query failed — supply levels may be empty */
   cupsError?: string;
+  /** True when the printer's PPD advertises two-sided-long-edge (auto-duplex capable) */
+  supportsDuplex: boolean;
 }
 
 /**
