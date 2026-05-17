@@ -135,7 +135,7 @@ export const FeatureSidebar = ({ config }: FeatureSidebarProps) => {
           </SidebarMenu>
 
           <div className="mt-2 px-2 text-center text-[9px] leading-relaxed text-muted-foreground group-data-[collapsible=icon]:hidden">
-            <p>Copyright © {new Date().getFullYear()} JLTS Company.</p>
+            <p>Copyright © {new Date().getFullYear()} Print Easy.</p>
             <p>All rights reserved.</p>
           </div>
         </SidebarGroup>
