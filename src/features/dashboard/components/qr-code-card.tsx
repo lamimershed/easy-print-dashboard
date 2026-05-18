@@ -11,7 +11,7 @@ interface QrCodeCardProps {
 
 export function QrCodeCard({ slug, companyName }: QrCodeCardProps) {
   const [copied, setCopied] = useState(false);
-  const customerUrl = `${import.meta.env.VITE_CUSTOMER_APP_URL ?? window.location.origin}/shop/${slug}`;
+  const customerUrl = `${import.meta.env.VITE_CUSTOMER_APP_URL ?? window.location.origin}/${slug}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(customerUrl);
