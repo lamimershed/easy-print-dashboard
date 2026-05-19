@@ -1,11 +1,88 @@
 import { AlertTriangle, Printer, RefreshCw, WifiOff } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useElectronPrinter } from '@/hooks';
+import { usePrinterFeedback, PrintStageStepper } from '@/features/print-monitor';
 
 interface DeviceCardProps {
-  /** Whether the WebSocket session with the backend is active */
   isConnected: boolean;
+}
+
+type UnifiedStatus = {
+  label: string;
+  description: string;
+  dotClass: string;
+  badgeClass: string;
+  pulse: boolean;
+};
+
+function getUnifiedStatus(
+  isConnected: boolean,
+  printer: ReturnType<typeof usePrinterFeedback>
+): UnifiedStatus {
+  if (!printer.isElectron) {
+    return {
+      label: 'Companion Required',
+      description: 'Open the Easy Print desktop app',
+      dotClass: 'bg-muted-foreground',
+      badgeClass: 'bg-muted text-muted-foreground',
+      pulse: false,
+    };
+  }
+  if (!printer.printerName) {
+    return {
+      label: 'No Printer Found',
+      description: 'No printer detected on this system',
+      dotClass: 'bg-muted-foreground',
+      badgeClass: 'bg-muted text-muted-foreground',
+      pulse: false,
+    };
+  }
+  if (printer.isError) {
+    return {
+      label: 'Printer Error',
+      description: printer.error ?? 'Check printer hardware',
+      dotClass: 'bg-destructive',
+      badgeClass: 'bg-destructive/10 text-destructive',
+      pulse: false,
+    };
+  }
+  if (!printer.isPrinterConnected || printer.printerStatus === 'disconnected') {
+    return {
+      label: 'Printer Offline',
+      description: 'Printer is not responding',
+      dotClass: 'bg-amber-500',
+      badgeClass: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+      pulse: false,
+    };
+  }
+  if (printer.printerStatus === 'queue_stopped') {
+    return {
+      label: 'Queue Paused',
+      description: 'Print queue paused — check printer',
+      dotClass: 'bg-amber-500',
+      badgeClass: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+      pulse: true,
+    };
+  }
+  if (printer.isBusy) {
+    return {
+      label: 'Printing…',
+      description: 'Job in progress',
+      dotClass: 'bg-primary',
+      badgeClass: 'bg-primary/10 text-primary',
+      pulse: true,
+    };
+  }
+  return {
+    label: 'Ready to Print',
+    description: isConnected
+      ? 'System connected · Printer online'
+      : 'Printer ready · Server reconnecting',
+    dotClass: 'bg-primary',
+    badgeClass: 'bg-primary/10 text-primary',
+    pulse: true,
+  };
 }
 
 function SupplyBar({
@@ -22,17 +99,17 @@ function SupplyBar({
   const level = levelPercent ?? 0;
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm font-bold tracking-tight text-foreground uppercase">{label}</span>
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-xs font-bold tracking-tight text-foreground uppercase">{label}</span>
         {levelPercent !== null ? (
-          <span className={cn('text-sm font-bold', barClass.replace('bg-', 'text-'))}>
+          <span className={cn('text-xs font-bold', barClass.replace('bg-', 'text-'))}>
             {level}%
           </span>
         ) : (
-          <span className="text-xs text-muted-foreground">N/A</span>
+          <span className="text-xs text-muted-foreground">—</span>
         )}
       </div>
-      <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
         {levelPercent !== null && (
           <div
             className={cn('h-full rounded-full transition-all', barClass)}
@@ -41,7 +118,7 @@ function SupplyBar({
         )}
       </div>
       {suffix && (
-        <p className="mt-2 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
+        <p className="mt-1.5 text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
           {suffix}
         </p>
       )}
@@ -50,122 +127,93 @@ function SupplyBar({
 }
 
 export function DeviceCard({ isConnected }: DeviceCardProps) {
-  const printer = useElectronPrinter();
-
+  const printer = usePrinterFeedback();
+  const status = getUnifiedStatus(isConnected, printer);
   const displayName = printer.printerName ?? 'No printer detected';
-
-  // Stale 'idle' from a failed IPC call should not show as ready
-  const isPrinterReady =
-    (printer.printerStatus === 'idle' || printer.printerStatus === 'printing') && !printer.error;
-
-  const printerBadge = !printer.isElectron
-    ? {
-        label: 'DISCONNECTED',
-        className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-        dotClass: 'bg-amber-500',
-      }
-    : isPrinterReady
-      ? {
-          label: 'PRINTER READY',
-          className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-          dotClass: 'bg-green-500',
-        }
-      : printer.printerStatus === 'queue_stopped'
-        ? {
-            label: 'RECONNECTING',
-            className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-            dotClass: 'bg-amber-500 animate-pulse',
-          }
-        : printer.printerStatus === 'disconnected'
-          ? {
-              label: 'DISCONNECTED',
-              className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-              dotClass: 'bg-amber-500',
-            }
-          : {
-              label: 'NO PRINTER',
-              className: 'bg-muted text-muted-foreground',
-              dotClass: 'bg-muted-foreground',
-            };
-
   const paperSheets =
     printer.paperLevel !== null ? Math.round((printer.paperLevel / 100) * 500) : null;
-
-  const handleDiagnostic = () => {
-    printer.refetch();
-  };
 
   return (
     <div className="overflow-hidden rounded-xl bg-card shadow-card-soft">
       {/* Header */}
-      <div className="border-b border-border p-8">
-        <div className="mb-6 flex items-start justify-between">
-          <div className="rounded-2xl bg-primary/10 p-3">
-            <Printer className="size-7 text-primary" />
+      <div className="border-b border-border p-6">
+        <div className="mb-4 flex items-start justify-between">
+          <div className="rounded-xl bg-primary/10 p-2.5">
+            <Printer className="size-6 text-primary" />
           </div>
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-2">
+            {printer.printQueue.length > 0 && (
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                {printer.printQueue.length} queued
+              </span>
+            )}
             <span
               className={cn(
-                'flex items-center gap-2 rounded-full px-4 py-1 text-xs font-bold',
-                isConnected ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
+                'flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold',
+                status.badgeClass
               )}
             >
               <span
                 className={cn(
-                  'h-2 w-2 rounded-full',
-                  isConnected ? 'animate-pulse bg-primary' : 'bg-muted-foreground'
+                  'size-2 rounded-full',
+                  status.dotClass,
+                  status.pulse && 'animate-pulse'
                 )}
               />
-              {isConnected ? 'ONLINE' : 'OFFLINE'}
-            </span>
-            <span
-              className={cn(
-                'flex items-center gap-1.5 rounded-full px-3 py-0.5 text-[10px] font-bold',
-                printerBadge.className
-              )}
-            >
-              <span className={cn('h-1.5 w-1.5 rounded-full', printerBadge.dotClass)} />
-              {printerBadge.label}
+              {status.label}
             </span>
           </div>
         </div>
-        <h3 className="truncate text-2xl font-bold text-foreground">{displayName}</h3>
-        <p className="font-medium text-muted-foreground">
-          {printer.isElectron ? 'Default System Printer' : 'Open in companion app to detect'}
-        </p>
-        {printer.cupsError && (
-          <div className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-900/20">
-            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-            <p className="text-xs text-amber-700 dark:text-amber-300">CUPS: {printer.cupsError}</p>
+
+        <h3 className="truncate text-xl font-bold text-foreground">{displayName}</h3>
+        <p className="mt-0.5 text-sm text-muted-foreground">{status.description}</p>
+
+        {printer.isElectron && printer.printerName && (
+          <div className="mt-3">
+            <span
+              className={cn(
+                'rounded-md px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase',
+                printer.supportsDuplex
+                  ? 'bg-primary/10 text-primary'
+                  : 'bg-muted text-muted-foreground'
+              )}
+            >
+              {printer.supportsDuplex ? 'Duplex supported' : 'Single-sided only'}
+            </span>
           </div>
         )}
-        {printer.error && !printer.cupsError && (
-          <p className="mt-1 text-xs text-destructive">{printer.error}</p>
+
+        {printer.cupsError && (
+          <div className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-900/20">
+            <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <p className="text-xs text-amber-700 dark:text-amber-300">
+              Supply data unavailable (CUPS)
+            </p>
+          </div>
         )}
       </div>
 
-      {/* Levels */}
-      <div className="space-y-8 p-8">
+      {/* Supply Levels */}
+      <div className="space-y-5 p-6">
         <SupplyBar
-          label="Paper Level"
+          label="Paper"
           levelPercent={printer.paperLevel}
           barClass="bg-primary"
           suffix={
             paperSheets !== null
-              ? `Approx. ${paperSheets} Sheets Remaining`
-              : 'Supply data unavailable — requires CUPS driver'
+              ? `Approx. ${paperSheets} sheets remaining`
+              : 'Requires CUPS driver'
           }
         />
 
-        {/* CMYK per-cartridge if available, otherwise aggregate ink bar */}
         {printer.supplyLevels.filter((s) => s.type === 'ink').length > 1 ? (
           <div>
-            <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-bold tracking-tight text-foreground uppercase">
-                Ink Level
+            <div className="mb-2">
+              <span className="text-xs font-bold tracking-tight text-foreground uppercase">
+                Ink
               </span>
             </div>
-            <div className="flex h-3 w-full overflow-hidden rounded-full bg-muted">
+            <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-muted">
               {printer.supplyLevels
                 .filter((s) => s.type === 'ink')
                 .map((s) => {
@@ -186,32 +234,68 @@ export function DeviceCard({ isConnected }: DeviceCardProps) {
                   );
                 })}
             </div>
+            <div className="mt-2 flex flex-wrap gap-3">
+              {printer.supplyLevels
+                .filter((s) => s.type === 'ink')
+                .map((s) => {
+                  const textMap: Record<string, string> = {
+                    cyan: 'text-cyan-500',
+                    magenta: 'text-fuchsia-500',
+                    yellow: 'text-yellow-600',
+                    black: 'text-foreground',
+                    toner: 'text-foreground',
+                  };
+                  const key = Object.keys(textMap).find((k) => s.name.toLowerCase().includes(k));
+                  return (
+                    <span
+                      key={s.name}
+                      className={cn(
+                        'text-[10px] font-bold uppercase',
+                        textMap[key ?? ''] ?? 'text-muted-foreground'
+                      )}
+                    >
+                      {key ?? s.name.split('<')[0]}{' '}
+                      {s.levelPercent !== null ? `${s.levelPercent}%` : '—'}
+                    </span>
+                  );
+                })}
+            </div>
           </div>
         ) : (
           <SupplyBar
-            label="Ink Level"
+            label="Ink"
             levelPercent={printer.inkLevel}
             barClass="bg-amber-400"
-            suffix={
-              printer.inkLevel === null
-                ? 'Supply data unavailable — requires CUPS driver'
-                : undefined
-            }
+            suffix={printer.inkLevel === null ? 'Requires CUPS driver' : undefined}
           />
         )}
       </div>
 
+      {/* Print Stage Stepper — only visible during an active print */}
+      {printer.currentPrintStage !== 'idle' && (
+        <div className="border-t border-border px-6">
+          <PrintStageStepper currentStage={printer.currentPrintStage} />
+        </div>
+      )}
+
       {/* Action */}
-      <div className="px-8 pb-8">
+      <div className="px-6 pb-6">
         {printer.isElectron ? (
-          <Button
-            className="w-full rounded-full bg-foreground py-6 text-sm font-bold text-background hover:bg-foreground/90"
-            onClick={handleDiagnostic}
-            disabled={printer.isLoading}
-          >
-            <RefreshCw className={cn('mr-2 size-4', printer.isLoading && 'animate-spin')} />
-            {printer.isLoading ? 'Refreshing…' : 'Refresh Device Info'}
-          </Button>
+          <>
+            <Button
+              className="w-full rounded-full bg-foreground text-sm font-bold text-background hover:bg-foreground/90"
+              onClick={() => printer.refetch()}
+              disabled={printer.isLoading}
+            >
+              <RefreshCw className={cn('mr-2 size-4', printer.isLoading && 'animate-spin')} />
+              {printer.isLoading ? 'Refreshing…' : 'Refresh Device Info'}
+            </Button>
+            {printer.lastRefreshedAt && (
+              <p className="mt-2 text-center text-[10px] text-muted-foreground">
+                Updated {formatDistanceToNow(printer.lastRefreshedAt, { addSuffix: true })}
+              </p>
+            )}
+          </>
         ) : (
           <div className="flex items-center gap-3 rounded-xl border border-border/60 bg-muted/40 px-4 py-3">
             <WifiOff className="size-4 shrink-0 text-muted-foreground" />

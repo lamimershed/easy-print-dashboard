@@ -27,7 +27,8 @@ function resolvePrinterStatus(
   if (status < 0) return 'disconnected';
   const stateReasons =
     options?.['printer-state-reasons'] ?? options?.['printer-state-reason'] ?? '';
-  if (stateReasons.includes('offline-report') || status === 3) return 'disconnected';
+  if (stateReasons.includes('offline-report')) return 'disconnected';
+  if (status === 3) return 'queue_stopped';
   if (options?.['printer-is-accepting-jobs'] === 'false') return 'disconnected';
   if (status === 0 || status === 2) return 'idle';
   if (status === 1) return 'printing';
@@ -160,11 +161,12 @@ export function usePrinterFeedback(): PrinterFeedbackState {
 
     window.electronAPI!.onPrintStage(stageHandler);
 
-    // Subscribe to optional push-based printer status changes
+    // Subscribe to optional push-based printer status changes.
+    // Trigger a full fetchDeviceInfo() so realStatus (with ioreg/PnpDevice check) is used
+    // rather than mapping the raw numeric status code, which lacks physical-connection context.
     if (typeof window.electronAPI!.onPrinterStatusChange === 'function') {
-      window.electronAPI!.onPrinterStatusChange!((status) => {
-        const mapped = resolvePrinterStatus(undefined, status);
-        setState((s) => ({ ...s, printerStatus: mapped }));
+      window.electronAPI!.onPrinterStatusChange!(() => {
+        void fetchDeviceInfo();
       });
     }
 
@@ -174,7 +176,7 @@ export function usePrinterFeedback(): PrinterFeedbackState {
         window.electronAPI!.offPrinterStatusChange!();
       }
     };
-  }, [isElectron]);
+  }, [isElectron, fetchDeviceInfo]);
 
   // Adaptive polling — faster while a print stage is active
   useEffect(() => {

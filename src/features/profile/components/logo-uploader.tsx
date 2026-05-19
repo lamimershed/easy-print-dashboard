@@ -1,6 +1,5 @@
 import { useRef } from 'react';
-import { Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Upload, Loader2 } from 'lucide-react';
 import { uploadService } from '@/features/upload/services';
 import { profileService } from '../services';
 
@@ -26,37 +25,43 @@ export function LogoUploader({ currentLogoUrl }: LogoUploaderProps) {
   const isPending = uploadMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="flex items-center gap-4">
-      {currentLogoUrl ? (
-        <img
-          src={currentLogoUrl}
-          alt="Shop logo"
-          className="h-16 w-16 rounded-lg border border-border object-cover"
-        />
-      ) : (
-        <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-dashed border-border bg-muted">
-          <Upload className="size-5 text-muted-foreground" />
+    <div className="flex items-center gap-5">
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        disabled={isPending}
+        className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 border-border bg-muted transition-all hover:border-primary/50 disabled:pointer-events-none"
+      >
+        {currentLogoUrl ? (
+          <img src={currentLogoUrl} alt="Shop logo" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <Upload className="size-6 text-muted-foreground" />
+          </div>
+        )}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+          {isPending ? (
+            <Loader2 className="size-5 animate-spin text-white" />
+          ) : (
+            <Upload className="size-5 text-white" />
+          )}
         </div>
-      )}
+      </button>
+
       <div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={isPending}
-          onClick={() => inputRef.current?.click()}
-        >
-          {isPending ? 'Uploading…' : 'Change Logo'}
-        </Button>
-        <p className="mt-1 text-xs text-muted-foreground">JPEG, PNG, WebP · max 5 MB</p>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          className="hidden"
-          onChange={handleFileChange}
-        />
+        <p className="text-sm font-semibold text-foreground">Shop Logo</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {isPending ? 'Uploading…' : 'Click to upload · JPEG, PNG, WebP · max 5 MB'}
+        </p>
       </div>
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={handleFileChange}
+      />
     </div>
   );
 }

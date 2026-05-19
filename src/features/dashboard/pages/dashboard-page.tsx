@@ -1,17 +1,15 @@
 import { Users, TrendingUp, Printer, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router';
-import { useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
+import { usePrintSocketStore } from '@/stores/print-socket-store';
 import { profileService } from '@/features/profile/services';
 import { analyticsService } from '@/features/analytics';
-import { usePrintSocket } from '../hooks/use-print-socket';
 import { DashboardGreeting } from '../components/dashboard-greeting';
 import { StatCard } from '../components/stat-card';
 import { DeviceCard } from '../components/device-card';
 import { LiveQueueCard } from '../components/live-queue-card';
 
 export default function DashboardPage() {
-  const queryClient = useQueryClient();
   const {
     data: profile,
     isLoading: profileLoading,
@@ -20,11 +18,10 @@ export default function DashboardPage() {
   const { data: summary, isLoading: summaryLoading } = analyticsService.useGetSummary('7d');
   const { data: jobsData, isLoading: jobsLoading } = analyticsService.useGetPrintJobs(1, 5);
 
-  const { sessionStatus, currentJob, isConnected, printStage } = usePrintSocket(profile?.id, {
-    onPrintSettled: () => {
-      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
-    },
-  });
+  const sessionStatus = usePrintSocketStore((s) => s.sessionStatus);
+  const currentJob = usePrintSocketStore((s) => s.currentJob);
+  const isConnected = usePrintSocketStore((s) => s.isConnected);
+  const printStage = usePrintSocketStore((s) => s.printStage);
 
   if (profileLoading) {
     return (
