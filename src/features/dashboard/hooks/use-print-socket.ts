@@ -82,6 +82,8 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
           colorMode: job.colorMode,
           duplex: job.duplex,
           pageRange: job.pageRange,
+          // Whatever the customer was charged for is what gets printed.
+          paperSize: job.paperSize,
           printerName,
         });
         await clearPendingJob();

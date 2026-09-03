@@ -11,6 +11,8 @@ export interface PrintIncomingPayload {
   colorMode: 'color' | 'blackwhite';
   duplex?: 'simplex' | 'longEdge' | 'shortEdge';
   pageRange?: string;
+  /** Sheet size the customer was quoted and charged for. */
+  paperSize?: 'A4' | 'A3' | 'A5' | 'LETTER' | 'LEGAL';
 }
 
 interface PrintSocketState {

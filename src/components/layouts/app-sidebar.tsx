@@ -1,6 +1,14 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router';
-import { LayoutDashboard, BarChart2, Settings, LogOutIcon, FlaskConical } from 'lucide-react';
+import {
+  LayoutDashboard,
+  BarChart2,
+  Wallet,
+  Tag,
+  Settings,
+  LogOutIcon,
+  FlaskConical,
+} from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -35,6 +43,8 @@ import { cn } from '@/lib/utils';
 const navLinks = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Analytics', url: '/analytics', icon: BarChart2 },
+  { title: 'Pricing', url: '/pricing', icon: Tag },
+  { title: 'Billing', url: '/billing', icon: Wallet },
   { title: 'Settings', url: '/profile', icon: Settings },
   ...(import.meta.env.DEV
     ? [{ title: 'Printer Test', url: '/printer-test', icon: FlaskConical }]

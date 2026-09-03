@@ -16,6 +16,14 @@ const AnalyticsRoutes = lazy(() =>
   import('./features/analytics').then((m) => ({ default: m.AnalyticsRoutes }))
 );
 
+const BillingRoutes = lazy(() =>
+  import('./features/billing').then((m) => ({ default: m.BillingRoutes }))
+);
+
+const PricingRoutes = lazy(() =>
+  import('./features/pricing').then((m) => ({ default: m.PricingRoutes }))
+);
+
 const ProfileRoutes = lazy(() =>
   import('./features/profile').then((m) => ({ default: m.ProfileRoutes }))
 );
@@ -39,6 +47,14 @@ function App() {
 
           <Route path="/analytics/*" element={<MainLayout />}>
             <Route path="*" element={<AnalyticsRoutes />} />
+          </Route>
+
+          <Route path="/pricing/*" element={<MainLayout />}>
+            <Route path="*" element={<PricingRoutes />} />
+          </Route>
+
+          <Route path="/billing/*" element={<MainLayout />}>
+            <Route path="*" element={<BillingRoutes />} />
           </Route>
 
           <Route path="/profile/*" element={<MainLayout />}>

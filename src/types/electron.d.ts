@@ -99,6 +99,8 @@ export interface ElectronAPI {
     colorMode?: 'color' | 'blackwhite';
     duplex?: 'simplex' | 'longEdge' | 'shortEdge';
     pageRange?: string;
+    /** Sheet size the customer was quoted and charged for. */
+    paperSize?: 'A4' | 'A3' | 'A5' | 'LETTER' | 'LEGAL';
   }) => Promise<PrintResult>;
   printFileNative: (options: {
     fileData: ArrayBuffer;
@@ -108,6 +110,8 @@ export interface ElectronAPI {
     colorMode?: 'color' | 'blackwhite';
     duplex?: 'simplex' | 'longEdge' | 'shortEdge';
     pageRange?: string;
+    /** Sheet size the customer was quoted and charged for. */
+    paperSize?: 'A4' | 'A3' | 'A5' | 'LETTER' | 'LEGAL';
   }) => Promise<PrintResult>;
   printHello: () => Promise<boolean>;
   /** Subscribe to stage events emitted by main process during a print job */

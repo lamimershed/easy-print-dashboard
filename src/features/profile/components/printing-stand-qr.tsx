@@ -32,7 +32,10 @@ export function PrintingStandQr({ slug, companyName }: PrintingStandQrProps) {
   const { printerName, printerSystemName, isLoading: printerLoading } = usePrinterFeedback();
   const { print, isPending, stage, error, result, reset } = usePrintStandee();
 
-  const customerUrl = `${import.meta.env.VITE_CUSTOMER_APP_URL ?? window.location.origin}/${slug}`;
+  const customerUrl = `${
+    import.meta.env.VITE_CUSTOMER_APP_URL ??
+    `${window.location.protocol}//${window.location.hostname}:5174`
+  }/${slug}`;
 
   // Auto-reset error banner after 5 s
   useEffect(() => {

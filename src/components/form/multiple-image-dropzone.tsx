@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import React, { useState } from 'react';
 import { Accept, useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
+import { safeRandomUUID } from '@/utils/safe-uuid';
 
 type MultipleImageDropzoneProps = {
   accept?: Accept;
@@ -34,7 +35,7 @@ export const MultipleImageDropzone: React.FC<MultipleImageDropzoneProps> = ({
 
       // Process all files in parallel
       const uploadPromises = files.map(async (file) => {
-        const fileId = crypto.randomUUID();
+        const fileId = safeRandomUUID();
 
         try {
           // Set initial progress
