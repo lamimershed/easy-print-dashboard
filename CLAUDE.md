@@ -138,7 +138,7 @@ type TClientProfile = {
   slug: string;
   companyName: string;
   phoneNumber: string;
-  plan: 'FREE' | 'STARTER' | 'PRO';
+  plan: 'FREE' | 'PARTNER' | 'BUSINESS';
   logoUrl: string | null;
   googleProfileLink: string | null;
   address: string | null;
@@ -167,7 +167,7 @@ Both upload endpoints: `multipart/form-data`, single `file` field (JPEG/PNG/WebP
 
 ```
 UserRole:       CLIENT | SUPER_ADMIN
-ClientPlan:     FREE | STARTER | PRO
+ClientPlan:     FREE | PARTNER | BUSINESS
 SessionStatus:  WAITING | CONNECTED | PRINTING | COMPLETED | EXPIRED
 PrintJobStatus: PENDING | PRINTING | COMPLETED | FAILED
 ```

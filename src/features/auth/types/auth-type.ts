@@ -8,7 +8,7 @@ export type TClientProfile = {
   slug: string;
   companyName: string;
   phoneNumber: string;
-  plan: 'FREE' | 'STARTER' | 'PRO';
+  plan: 'FREE' | 'PARTNER' | 'BUSINESS';
   logoUrl: string | null;
   googleProfileLink: string | null;
   address: string | null;

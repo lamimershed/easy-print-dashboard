@@ -3,25 +3,32 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { profileService } from '@/features/profile/services';
-import { billingService } from '../services';
-import { useRazorpayCheckout } from '../hooks/use-razorpay-checkout';
-import { PLANS, PlanCard, type TPlanId } from '../components';
 import { formatDate } from '@/utils/format-money';
+import { planService } from '../services';
+import { useRazorpayCheckout } from '../hooks/use-razorpay-checkout';
+import {
+  CollectionModeCard,
+  PLANS,
+  PlanCard,
+  PrintQuotaCard,
+  TrialBanner,
+  type TPayablePlanId,
+} from '../components';
 
-export function PlanTab() {
-  const { data: profile, isLoading } = profileService.useGetMe();
-  const { data: subscription } = billingService.useGetSubscription();
+export function PlanPage() {
+  // One call carries plan, trial countdown, quota and collection mode, so these
+  // never disagree with each other the way separate queries would.
+  const { data: entitlements, isLoading } = planService.useGetEntitlements();
 
-  const createOrder = billingService.useCreateSubscriptionOrder();
-  const verify = billingService.useVerifySubscription();
-  const cancel = billingService.useCancelSubscription();
-  const resume = billingService.useResumeSubscription();
+  const createOrder = planService.useCreateSubscriptionOrder();
+  const verify = planService.useVerifySubscription();
+  const cancel = planService.useCancelSubscription();
+  const resume = planService.useResumeSubscription();
+  const startTrial = planService.useStartTrial();
+  const setCollectionMode = planService.useSetCollectionMode();
   const { open } = useRazorpayCheckout();
 
-  const currentPlan: TPlanId = profile?.plan ?? 'FREE';
-
-  const choosePlan = (plan: 'STARTER' | 'PRO') => {
+  const choosePlan = (plan: TPayablePlanId) => {
     createOrder.mutate(plan, {
       onSuccess: async (order) => {
         try {
@@ -43,11 +50,27 @@ export function PlanTab() {
     });
   };
 
-  if (isLoading) return <Skeleton className="h-72 w-full rounded-xl" />;
+  if (isLoading || !entitlements) return <Skeleton className="h-72 w-full rounded-xl" />;
+
+  const { plan: currentPlan, subscription, isTrial, usage } = entitlements;
 
   return (
     <div className="flex flex-col gap-5">
-      {subscription && (
+      <div>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">Plan</h1>
+        <p className="mt-0.5 text-sm text-muted-foreground">
+          What you pay us, what it includes, and how you take payment.
+        </p>
+      </div>
+
+      <TrialBanner
+        entitlements={entitlements}
+        onStartTrial={() => startTrial.mutate()}
+        isStarting={startTrial.isPending}
+      />
+
+      {/* A trial has its own banner and no renewal date to manage. */}
+      {subscription && !isTrial && (
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold">Your subscription</CardTitle>
@@ -102,12 +125,23 @@ export function PlanTab() {
         </div>
       )}
 
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Only rendered when the plan actually includes an allowance. */}
+        {usage?.includedSheets ? <PrintQuotaCard usage={usage} /> : null}
+        <CollectionModeCard
+          entitlements={entitlements}
+          onChange={(enabled) => setCollectionMode.mutate(enabled)}
+          isPending={setCollectionMode.isPending}
+        />
+      </div>
+
       <div className="grid gap-4 md:grid-cols-3">
         {PLANS.map((plan) => (
           <PlanCard
             key={plan.id}
             plan={plan}
             currentPlan={currentPlan}
+            isTrialing={isTrial && plan.id === currentPlan}
             onChoose={choosePlan}
             isPending={createOrder.isPending || verify.isPending}
           />

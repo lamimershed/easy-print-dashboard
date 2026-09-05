@@ -5,7 +5,6 @@ import { TransactionsTab } from './transactions-tab';
 import { PayoutsTab } from './payouts-tab';
 import { RefundsTab } from './refunds-tab';
 import { PayoutAccountTab } from './payout-account-tab';
-import { PlanTab } from './plan-tab';
 
 const TABS = [
   { value: 'overview', label: 'Overview' },
@@ -13,7 +12,6 @@ const TABS = [
   { value: 'payouts', label: 'Payouts' },
   { value: 'refunds', label: 'Refunds' },
   { value: 'payout-account', label: 'Payout account' },
-  { value: 'plan', label: 'Plan' },
 ] as const;
 
 type TTabValue = (typeof TABS)[number]['value'];
@@ -33,9 +31,9 @@ export default function BillingPage() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-foreground">Billing</h1>
+        <h1 className="text-xl font-bold tracking-tight text-foreground">Earnings</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">
-          Earnings, payouts, refunds and your plan.
+          Money your customers have paid you — transactions, payouts and refunds.
         </p>
       </div>
 
@@ -67,9 +65,6 @@ export default function BillingPage() {
         </TabsContent>
         <TabsContent value="payout-account" className="mt-5">
           <PayoutAccountTab />
-        </TabsContent>
-        <TabsContent value="plan" className="mt-5">
-          <PlanTab />
         </TabsContent>
       </Tabs>
     </div>

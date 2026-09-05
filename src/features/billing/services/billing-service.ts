@@ -5,7 +5,6 @@ import { utils } from '@/utils';
 import type {
   TBillingPeriod,
   TExportResponse,
-  TOrderApiResponse,
   TPayment,
   TPaymentDetailResponse,
   TPaymentFilters,
@@ -19,7 +18,6 @@ import type {
   TRefundStatus,
   TRefundabilityResponse,
   TRefundsResponse,
-  TSubscriptionResponse,
   TSummaryResponse,
 } from '../types';
 
@@ -33,7 +31,6 @@ const queryKeys = {
     ['billing', 'payouts', page, limit, status] as const,
   refunds: (page: number, limit: number, status?: TRefundStatus) =>
     ['billing', 'refunds', page, limit, status] as const,
-  subscription: () => ['billing', 'subscription'] as const,
   payoutAccount: () => ['billing', 'payout-account'] as const,
 };
 
@@ -141,83 +138,13 @@ const useExportPayments = () =>
     onError: (error) => toast.error(utils.getApiResponseError(error)),
   });
 
-// ── Subscription ────────────────────────────────────────────────────────────
-
-const useGetSubscription = () =>
-  useQuery({
-    queryKey: queryKeys.subscription(),
-    queryFn: async () => {
-      const { data } = await api.get<TSubscriptionResponse>('/payment/subscription/me');
-      return data.data;
-    },
-  });
-
-const useCreateSubscriptionOrder = () =>
-  useMutation({
-    mutationFn: async (plan: 'STARTER' | 'PRO') => {
-      const { data } = await api.post<TOrderApiResponse>('/payment/subscription/order', { plan });
-      return data.data;
-    },
-    onError: (error) => toast.error(utils.getApiResponseError(error)),
-  });
-
-const useVerifySubscription = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (payload: {
-      razorpay_order_id: string;
-      razorpay_payment_id: string;
-      razorpay_signature: string;
-    }) => {
-      const { data } = await api.post('/payment/subscription/verify', payload);
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.all });
-      queryClient.invalidateQueries({ queryKey: ['client'] });
-      toast.success('Plan updated');
-    },
-    onError: (error) => toast.error(utils.getApiResponseError(error)),
-  });
-};
-
-const useCancelSubscription = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async () => {
-      const { data } = await api.post('/payment/subscription/cancel');
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.subscription() });
-      toast.success('Plan will end at the close of the current period');
-    },
-    onError: (error) => toast.error(utils.getApiResponseError(error)),
-  });
-};
-
-const useResumeSubscription = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async () => {
-      const { data } = await api.post('/payment/subscription/resume');
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.subscription() });
-      toast.success('Plan renewal resumed');
-    },
-    onError: (error) => toast.error(utils.getApiResponseError(error)),
-  });
-};
-
-// ── Payout account (Razorpay Route onboarding) ──────────────────────────────
-
+/** Razorpay Route onboarding payload — snake_case because the gateway is. */
 export type TPayoutAccountInput = {
   email: string;
+  phone: string;
+  legal_business_name: string;
+  business_type: string;
+  contact_name: string;
   profile: {
     category: string;
     subcategory: string;
@@ -232,6 +159,8 @@ export type TPayoutAccountInput = {
     };
   };
   legal_info: { pan: string; gst?: string };
+  stakeholder: { name: string; email: string; pan: string };
+  settlements: { account_number: string; ifsc_code: string; beneficiary_name: string };
 };
 
 const useGetPayoutAccount = () =>
@@ -272,11 +201,6 @@ export const billingService = {
   useGetRefunds,
   useCreateRefund,
   useExportPayments,
-  useGetSubscription,
-  useCreateSubscriptionOrder,
-  useVerifySubscription,
-  useCancelSubscription,
-  useResumeSubscription,
   useGetPayoutAccount,
   useRegisterPayoutAccount,
 };

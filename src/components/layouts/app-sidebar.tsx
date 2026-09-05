@@ -8,7 +8,9 @@ import {
   Settings,
   LogOutIcon,
   FlaskConical,
+  Sparkles,
 } from 'lucide-react';
+import { TrialCountdown } from '@/features/plan';
 import {
   Sidebar,
   SidebarContent,
@@ -44,7 +46,8 @@ const navLinks = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Analytics', url: '/analytics', icon: BarChart2 },
   { title: 'Pricing', url: '/pricing', icon: Tag },
-  { title: 'Billing', url: '/billing', icon: Wallet },
+  { title: 'Earnings', url: '/billing', icon: Wallet },
+  { title: 'Plan', url: '/plan', icon: Sparkles },
   { title: 'Settings', url: '/profile', icon: Settings },
   ...(import.meta.env.DEV
     ? [{ title: 'Printer Test', url: '/printer-test', icon: FlaskConical }]
@@ -53,7 +56,7 @@ const navLinks = [
 
 export function AppSidebar() {
   const { pathname } = useLocation();
-  const { isMobile, setOpenMobile } = useSidebar();
+  const { isMobile, setOpenMobile, state } = useSidebar();
   const logoutMutation = authService.useLogout();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { data: profile, isLoading } = profileService.useGetMe();
@@ -143,7 +146,12 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="mt-auto px-3 pt-2 pb-4 group-data-[collapsible=icon]:px-2">
-        <SidebarSeparator className="mb-3 bg-border/60 group-data-[collapsible=icon]:mb-2" />
+        {/* Every shop signs up onto a 30-day trial, so this clock is live for all
+            of them. It sits in the shell rather than on the plan page because a
+            countdown you have to navigate to is one nobody sees. */}
+        <TrialCountdown collapsed={state === 'collapsed' && !isMobile} />
+
+        <SidebarSeparator className="my-3 bg-border/60 group-data-[collapsible=icon]:my-2" />
 
         <Dialog open={showLogoutModal} onOpenChange={setShowLogoutModal}>
           <DialogTrigger asChild>

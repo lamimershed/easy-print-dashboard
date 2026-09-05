@@ -149,27 +149,9 @@ export type TBillingSummary = {
   series: TEarningsPoint[];
 };
 
-export type TSubscription = {
-  id: string;
-  plan: 'FREE' | 'STARTER' | 'PRO';
-  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELLED' | 'EXPIRED';
-  currentPeriodStart: string;
-  currentPeriodEnd: string;
-  cancelAtPeriodEnd: boolean;
-} | null;
-
 export type TPayoutAccount = {
   razorpayAccountId: string | null;
   status: TRazorpayAccountStatus | null;
-};
-
-export type TOrderResponse = {
-  paymentId: string;
-  orderId: string;
-  amountPaise: number;
-  currency: string;
-  razorpayKeyId: string;
-  shopName: string;
 };
 
 export type TPaymentFilters = {
@@ -190,7 +172,5 @@ export type TPayoutsResponse = TApiPaginatedResponse<TPayout>;
 export type TRefundsResponse = TApiPaginatedResponse<TRefund>;
 export type TRefundResponse = TApiResponse<TRefund>;
 export type TRefundabilityResponse = TApiResponse<TRefundability>;
-export type TSubscriptionResponse = TApiResponse<TSubscription>;
 export type TPayoutAccountResponse = TApiResponse<TPayoutAccount>;
-export type TOrderApiResponse = TApiResponse<TOrderResponse>;
 export type TExportResponse = TApiResponse<TPayment[]>;
