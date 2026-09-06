@@ -164,13 +164,21 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       }
     };
 
-    const onServerError = ({ code }: { code?: string }) => {
-      if (code !== 'UNAUTHORIZED') return;
+    const onServerError = ({ code, message }: { code?: string; message?: string }) => {
+      console.error('[socket] server rejected a message:', code, message);
+      if (code !== 'UNAUTHORIZED') {
+        store().update({ connectionError: message ?? 'The server rejected a request' });
+        return;
+      }
       if (reauthAttempts >= MAX_REAUTH_ATTEMPTS) {
-        store().update({ isConnected: false });
+        store().update({
+          isConnected: false,
+          connectionError: 'Session rejected by the server — sign out and back in',
+        });
         return;
       }
       reauthAttempts += 1;
+      store().update({ connectionError: 'Refreshing session…' });
       void refreshAccessToken()
         .then(() => {
           if (!disposed) reconnectSocket();
@@ -196,20 +204,46 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     });
 
     socket.on('connect', () => {
-      store().update({ isConnected: true, sessionStatus: 'waiting' });
+      // Deliberately NOT isConnected yet — the server has not accepted us. The
+      // handshake is unauthenticated, so this fires even with a dead token.
+      console.warn('[socket] connected, transport:', socket.io.engine.transport.name);
+      store().update({ sessionStatus: 'waiting', connectionError: null });
       socket.emit('client:join', clientId);
     });
 
-    socket.on('disconnect', () => {
-      store().update({ isConnected: false, sessionStatus: 'idle', sessionId: null });
+    socket.on('disconnect', (reason) => {
+      console.warn('[socket] disconnected:', reason);
+      store().update({
+        isConnected: false,
+        sessionStatus: 'idle',
+        sessionId: null,
+        connectionError: `Disconnected from server (${reason})`,
+      });
+    });
+
+    // Never listened for before, which is why a machine that simply could not
+    // reach the server — proxy, firewall, TLS interception — looked identical to
+    // one that was connected.
+    socket.on('connect_error', (err) => {
+      console.error('[socket] connect_error:', err.message);
+      store().update({
+        isConnected: false,
+        connectionError: `Cannot reach the server: ${err.message}`,
+      });
     });
 
     socket.on('error', onServerError);
 
     socket.on('client:joined', ({ sessionId: sid }: { sessionId: string }) => {
       // The join stuck, so the token is good — start the retry budget over.
+      console.warn('[socket] join accepted, session:', sid);
       reauthAttempts = 0;
-      store().update({ sessionId: sid, sessionStatus: 'waiting' });
+      store().update({
+        sessionId: sid,
+        sessionStatus: 'waiting',
+        isConnected: true,
+        connectionError: null,
+      });
       // Only now does the server hold a session to attach the status to.
       void reportPrinterStatus();
     });
@@ -271,6 +305,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       }
       socket.off('error', onServerError);
       socket.off('connect');
+      socket.off('connect_error');
       socket.off('disconnect');
       socket.off('client:joined');
       socket.off('customer:joined');

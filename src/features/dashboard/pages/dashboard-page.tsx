@@ -21,6 +21,7 @@ export default function DashboardPage() {
   const sessionStatus = usePrintSocketStore((s) => s.sessionStatus);
   const currentJob = usePrintSocketStore((s) => s.currentJob);
   const isConnected = usePrintSocketStore((s) => s.isConnected);
+  const connectionError = usePrintSocketStore((s) => s.connectionError);
   const printStage = usePrintSocketStore((s) => s.printStage);
 
   if (profileLoading) {
@@ -97,7 +98,7 @@ export default function DashboardPage() {
       {/* Device + Queue */}
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <DeviceCard isConnected={isConnected} />
+          <DeviceCard isConnected={isConnected} connectionError={connectionError} />
         </div>
         <div className="lg:col-span-7">
           <LiveQueueCard

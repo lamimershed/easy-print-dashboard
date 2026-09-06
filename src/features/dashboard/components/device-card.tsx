@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { usePrinterFeedback, PrintStageStepper } from '@/features/print-monitor';
 
 interface DeviceCardProps {
+  /** True only once the server accepted `client:join` — see the print-socket store. */
   isConnected: boolean;
+  /** Why not, when it is false. */
+  connectionError?: string | null;
 }
 
 type UnifiedStatus = {
@@ -18,6 +21,7 @@ type UnifiedStatus = {
 
 function getUnifiedStatus(
   isConnected: boolean,
+  connectionError: string | null | undefined,
   printer: ReturnType<typeof usePrinterFeedback>
 ): UnifiedStatus {
   if (!printer.isElectron) {
@@ -26,6 +30,20 @@ function getUnifiedStatus(
       description: 'Open the Easy Print desktop app',
       dotClass: 'bg-muted-foreground',
       badgeClass: 'bg-muted text-muted-foreground',
+      pulse: false,
+    };
+  }
+  // Before anything about the printer: with no accepted session on the server,
+  // customers scanning the QR are told this shop is closed, whatever the
+  // hardware is doing. This used to read "Ready to Print · Server reconnecting",
+  // which is how a shop could sit here looking healthy for hours while no
+  // customer could reach it.
+  if (!isConnected) {
+    return {
+      label: 'Not Reachable',
+      description: connectionError ?? 'Connecting to the server…',
+      dotClass: 'bg-destructive',
+      badgeClass: 'bg-destructive/10 text-destructive',
       pulse: false,
     };
   }
@@ -76,9 +94,7 @@ function getUnifiedStatus(
   }
   return {
     label: 'Ready to Print',
-    description: isConnected
-      ? 'System connected · Printer online'
-      : 'Printer ready · Server reconnecting',
+    description: 'System connected · Printer online',
     dotClass: 'bg-primary',
     badgeClass: 'bg-primary/10 text-primary',
     pulse: true,
@@ -126,9 +142,9 @@ function SupplyBar({
   );
 }
 
-export function DeviceCard({ isConnected }: DeviceCardProps) {
+export function DeviceCard({ isConnected, connectionError }: DeviceCardProps) {
   const printer = usePrinterFeedback();
-  const status = getUnifiedStatus(isConnected, printer);
+  const status = getUnifiedStatus(isConnected, connectionError, printer);
   const displayName = printer.printerName ?? 'No printer detected';
   const paperSheets =
     printer.paperLevel !== null ? Math.round((printer.paperLevel / 100) * 500) : null;
