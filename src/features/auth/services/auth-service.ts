@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import api from '@/services/api';
+import { disconnectSocket } from '@/services/socket';
 import { useAuthStore } from '@/stores';
 import { utils } from '@/utils';
 import { authRoutes, DEFAULT_ROUTE } from '../config';
@@ -61,21 +62,27 @@ const useLogout = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // Leaving the socket up after logout kept the shop's backend session alive, so
+  // customers scanning the QR were told the shop was open and could upload into
+  // a dashboard nobody was signed into.
+  const teardown = () => {
+    disconnectSocket();
+    clearAuth();
+    queryClient.clear();
+    navigate(authRoutes.items.login.href);
+  };
+
   return useMutation({
     mutationFn: async () => {
       await api.post('/auth/logout');
     },
     onSuccess: () => {
-      clearAuth();
-      queryClient.clear();
-      navigate(authRoutes.items.login.href);
+      teardown();
       toast.success('Logged out successfully.');
     },
     onError: (error) => {
       console.error('Logout failed', error);
-      clearAuth();
-      queryClient.clear();
-      navigate(authRoutes.items.login.href);
+      teardown();
     },
   });
 };

@@ -2,10 +2,11 @@ import { useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores';
 import { usePrintSocketStore } from '@/stores/print-socket-store';
-import { getSocket } from '@/services/socket';
+import { getSocket, reconnectSocket } from '@/services/socket';
+import { refreshAccessToken } from '@/services/api';
 import { isElectron } from '@/lib/electron-print';
 import { savePendingJob, getPendingJob, clearPendingJob } from '@/lib/print-job-db';
-import type { PrintStage } from '@/types/electron';
+import type { PrintStage, RealStatus } from '@/types/electron';
 import type { SessionStatus, PrintIncomingPayload } from '@/stores/print-socket-store';
 
 interface PrintChunkPayload {
@@ -26,8 +27,18 @@ interface UsePrintSocketReturn {
 
 const STALE_MS = 5 * 60 * 1000;
 
+/**
+ * How many times one mount will refresh the token and reconnect after the server
+ * rejects `client:join`. A cap, because if a fresh token is still rejected the
+ * problem is not the token and retrying forever would hammer /auth/refresh.
+ */
+const MAX_REAUTH_ATTEMPTS = 3;
+
 export function usePrintSocket(clientId: string | undefined): UsePrintSocketReturn {
-  const { accessToken } = useAuthStore();
+  // Deliberately not `accessToken`: that changes on every refresh, and this
+  // effect tears down the socket handlers and re-runs crash recovery when its
+  // deps change. `getSocket` reads the live token at handshake time instead.
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const queryClient = useQueryClient();
 
   const sessionStatus = usePrintSocketStore((s) => s.sessionStatus);
@@ -39,9 +50,9 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
   const chunksRef = useRef<Map<number, Uint8Array>>(new Map());
 
   useEffect(() => {
-    if (!accessToken || !clientId) return;
+    if (!isAuthenticated || !clientId) return;
 
-    const socket = getSocket(accessToken);
+    const socket = getSocket();
     const store = () => usePrintSocketStore.getState();
 
     // Shared print execution — used by both print:ready and crash recovery
@@ -53,7 +64,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
         setTimeout(() => URL.revokeObjectURL(url), 60_000);
         await clearPendingJob();
         store().update({ printStage: 'complete', sessionStatus: 'waiting', currentJob: null });
-        getSocket(accessToken).emit('client:print_complete', sid);
+        getSocket().emit('client:print_complete', sid);
         setTimeout(() => {
           void queryClient.invalidateQueries({ queryKey: ['analytics'] });
         }, 1500);
@@ -88,7 +99,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
         });
         await clearPendingJob();
         store().update({ printStage: result.stage, sessionStatus: 'waiting', currentJob: null });
-        const s = getSocket(accessToken);
+        const s = getSocket();
         if (result.success) {
           s.emit('client:print_complete', sid);
         } else {
@@ -100,7 +111,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       } catch (err) {
         await clearPendingJob();
         store().update({ printStage: 'error', sessionStatus: 'waiting', currentJob: null });
-        getSocket(accessToken).emit('client:print_error', {
+        getSocket().emit('client:print_error', {
           sessionId: sid,
           error: (err as Error).message,
         });
@@ -110,6 +121,63 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       } finally {
         window.electronAPI!.offPrintStage(stageHandler);
       }
+    };
+
+    let disposed = false;
+    let reauthAttempts = 0;
+
+    // ── Printer state reporting ──────────────────────────────────────────────
+    // The backend gates customer uploads on this. Without it "online" only means
+    // "an app is connected", which is why customers could reach a shop whose
+    // printer was switched off. Companion builds without the IPC report nothing
+    // and the backend keeps treating them as available.
+    const reportPrinterStatus = async (known?: RealStatus) => {
+      if (disposed || !socket.connected) return;
+      let status = known;
+      if (!status) {
+        if (!isElectron() || typeof window.electronAPI?.getPrinterRealStatus !== 'function') return;
+        try {
+          status = await window.electronAPI.getPrinterRealStatus();
+        } catch {
+          return;
+        }
+      }
+      if (disposed || !socket.connected) return;
+      socket.emit('client:printer_status', { status });
+    };
+
+    if (isElectron() && typeof window.electronAPI?.onPrinterRealStatus === 'function') {
+      window.electronAPI.onPrinterRealStatus((status) => void reportPrinterStatus(status));
+    }
+
+    // ── Auth recovery ────────────────────────────────────────────────────────
+    // Socket.IO freezes `handshake.auth` when the connection opens, so a token
+    // that expired mid-connection cannot be replaced on the live socket — the
+    // only fix is refresh + fresh handshake.
+    const ensureToken = async () => {
+      if (useAuthStore.getState().accessToken) return true;
+      try {
+        await refreshAccessToken();
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    const onServerError = ({ code }: { code?: string }) => {
+      if (code !== 'UNAUTHORIZED') return;
+      if (reauthAttempts >= MAX_REAUTH_ATTEMPTS) {
+        store().update({ isConnected: false });
+        return;
+      }
+      reauthAttempts += 1;
+      void refreshAccessToken()
+        .then(() => {
+          if (!disposed) reconnectSocket();
+        })
+        .catch(() => {
+          // The axios interceptor owns the logout redirect — nothing to do here.
+        });
     };
 
     // On mount: recover any job that survived a crash or page refresh
@@ -136,8 +204,14 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       store().update({ isConnected: false, sessionStatus: 'idle', sessionId: null });
     });
 
+    socket.on('error', onServerError);
+
     socket.on('client:joined', ({ sessionId: sid }: { sessionId: string }) => {
+      // The join stuck, so the token is good — start the retry budget over.
+      reauthAttempts = 0;
       store().update({ sessionId: sid, sessionStatus: 'waiting' });
+      // Only now does the server hold a session to attach the status to.
+      void reportPrinterStatus();
     });
 
     socket.on('customer:joined', () => {
@@ -186,9 +260,16 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       store().update({ sessionStatus: 'waiting', currentJob: null });
     });
 
-    if (!socket.connected) socket.connect();
+    void ensureToken().then((ok) => {
+      if (ok && !disposed && !socket.connected) socket.connect();
+    });
 
     return () => {
+      disposed = true;
+      if (isElectron() && typeof window.electronAPI?.offPrinterRealStatus === 'function') {
+        window.electronAPI.offPrinterRealStatus();
+      }
+      socket.off('error', onServerError);
       socket.off('connect');
       socket.off('disconnect');
       socket.off('client:joined');
@@ -199,29 +280,29 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       socket.off('print:ready');
       socket.off('session:ended');
     };
-  }, [accessToken, clientId, queryClient]);
+  }, [isAuthenticated, clientId, queryClient]);
 
   const markComplete = useCallback(() => {
     const { sessionId: sid } = usePrintSocketStore.getState();
-    if (!accessToken || !sid) return;
-    getSocket(accessToken).emit('client:print_complete', sid);
+    if (!sid) return;
+    getSocket().emit('client:print_complete', sid);
     usePrintSocketStore.getState().update({ sessionStatus: 'waiting', currentJob: null });
     setTimeout(() => {
       void queryClient.invalidateQueries({ queryKey: ['analytics'] });
     }, 1500);
-  }, [accessToken, queryClient]);
+  }, [queryClient]);
 
   const markError = useCallback(
     (error: string) => {
       const { sessionId: sid } = usePrintSocketStore.getState();
-      if (!accessToken || !sid) return;
-      getSocket(accessToken).emit('client:print_error', { sessionId: sid, error });
+      if (!sid) return;
+      getSocket().emit('client:print_error', { sessionId: sid, error });
       usePrintSocketStore.getState().update({ sessionStatus: 'waiting', currentJob: null });
       setTimeout(() => {
         void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       }, 1500);
     },
-    [accessToken, queryClient]
+    [queryClient]
   );
 
   return { sessionStatus, currentJob, sessionId, isConnected, printStage, markComplete, markError };

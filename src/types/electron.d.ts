@@ -125,6 +125,17 @@ export interface ElectronAPI {
   onPrinterStatusChange: (cb: (status: number) => void) => void;
   /** Unsubscribe all printer-status-change listeners */
   offPrinterStatusChange: () => void;
+
+  /**
+   * Resolve the physical printer state on demand. Cheaper than getDeviceInfo —
+   * it skips supply levels and duplex detection.
+   * Optional: shops running an older companion build do not expose it.
+   */
+  getPrinterRealStatus?: () => Promise<RealStatus>;
+  /** Subscribe to realStatus changes pushed by the main process */
+  onPrinterRealStatus?: (cb: (status: RealStatus) => void) => void;
+  /** Unsubscribe all printer-real-status listeners */
+  offPrinterRealStatus?: () => void;
 }
 
 declare global {
