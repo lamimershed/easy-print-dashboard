@@ -6,7 +6,7 @@ import { getSocket, reconnectSocket } from '@/services/socket';
 import { refreshAccessToken } from '@/services/api';
 import { isElectron } from '@/lib/electron-print';
 import { savePendingJob, getPendingJob, clearPendingJob } from '@/lib/print-job-db';
-import type { PrintStage, RealStatus } from '@/types/electron';
+import type { PrintStage, PrintProgress, RealStatus } from '@/types/electron';
 import type { SessionStatus, PrintIncomingPayload } from '@/stores/print-socket-store';
 
 interface PrintChunkPayload {
@@ -21,6 +21,9 @@ interface UsePrintSocketReturn {
   sessionId: string | null;
   isConnected: boolean;
   printStage: PrintStage;
+  pagesPrinted: number | null;
+  totalPages: number | null;
+  blockedReason: string | null;
   markComplete: () => void;
   markError: (error: string) => void;
 }
@@ -46,6 +49,9 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
   const sessionId = usePrintSocketStore((s) => s.sessionId);
   const isConnected = usePrintSocketStore((s) => s.isConnected);
   const printStage = usePrintSocketStore((s) => s.printStage);
+  const pagesPrinted = usePrintSocketStore((s) => s.pagesPrinted);
+  const totalPages = usePrintSocketStore((s) => s.totalPages);
+  const blockedReason = usePrintSocketStore((s) => s.blockedReason);
 
   const chunksRef = useRef<Map<number, Uint8Array>>(new Map());
 
@@ -55,8 +61,17 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     const socket = getSocket();
     const store = () => usePrintSocketStore.getState();
 
-    // Shared print execution — used by both print:ready and crash recovery
+    const refreshAnalyticsSoon = () => {
+      setTimeout(() => {
+        void queryClient.invalidateQueries({ queryKey: ['analytics'] });
+      }, 1500);
+    };
+
+    // Shared print execution — used by print:ready, print:retry and crash recovery
     const attemptPrint = async (buffer: ArrayBuffer, job: PrintIncomingPayload, sid: string) => {
+      const jobId = store().printJobId ?? undefined;
+      store().update({ pagesPrinted: null, totalPages: null, blockedReason: null });
+
       if (!isElectron()) {
         const blob = new Blob([buffer], { type: job.fileType });
         const url = URL.createObjectURL(blob);
@@ -64,15 +79,46 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
         setTimeout(() => URL.revokeObjectURL(url), 60_000);
         await clearPendingJob();
         store().update({ printStage: 'complete', sessionStatus: 'waiting', currentJob: null });
-        getSocket().emit('client:print_complete', sid);
-        setTimeout(() => {
-          void queryClient.invalidateQueries({ queryKey: ['analytics'] });
-        }, 1500);
+        // A browser hand-off is never an observed print, and saying otherwise is
+        // how the customer got told a job succeeded that nobody watched.
+        getSocket().emit('client:print_complete', {
+          sessionId: sid,
+          printJobId: jobId,
+          confirmed: false,
+        });
+        refreshAnalyticsSoon();
         return;
       }
 
       const stageHandler = (stage: PrintStage) => store().update({ printStage: stage });
       window.electronAPI!.onPrintStage(stageHandler);
+
+      // Live spooler detail — page counts, and the reason a job has stopped.
+      // Relayed on so the customer sees "out of paper" rather than a frozen bar.
+      const progressHandler = (progress: PrintProgress) => {
+        if (progress.stage === 'blocked') {
+          store().update({ blockedReason: progress.message ?? 'The printer needs attention.' });
+        } else {
+          store().update({ blockedReason: null });
+        }
+        if (typeof progress.pagesPrinted === 'number') {
+          store().update({
+            pagesPrinted: progress.pagesPrinted,
+            totalPages: progress.totalPages ?? null,
+          });
+        }
+        getSocket().emit('client:print_progress', {
+          sessionId: sid,
+          printJobId: jobId,
+          stage: progress.stage,
+          pagesPrinted: progress.pagesPrinted,
+          totalPages: progress.totalPages,
+          code: progress.code,
+          message: progress.message,
+        });
+      };
+      window.electronAPI?.onPrintProgress?.(progressHandler);
+
       store().update({ printStage: 'preparing' });
 
       // Fetch the printer name so the companion can apply Canon-specific
@@ -97,29 +143,62 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
           paperSize: job.paperSize,
           printerName,
         });
-        await clearPendingJob();
-        store().update({ printStage: result.stage, sessionStatus: 'waiting', currentJob: null });
+
         const s = getSocket();
         if (result.success) {
-          s.emit('client:print_complete', sid);
+          await clearPendingJob();
+          store().update({
+            printStage: result.stage,
+            sessionStatus: 'waiting',
+            currentJob: null,
+            printJobId: null,
+            blockedReason: null,
+          });
+          s.emit('client:print_complete', {
+            sessionId: sid,
+            printJobId: jobId,
+            confirmed: result.confirmed !== false,
+          });
         } else {
-          s.emit('client:print_error', { sessionId: sid, error: result.error ?? 'Print failed' });
+          // Keep the bytes. A failed print is usually an empty paper tray, and
+          // the customer's retry re-prints this buffer rather than re-uploading.
+          await savePendingJob({
+            sessionId: sid,
+            job,
+            buffer,
+            savedAt: Date.now(),
+            printJobId: jobId,
+            state: 'failed',
+          });
+          store().update({ printStage: 'error', sessionStatus: 'waiting' });
+          s.emit('client:print_error', {
+            sessionId: sid,
+            printJobId: jobId,
+            error: result.error ?? 'Print failed',
+            code: result.code,
+          });
         }
-        setTimeout(() => {
-          void queryClient.invalidateQueries({ queryKey: ['analytics'] });
-        }, 1500);
+        refreshAnalyticsSoon();
       } catch (err) {
-        await clearPendingJob();
-        store().update({ printStage: 'error', sessionStatus: 'waiting', currentJob: null });
+        await savePendingJob({
+          sessionId: sid,
+          job,
+          buffer,
+          savedAt: Date.now(),
+          printJobId: jobId,
+          state: 'failed',
+        });
+        store().update({ printStage: 'error', sessionStatus: 'waiting' });
         getSocket().emit('client:print_error', {
           sessionId: sid,
+          printJobId: jobId,
           error: (err as Error).message,
+          code: 'UNKNOWN',
         });
-        setTimeout(() => {
-          void queryClient.invalidateQueries({ queryKey: ['analytics'] });
-        }, 1500);
+        refreshAnalyticsSoon();
       } finally {
         window.electronAPI!.offPrintStage(stageHandler);
+        window.electronAPI?.offPrintProgress?.(progressHandler);
       }
     };
 
@@ -164,21 +243,13 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       }
     };
 
-    const onServerError = ({ code, message }: { code?: string; message?: string }) => {
-      console.error('[socket] server rejected a message:', code, message);
-      if (code !== 'UNAUTHORIZED') {
-        store().update({ connectionError: message ?? 'The server rejected a request' });
-        return;
-      }
+    const onServerError = ({ code }: { code?: string }) => {
+      if (code !== 'UNAUTHORIZED') return;
       if (reauthAttempts >= MAX_REAUTH_ATTEMPTS) {
-        store().update({
-          isConnected: false,
-          connectionError: 'Session rejected by the server — sign out and back in',
-        });
+        store().update({ isConnected: false });
         return;
       }
       reauthAttempts += 1;
-      store().update({ connectionError: 'Refreshing session…' });
       void refreshAccessToken()
         .then(() => {
           if (!disposed) reconnectSocket();
@@ -188,9 +259,11 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
         });
     };
 
-    // On mount: recover any job that survived a crash or page refresh
+    // On mount: recover a job that was interrupted mid-print by a crash or
+    // refresh. A job kept because it *failed* is deliberately not resumed here —
+    // only an explicit retry re-prints that, or the customer gets their money back.
     void getPendingJob().then((pending) => {
-      if (!pending) return;
+      if (!pending || pending.state === 'failed') return;
       if (Date.now() - pending.savedAt > STALE_MS) {
         void clearPendingJob();
         return;
@@ -198,52 +271,27 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       store().update({
         sessionId: pending.sessionId,
         currentJob: pending.job,
+        printJobId: pending.printJobId ?? null,
         sessionStatus: 'printing',
       });
       void attemptPrint(pending.buffer, pending.job, pending.sessionId);
     });
 
     socket.on('connect', () => {
-      // Deliberately NOT isConnected yet — the server has not accepted us. The
-      // handshake is unauthenticated, so this fires even with a dead token.
-      console.warn('[socket] connected, transport:', socket.io.engine.transport.name);
-      store().update({ sessionStatus: 'waiting', connectionError: null });
+      store().update({ isConnected: true, sessionStatus: 'waiting' });
       socket.emit('client:join', clientId);
     });
 
-    socket.on('disconnect', (reason) => {
-      console.warn('[socket] disconnected:', reason);
-      store().update({
-        isConnected: false,
-        sessionStatus: 'idle',
-        sessionId: null,
-        connectionError: `Disconnected from server (${reason})`,
-      });
-    });
-
-    // Never listened for before, which is why a machine that simply could not
-    // reach the server — proxy, firewall, TLS interception — looked identical to
-    // one that was connected.
-    socket.on('connect_error', (err) => {
-      console.error('[socket] connect_error:', err.message);
-      store().update({
-        isConnected: false,
-        connectionError: `Cannot reach the server: ${err.message}`,
-      });
+    socket.on('disconnect', () => {
+      store().update({ isConnected: false, sessionStatus: 'idle', sessionId: null });
     });
 
     socket.on('error', onServerError);
 
     socket.on('client:joined', ({ sessionId: sid }: { sessionId: string }) => {
       // The join stuck, so the token is good — start the retry budget over.
-      console.warn('[socket] join accepted, session:', sid);
       reauthAttempts = 0;
-      store().update({
-        sessionId: sid,
-        sessionStatus: 'waiting',
-        isConnected: true,
-        connectionError: null,
-      });
+      store().update({ sessionId: sid, sessionStatus: 'waiting' });
       // Only now does the server hold a session to attach the status to.
       void reportPrinterStatus();
     });
@@ -259,15 +307,23 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
 
     socket.on('print:incoming', (payload: PrintIncomingPayload) => {
       chunksRef.current.clear();
-      store().update({ printStage: 'idle', currentJob: payload, sessionStatus: 'incoming' });
+      store().update({
+        printStage: 'idle',
+        currentJob: payload,
+        sessionStatus: 'incoming',
+        blockedReason: null,
+        pagesPrinted: null,
+        totalPages: null,
+      });
     });
 
     socket.on('print:chunk', ({ chunk, chunkIndex }: PrintChunkPayload) => {
       chunksRef.current.set(chunkIndex, new Uint8Array(chunk));
     });
 
-    socket.on('print:ready', () => {
-      store().update({ sessionStatus: 'printing' });
+    // Payload is optional: older backends emit `print:ready` with no body.
+    socket.on('print:ready', (payload?: { printJobId?: string }) => {
+      store().update({ sessionStatus: 'printing', printJobId: payload?.printJobId ?? null });
       const { currentJob: job, sessionId: sid } = store();
       if (!job || !sid) return;
 
@@ -284,9 +340,55 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       }
       chunksRef.current.clear();
 
-      void savePendingJob({ sessionId: sid, job, buffer, savedAt: Date.now() }).then(() =>
-        attemptPrint(buffer, job, sid)
-      );
+      void savePendingJob({
+        sessionId: sid,
+        job,
+        buffer,
+        savedAt: Date.now(),
+        printJobId: payload?.printJobId,
+        state: 'pending',
+      }).then(() => attemptPrint(buffer, job, sid));
+    });
+
+    // The customer asked for a failed job to be printed again. The bytes are
+    // still on disk from the first attempt, so nothing is re-uploaded.
+    socket.on('print:retry', ({ printJobId }: { printJobId?: string }) => {
+      void getPendingJob().then((pending) => {
+        // The server has already moved the job to QUEUED on the strength of this
+        // retry, so silence here would leave the customer watching a progress
+        // bar for a print that is never going to start — until the reconciler
+        // refunds them ten minutes later. Say what happened instead.
+        const reject = (error: string) => {
+          getSocket().emit('client:print_error', {
+            sessionId: store().sessionId,
+            printJobId,
+            error,
+            code: 'RETRY_UNAVAILABLE',
+          });
+        };
+
+        if (!pending) {
+          reject('The shop no longer has this file. Please upload it again.');
+          return;
+        }
+
+        // Only one job is kept at a time, so a retry arriving for a different
+        // job means the kept bytes are not the ones being asked for — printing
+        // them would hand the customer somebody else's document.
+        if (printJobId && pending.printJobId && pending.printJobId !== printJobId) {
+          reject('The shop no longer has this file. Please upload it again.');
+          return;
+        }
+
+        store().update({
+          sessionId: pending.sessionId,
+          currentJob: pending.job,
+          printJobId: printJobId ?? pending.printJobId ?? null,
+          sessionStatus: 'printing',
+          printStage: 'preparing',
+        });
+        void attemptPrint(pending.buffer, pending.job, pending.sessionId);
+      });
     });
 
     socket.on('session:ended', () => {
@@ -305,7 +407,6 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       }
       socket.off('error', onServerError);
       socket.off('connect');
-      socket.off('connect_error');
       socket.off('disconnect');
       socket.off('client:joined');
       socket.off('customer:joined');
@@ -313,15 +414,19 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
       socket.off('print:incoming');
       socket.off('print:chunk');
       socket.off('print:ready');
+      socket.off('print:retry');
       socket.off('session:ended');
     };
   }, [isAuthenticated, clientId, queryClient]);
 
   const markComplete = useCallback(() => {
-    const { sessionId: sid } = usePrintSocketStore.getState();
+    const { sessionId: sid, printJobId } = usePrintSocketStore.getState();
     if (!sid) return;
-    getSocket().emit('client:print_complete', sid);
-    usePrintSocketStore.getState().update({ sessionStatus: 'waiting', currentJob: null });
+    // Marked by hand at the counter, so nothing observed it in the spooler.
+    getSocket().emit('client:print_complete', { sessionId: sid, printJobId, confirmed: false });
+    usePrintSocketStore
+      .getState()
+      .update({ sessionStatus: 'waiting', currentJob: null, printJobId: null });
     setTimeout(() => {
       void queryClient.invalidateQueries({ queryKey: ['analytics'] });
     }, 1500);
@@ -329,9 +434,14 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
 
   const markError = useCallback(
     (error: string) => {
-      const { sessionId: sid } = usePrintSocketStore.getState();
+      const { sessionId: sid, printJobId } = usePrintSocketStore.getState();
       if (!sid) return;
-      getSocket().emit('client:print_error', { sessionId: sid, error });
+      getSocket().emit('client:print_error', {
+        sessionId: sid,
+        printJobId,
+        error,
+        code: 'SHOP_REPORTED',
+      });
       usePrintSocketStore.getState().update({ sessionStatus: 'waiting', currentJob: null });
       setTimeout(() => {
         void queryClient.invalidateQueries({ queryKey: ['analytics'] });
@@ -340,5 +450,16 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     [queryClient]
   );
 
-  return { sessionStatus, currentJob, sessionId, isConnected, printStage, markComplete, markError };
+  return {
+    sessionStatus,
+    currentJob,
+    sessionId,
+    isConnected,
+    printStage,
+    pagesPrinted,
+    totalPages,
+    blockedReason,
+    markComplete,
+    markError,
+  };
 }

@@ -18,16 +18,25 @@ interface LiveQueueCardProps {
   currentJob: PrintIncomingPayload | null;
   printStage: PrintStage;
   isLoading: boolean;
+  /** Live page count from the OS spooler while a job is running. */
+  pagesPrinted?: number | null;
+  totalPages?: number | null;
+  /**
+   * Why the printer has stopped, when it has. The shop is the only party that
+   * can act on this, so it belongs here before anywhere else.
+   */
+  blockedReason?: string | null;
 }
 
-function activeBadgeStatus(stage: PrintStage): JobStatus {
+function activeBadgeStatus(stage: PrintStage, blocked: boolean): JobStatus {
+  if (blocked) return 'BLOCKED';
   if (stage === 'complete') return 'COMPLETED';
   if (stage === 'error') return 'FAILED';
   if (stage === 'printing' || stage === 'spooling') return 'PRINTING';
   return 'ACTIVE';
 }
 
-type JobStatus = TPrintJob['status'] | 'ACTIVE';
+type JobStatus = TPrintJob['status'] | 'ACTIVE' | 'BLOCKED';
 
 const STATUS_CONFIG: Record<JobStatus, { label: string; className: string; spinner?: boolean }> = {
   ACTIVE: { label: 'Processing', className: 'bg-primary/10 text-primary', spinner: true },
@@ -38,6 +47,10 @@ const STATUS_CONFIG: Record<JobStatus, { label: string; className: string; spinn
     className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   },
   FAILED: { label: 'Failed', className: 'bg-destructive/10 text-destructive' },
+  BLOCKED: {
+    label: 'Needs attention',
+    className: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+  },
 };
 
 function getFileIcon(mimeType: string) {
@@ -76,7 +89,15 @@ function ColorModeTag({ colorMode }: { colorMode: 'color' | 'blackwhite' | strin
   );
 }
 
-export function LiveQueueCard({ jobs, currentJob, printStage, isLoading }: LiveQueueCardProps) {
+export function LiveQueueCard({
+  jobs,
+  currentJob,
+  printStage,
+  isLoading,
+  pagesPrinted,
+  totalPages,
+  blockedReason,
+}: LiveQueueCardProps) {
   const pendingCount = jobs.filter((j) => j.status === 'PENDING' || j.status === 'PRINTING').length;
   const totalPending = pendingCount + (currentJob ? 1 : 0);
 
@@ -131,7 +152,19 @@ export function LiveQueueCard({ jobs, currentJob, printStage, isLoading }: LiveQ
                       </p>
                       <div className="mt-0.5 flex items-center gap-1.5">
                         <ColorModeTag colorMode={currentJob.colorMode} />
+                        {typeof pagesPrinted === 'number' && (
+                          <span className="text-[11px] font-semibold text-muted-foreground">
+                            {totalPages
+                              ? `${pagesPrinted}/${totalPages} pages`
+                              : `${pagesPrinted} pages`}
+                          </span>
+                        )}
                       </div>
+                      {blockedReason && (
+                        <p className="mt-1 text-xs font-semibold text-amber-700 dark:text-amber-400">
+                          {blockedReason}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </td>
@@ -139,7 +172,7 @@ export function LiveQueueCard({ jobs, currentJob, printStage, isLoading }: LiveQ
                   {currentJob.copies}
                 </td>
                 <td className="px-6 py-3.5">
-                  <StatusBadge status={activeBadgeStatus(printStage)} />
+                  <StatusBadge status={activeBadgeStatus(printStage, Boolean(blockedReason))} />
                 </td>
               </tr>
             )}

@@ -30,6 +30,17 @@ interface PrintSocketState {
   /** Why the shop is not connected, for the dashboard to show. Null when fine. */
   connectionError: string | null;
   printStage: PrintStage;
+  /**
+   * The server's id for the job being printed, handed over with `print:ready`.
+   * Echoed back on every outcome so the backend can attribute it even after a
+   * restart has emptied its in-memory session map.
+   */
+  printJobId: string | null;
+  /** Live page count from the OS spooler — null before the job surfaces. */
+  pagesPrinted: number | null;
+  totalPages: number | null;
+  /** Set while the job is stopped for a recoverable reason (paper out, offline). */
+  blockedReason: string | null;
   update: (partial: Partial<Omit<PrintSocketState, 'update'>>) => void;
 }
 
@@ -40,5 +51,9 @@ export const usePrintSocketStore = create<PrintSocketState>((set) => ({
   isConnected: false,
   connectionError: null,
   printStage: 'idle',
+  printJobId: null,
+  pagesPrinted: null,
+  totalPages: null,
+  blockedReason: null,
   update: (partial) => set(partial),
 }));

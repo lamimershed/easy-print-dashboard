@@ -9,6 +9,15 @@ export interface PendingPrintJob {
   job: PrintIncomingPayload;
   buffer: ArrayBuffer;
   savedAt: number;
+  /** The server's job id, so a retry can name the job it is re-printing. */
+  printJobId?: string;
+  /**
+   * 'pending' — interrupted mid-print; recovered automatically on next launch.
+   * 'failed'  — finished as a failure; kept only so a customer-requested retry
+   *             can re-print the same bytes without a re-upload, and never
+   *             auto-printed on mount.
+   */
+  state?: 'pending' | 'failed';
 }
 
 function openDb(): Promise<IDBDatabase> {

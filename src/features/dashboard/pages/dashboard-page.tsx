@@ -23,6 +23,9 @@ export default function DashboardPage() {
   const isConnected = usePrintSocketStore((s) => s.isConnected);
   const connectionError = usePrintSocketStore((s) => s.connectionError);
   const printStage = usePrintSocketStore((s) => s.printStage);
+  const pagesPrinted = usePrintSocketStore((s) => s.pagesPrinted);
+  const totalPages = usePrintSocketStore((s) => s.totalPages);
+  const blockedReason = usePrintSocketStore((s) => s.blockedReason);
 
   if (profileLoading) {
     return (
@@ -105,6 +108,9 @@ export default function DashboardPage() {
             jobs={jobsData?.data ?? []}
             currentJob={activeJob}
             printStage={printStage}
+            pagesPrinted={pagesPrinted}
+            totalPages={totalPages}
+            blockedReason={blockedReason}
             isLoading={jobsLoading}
           />
         </div>
