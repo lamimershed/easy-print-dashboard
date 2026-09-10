@@ -6,6 +6,7 @@ import { getSocket, reconnectSocket } from '@/services/socket';
 import { refreshAccessToken } from '@/services/api';
 import { isElectron } from '@/lib/electron-print';
 import { savePendingJob, getPendingJob, clearPendingJob } from '@/lib/print-job-db';
+import { markActiveJobComplete, markActiveJobFailed } from '../services/print-job-actions';
 import type { PrintStage, PrintProgress, RealStatus } from '@/types/electron';
 import type { SessionStatus, PrintIncomingPayload } from '@/stores/print-socket-store';
 
@@ -419,14 +420,10 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
     };
   }, [isAuthenticated, clientId, queryClient]);
 
+  // Both delegate to the shared actions so the buttons in the queue card and
+  // this hook can never drift into reporting two different things.
   const markComplete = useCallback(() => {
-    const { sessionId: sid, printJobId } = usePrintSocketStore.getState();
-    if (!sid) return;
-    // Marked by hand at the counter, so nothing observed it in the spooler.
-    getSocket().emit('client:print_complete', { sessionId: sid, printJobId, confirmed: false });
-    usePrintSocketStore
-      .getState()
-      .update({ sessionStatus: 'waiting', currentJob: null, printJobId: null });
+    if (!markActiveJobComplete()) return;
     setTimeout(() => {
       void queryClient.invalidateQueries({ queryKey: ['analytics'] });
     }, 1500);
@@ -434,15 +431,7 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
 
   const markError = useCallback(
     (error: string) => {
-      const { sessionId: sid, printJobId } = usePrintSocketStore.getState();
-      if (!sid) return;
-      getSocket().emit('client:print_error', {
-        sessionId: sid,
-        printJobId,
-        error,
-        code: 'SHOP_REPORTED',
-      });
-      usePrintSocketStore.getState().update({ sessionStatus: 'waiting', currentJob: null });
+      if (!markActiveJobFailed(error)) return;
       setTimeout(() => {
         void queryClient.invalidateQueries({ queryKey: ['analytics'] });
       }, 1500);

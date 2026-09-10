@@ -1,9 +1,12 @@
-import { FileText, Image, File, ArrowRight, Settings, Printer } from 'lucide-react';
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { FileText, Image, File, ArrowRight, Settings, Printer, XCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { TPrintJob } from '@/features/analytics';
 import type { PrintStage } from '@/types/electron';
+import { markActiveJobFailed, SHOP_FAILURE_REASONS } from '../services/print-job-actions';
 
 interface PrintIncomingPayload {
   fileName: string;
@@ -101,6 +104,20 @@ export function LiveQueueCard({
   const pendingCount = jobs.filter((j) => j.status === 'PENDING' || j.status === 'PRINTING').length;
   const totalPending = pendingCount + (currentJob ? 1 : 0);
 
+  const queryClient = useQueryClient();
+  // Two steps on purpose. This tells the customer their print failed and opens
+  // their refund, so it is not something to fire off a single mis-tap at a busy
+  // counter.
+  const [pickingReason, setPickingReason] = useState(false);
+
+  const reportFailure = (reason: string) => {
+    setPickingReason(false);
+    if (!markActiveJobFailed(reason)) return;
+    setTimeout(() => {
+      void queryClient.invalidateQueries({ queryKey: ['analytics'] });
+    }, 1500);
+  };
+
   return (
     <div className="overflow-hidden rounded-xl bg-card shadow-card-soft">
       {/* Header */}
@@ -172,7 +189,47 @@ export function LiveQueueCard({
                   {currentJob.copies}
                 </td>
                 <td className="px-6 py-3.5">
-                  <StatusBadge status={activeBadgeStatus(printStage, Boolean(blockedReason))} />
+                  <div className="flex flex-col items-start gap-2">
+                    <StatusBadge status={activeBadgeStatus(printStage, Boolean(blockedReason))} />
+
+                    {/* The shop is the only party that can see the paper. When a
+                        job is never going to come out, this is how it says so —
+                        the customer then chooses a reprint or a refund instead
+                        of watching a progress bar that will not move. */}
+                    {!pickingReason ? (
+                      <button
+                        type="button"
+                        onClick={() => setPickingReason(true)}
+                        className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground transition-colors hover:text-destructive"
+                      >
+                        <XCircle className="h-3.5 w-3.5" />
+                        Can&apos;t print this
+                      </button>
+                    ) : (
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="text-[11px] font-semibold text-muted-foreground">
+                          Tell the customer why:
+                        </span>
+                        {SHOP_FAILURE_REASONS.map((reason) => (
+                          <button
+                            key={reason}
+                            type="button"
+                            onClick={() => reportFailure(reason)}
+                            className="rounded-md px-2 py-1 text-left text-[11px] font-semibold text-destructive transition-colors hover:bg-destructive/10"
+                          >
+                            {reason}
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setPickingReason(false)}
+                          className="px-2 py-1 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             )}
