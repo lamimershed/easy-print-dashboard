@@ -122,16 +122,10 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
 
       store().update({ printStage: 'preparing' });
 
-      // Fetch the printer name so the companion can apply Canon-specific
-      // grayscale settings (CNIJGrayScale) which require an explicit -p printerName.
-      let printerName: string | undefined;
-      try {
-        const deviceInfo = await window.electronAPI!.getDeviceInfo();
-        printerName = deviceInfo.printer?.name ?? undefined;
-      } catch {
-        // proceed without printerName; lpr will use the system default printer
-      }
-
+      // No printerName: the companion resolves the default printer itself in its
+      // preflight (which is also what Canon's CNIJGrayScale needs on macOS).
+      // Calling getDeviceInfo() here just for the name cost ~14s on Windows —
+      // supply levels, duplex and status probes, all serialised PowerShell.
       try {
         const result = await window.electronAPI!.printFile({
           fileData: buffer,
@@ -142,7 +136,6 @@ export function usePrintSocket(clientId: string | undefined): UsePrintSocketRetu
           pageRange: job.pageRange,
           // Whatever the customer was charged for is what gets printed.
           paperSize: job.paperSize,
-          printerName,
         });
 
         const s = getSocket();
