@@ -1,4 +1,10 @@
-import type { PrintStage, PrinterSupply, ChromiumPrinter, PrintQueueJob } from '@/types/electron';
+import type {
+  PrintStage,
+  PrinterSupply,
+  ChromiumPrinter,
+  PrintQueueJob,
+  PrinterDetails,
+} from '@/types/electron';
 
 export type PrinterStatus =
   | 'idle'
@@ -11,6 +17,12 @@ export type PrinterStatus =
 export type PrinterFeedbackState = {
   /** True only when running inside the Electron companion app */
   isElectron: boolean;
+  /** False until the companion's first reading arrives — "checking", not "no printer". */
+  loaded: boolean;
+  /** Everything the companion read about the default printer; fields it could not read are null. */
+  details: PrinterDetails | null;
+  /** The last read failed and these values are from the reading before it. */
+  stale: boolean;
   /** Human-readable display name of the default printer (for UI labels only) */
   printerName: string | null;
   /** System/driver name required as deviceName in webContents.print() */
@@ -35,9 +47,9 @@ export type PrinterFeedbackState = {
   printerList: ChromiumPrinter[];
   /** OS print spooler queue — only populated if companion app supports getPrintQueue */
   printQueue: PrintQueueJob[];
-  /** Timestamp of last successful getDeviceInfo call */
+  /** When the companion last read the printer */
   lastRefreshedAt: Date | null;
-  /** True while initial or manual fetch is in progress */
+  /** True until the first reading, and while a manual refresh runs */
   isLoading: boolean;
   /** Error message from getDeviceInfo / IPC */
   error: string | null;

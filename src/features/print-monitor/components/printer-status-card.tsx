@@ -137,7 +137,7 @@ export function PrinterStatusCard() {
         {printer.cupsError && (
           <div className="mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 dark:bg-amber-900/20">
             <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
-            <p className="text-xs text-amber-700 dark:text-amber-300">CUPS: {printer.cupsError}</p>
+            <p className="text-xs text-amber-700 dark:text-amber-300">{printer.cupsError}</p>
           </div>
         )}
 
@@ -177,16 +177,15 @@ export function PrinterStatusCard() {
 
       {/* Supply levels */}
       <div className="space-y-8 p-8">
-        <SupplyBar
-          label="Paper Level"
-          levelPercent={printer.paperLevel}
-          barClass="bg-primary"
-          suffix={
-            paperSheets !== null
-              ? `Approx. ${paperSheets} Sheets Remaining`
-              : 'Supply data unavailable — requires CUPS driver'
-          }
-        />
+        {/* Only what the printer reports — USB printers on Windows report none */}
+        {printer.paperLevel !== null && (
+          <SupplyBar
+            label="Paper Level"
+            levelPercent={printer.paperLevel}
+            barClass="bg-primary"
+            suffix={paperSheets !== null ? `Approx. ${paperSheets} Sheets Remaining` : undefined}
+          />
+        )}
 
         {hasMultipleInk ? (
           <div>
@@ -228,16 +227,9 @@ export function PrinterStatusCard() {
             </div>
           </div>
         ) : (
-          <SupplyBar
-            label="Ink Level"
-            levelPercent={printer.inkLevel}
-            barClass="bg-amber-400"
-            suffix={
-              printer.inkLevel === null
-                ? 'Supply data unavailable — requires CUPS driver'
-                : undefined
-            }
-          />
+          printer.inkLevel !== null && (
+            <SupplyBar label="Ink Level" levelPercent={printer.inkLevel} barClass="bg-amber-400" />
+          )
         )}
       </div>
 

@@ -50,6 +50,71 @@ export interface PrinterSupply {
  */
 export type RealStatus = 'ready' | 'printing' | 'queue_stopped' | 'disconnected' | 'unknown';
 
+/**
+ * Everything below is optional by design: drivers report very different
+ * things, and the UI shows only what this printer actually told the companion.
+ * `null` means "not reported", never "no".
+ */
+export interface PrinterAlert {
+  /** e.g. PAPER_JAM, PAPER_OUT, DOOR_OPEN, TONER_LOW, OFFLINE, DISCONNECTED */
+  code: string;
+  message: string;
+  severity: 'error' | 'warning' | 'info';
+}
+
+export interface PrinterConnection {
+  kind: 'usb' | 'network' | 'shared' | 'virtual' | 'local' | 'unknown';
+  /** Human label, e.g. "USB", "Network (WSD)", "Shared from another PC" */
+  label: string;
+  port: string | null;
+  /** IP or host name, for network printers */
+  address: string | null;
+  /** Whether the device is physically there — only known for USB */
+  present: boolean | null;
+  /** This PC shares the printer with others */
+  sharedOnNetwork: boolean;
+}
+
+export interface PrinterDetails {
+  name: string;
+  displayName: string;
+  status: RealStatus;
+  alerts: PrinterAlert[];
+  connection: PrinterConnection;
+  queue: { jobs: number | null };
+  location: string | null;
+  comment: string | null;
+  driver: { name: string; manufacturer: string | null; version: string | null } | null;
+  capabilities: {
+    color?: boolean | null;
+    /** As the driver reports it — manual-duplex drivers say two-sided too. */
+    twoSided?: boolean | null;
+    maxCopies?: number | null;
+    paperSizes?: string[];
+    orientations?: string[];
+  } | null;
+  defaults: {
+    color: string | null;
+    sides: string | null;
+    paperSize: string | null;
+    orientation: string | null;
+  } | null;
+  supplies: PrinterSupply[];
+  suppliesError: string | null;
+}
+
+/** The companion monitor's latest reading of the default printer. */
+export interface PrinterSnapshot {
+  printers: { name: string; displayName: string; isDefault: boolean }[];
+  /** The default printer, or null when none is installed. */
+  printer: PrinterDetails | null;
+  /** The last read failed; the data shown is the previous reading. */
+  error: string | null;
+  stale?: boolean;
+  /** Epoch ms of the read. */
+  updatedAt: number;
+}
+
 export interface DeviceInfo {
   /** Default printer with companion-computed realStatus, or null if none found */
   printer: (ChromiumPrinter & { realStatus: RealStatus }) | null;
@@ -168,6 +233,16 @@ export interface ElectronAPI {
    * Optional: shops running an older companion build do not expose it.
    */
   getPrinterRealStatus?: () => Promise<RealStatus>;
+  /**
+   * The companion monitor's cached printer reading, answered instantly.
+   * `{ force: true }` re-reads first. Optional: older companions lack it, and
+   * the dashboard falls back to polling getDeviceInfo.
+   */
+  getPrinterSnapshot?: (options?: { force?: boolean }) => Promise<PrinterSnapshot | null>;
+  /** Pushed after every monitor read. */
+  onPrinterSnapshot?: (cb: (snapshot: PrinterSnapshot) => void) => void;
+  offPrinterSnapshot?: (cb: (snapshot: PrinterSnapshot) => void) => void;
+
   /** Subscribe to realStatus changes pushed by the main process */
   onPrinterRealStatus?: (cb: (status: RealStatus) => void) => void;
   /** Unsubscribe all printer-real-status listeners */
