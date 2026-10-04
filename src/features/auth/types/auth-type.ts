@@ -38,7 +38,7 @@ export type TRegisterRequest = {
   password: string;
   companyName: string;
   phoneNumber: string;
-  logoUrl: string;
+  logoUrl?: string;
   googleProfileLink?: string;
   address: string;
   latitude?: number;

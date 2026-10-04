@@ -12,11 +12,12 @@ export const registerSchema = z
       .regex(/[^A-Za-z0-9]/, 'Must contain at least one special character'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
     companyName: z.string().min(1, 'Company name is required').max(100),
+    // The +91 is fixed in the field; this holds only the 10-digit mobile number.
     phoneNumber: z
       .string()
       .min(1, 'Phone number is required')
-      .regex(/^\+[1-9]\d{1,14}$/, 'Use international format e.g. +1234567890'),
-    logoUrl: z.url('Invalid URL — please upload a logo'),
+      .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number'),
+    logoUrl: z.url('Invalid URL — please upload the logo again').or(z.literal('')),
     googleProfileLink: z.url().or(z.literal('')),
     address: z.string().min(1, 'Address is required').max(255),
     latitude: z.number().optional(),

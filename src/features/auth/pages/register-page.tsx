@@ -40,6 +40,8 @@ export default function RegisterPage() {
     const { confirmPassword: _confirmPassword, ...payload } = data;
     registerMutation.mutate({
       ...payload,
+      phoneNumber: `+91${payload.phoneNumber}`,
+      logoUrl: payload.logoUrl || undefined,
       googleProfileLink: payload.googleProfileLink || undefined,
     });
   };
@@ -75,13 +77,26 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-1">
-            <label className={fieldLabel}>Phone number *</label>
-            <Input
-              className={fieldInput}
-              placeholder="+1 (555) 000-0000"
-              type="tel"
-              {...register('phoneNumber')}
-            />
+            <label className={fieldLabel}>Mobile number *</label>
+            <div className="relative">
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-sm font-medium text-muted-foreground">
+                +91
+              </span>
+              <Input
+                className={cn(fieldInput, 'pl-12')}
+                placeholder="98765 43210"
+                type="tel"
+                inputMode="numeric"
+                autoComplete="tel-national"
+                {...register('phoneNumber', {
+                  // Digits only; a pasted "+91 98765 43210" keeps just the 10 digits.
+                  setValueAs: (v: string) =>
+                    String(v ?? '')
+                      .replace(/\D/g, '')
+                      .replace(/^(?:91|0)(?=\d{10}$)/, ''),
+                })}
+              />
+            </div>
             {errors.phoneNumber && (
               <p className="text-xs text-destructive">{errors.phoneNumber.message}</p>
             )}
@@ -105,7 +120,7 @@ export default function RegisterPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Logo dropzone */}
             <div className="space-y-1">
-              <label className={fieldLabel}>Company logo *</label>
+              <label className={fieldLabel}>Company logo (optional)</label>
               <Controller
                 control={control}
                 name="logoUrl"
